@@ -936,17 +936,20 @@ sys.setrecursionlimit(100000)
 # NAME = "mask_demo"
 # NAME = "counter_memblock"
 # NAME = "alu"
-NAME = "alu-small"
 # NAME = "eval/pyrtl/fifo"
-# NAME = "eval/verilog/nerv"
 # NAME = "eval/verilog/opdb_pico"
 
+# small alu example (not not-working):
+NAME = "alu-small"
 clock = "clk"
-# clock = "clock"
-
 top = "toplevel"
-# top = "picorv32"
+
+# nerv example (not working):
+# NAME = "eval/verilog/nerv"
+# clock = "clock"
 # top = "nerv"
+
+# top = "picorv32"
 
 with open(NAME + ".blif", "r") as f: # for alu_scale
     s = f.read() # for alu_scale
