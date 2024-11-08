@@ -14,6 +14,7 @@ class AbstractMem:
 
     @dataclass
     class Mask:
+        # TODO: change granularity to be a power of 2
         bit: bool = True
         mask: pyrtl.WireVector = None
 
@@ -30,7 +31,7 @@ class AbstractMem:
                  name='',
                  read_ports=[],
                  write_port=None,
-                 raw_fwd=False,
+                 rw_fwd=False,
                  latch_last_read=False,
                  ):
         self.width = width
@@ -38,7 +39,7 @@ class AbstractMem:
         self.name = name
         self.read_ports = read_ports
         self.write_port = write_port
-        self.raw_fwd = raw_fwd
+        self.rw_fwd = rw_fwd
         self.latch_last_read = latch_last_read
 
         if self.latch_last_read and len(self.read_ports) > 1:
@@ -72,8 +73,8 @@ class AbstractMem:
             parameters_list.append(f".latch_last_read_p({p})")
 
         if not shared_rw:
-            raw_fwd_p = "1" if self.raw_fwd else "0"
-            parameters_list.append(f".read_write_same_addr_p({raw_fwd_p})")
+            rw_fwd_p = "1" if self.rw_fwd else "0"
+            parameters_list.append(f".read_write_same_addr_p({rw_fwd_p})")
 
         parameters = "#(" + ", ".join(parameters_list) + ")\n"
 
@@ -164,7 +165,7 @@ class AbstractMem:
                 with en:
                     addr_r.next |= addr
 
-            if self.raw_fwd:
+            if self.rw_fwd:
                 rdata = pyrtl.select(addr_r == w_addr,
                                      w_data,
                                      mem[addr_r])
@@ -181,6 +182,73 @@ class AbstractMem:
                 data <<= llr_data
             else:
                 data <<= rdata
+
+    def to_synthesizable_bram(self):
+        #modulename, type, height_define, heightlog2_define, width_define):
+        modulename = self.name
+        height_define = self.height
+        heightlog2_define = int(log2(self.height))
+        width_define = self.width
+
+        shared_rw = False
+        if len(self.read_ports) == 1:
+            if self.read_ports[0].addr.name == self.write_port.addr.name:
+                shared_rw = True
+
+        r = str(len(self.read_ports))
+        w = '' if shared_rw else '1'
+        type = f"{r}r{w}w"
+
+        if type == "1rw":
+            t = '''
+    bram_1rw_wrapper #(
+       .NAME          (""             ),
+       .DEPTH         (%s),
+       .ADDR_WIDTH    (%s),
+       .BITMASK_WIDTH (%s),
+       .DATA_WIDTH    (%s)
+    )   %s (
+       .MEMCLK        (MEMCLK     ),
+       .RESET_N        (RESET_N     ),
+       .CE            (CE         ),
+       .A             (A          ),
+       .RDWEN         (RDWEN      ),
+       .BW            (BW         ),
+       .DIN           (DIN        ),
+       .DOUT          (DOUT_bram       )
+    );
+           ''' % (height_define, heightlog2_define, width_define, width_define, modulename)
+    
+        elif type == "1r1w":
+            t = '''
+    bram_1r1w_wrapper #(
+       .NAME          (""             ),
+       .DEPTH         (%s),
+       .ADDR_WIDTH    (%s),
+       .BITMASK_WIDTH (%s),
+       .DATA_WIDTH    (%s)
+    )   %s (
+       .MEMCLK        (MEMCLK     ),
+       .RESET_N        (RESET_N     ),
+       .CEA        (CEA     ),
+       .AA        (AA     ),
+       .AB        (AB     ),
+       .RDWENA        (RDWENA     ),
+       .CEB        (CEB     ),
+       .RDWENB        (RDWENB     ),
+       .BWA        (BWA     ),
+       .DINA        (DINA     ),
+       .DOUTA        (DOUTA_bram     ),
+       .BWB        (BWB     ),
+       .DINB        (DINB     ),
+       .DOUTB        (DOUTB_bram     )
+    );
+           ''' % (height_define, heightlog2_define, width_define, width_define, modulename)
+    
+        else:
+            assert(0) # unimplemented
+    
+        return t
 
 
 def test_1r1w():
@@ -256,10 +324,10 @@ def test_1r1w_llr():
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
 
-def test_1r1w_raw():
+def test_1r1w_rw():
     pyrtl.reset_working_block()
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print("test 1r1w raw")
+    print("test 1r1w rw")
     addr_width = 2
     val_width = 2
     
@@ -277,7 +345,7 @@ def test_1r1w_raw():
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
             write_port=AbstractMem.WritePort(waddr, inc, w_en),
-            raw_fwd=True,
+            rw_fwd=True,
             )
     mem.to_pyrtl(pyrtl.working_block())
     
@@ -331,10 +399,10 @@ def test_2r1w():
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
 
-def test_2r1w_raw():
+def test_2r1w_rw():
     pyrtl.reset_working_block()
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print("test 2r1w raw")
+    print("test 2r1w rw")
 
     addr_width = 2
     val_width = 2
@@ -356,7 +424,7 @@ def test_2r1w_raw():
             read_ports=[AbstractMem.ReadPort(raddr1, rdata1, pyrtl.Const(1,bitwidth=1)),
                         AbstractMem.ReadPort(raddr2, rdata2, pyrtl.Const(1,bitwidth=1))],
             write_port=AbstractMem.WritePort(waddr, sum, w_en),
-            raw_fwd=True,
+            rw_fwd=True,
             )
     mem.to_pyrtl(pyrtl.working_block())
 
@@ -439,6 +507,47 @@ def test_1rw_bit_mask():
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
 
+def test_1r1w_bram():
+    pyrtl.reset_working_block()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("test 1r1w synthesizable bram")
+
+    addr_width = 2
+    val_width = 2
+    
+    waddr = pyrtl.Input(addr_width, 'waddr')
+    raddr = pyrtl.Input(addr_width, 'raddr')
+    w_en = pyrtl.Input(1, 'w_en')
+
+    rdata = pyrtl.WireVector(val_width, 'rdata')
+    inc = pyrtl.WireVector(val_width, 'inc')
+    inc <<= rdata + 1
+
+    mem = AbstractMem(
+            width=val_width,
+            height=(addr_width ** 2),
+            name='mem',
+            read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
+            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            )
+    mem.to_pyrtl(pyrtl.working_block())
+
+    ## Expected PyRTL:
+    # mem = pyrtl.MemBlock(
+    #      bitwidth=val_width,
+    #      addrwidth=addr_width,
+    #      name='mem',
+    #      max_read_ports=1,
+    #      max_write_ports=1)
+    # data <<= mem[raddr] + 1
+    # mem[waddr] <<= pyrtl.MemBlock.EnabledWrite(data, enable=en)
+    
+    data_o = pyrtl.Output(val_width, 'data_o')
+    data_o <<= inc
+
+    pyrtl.working_block().sanity_check()
+    print(mem.to_synthesizable_bram())
+
 
 if __name__ == '__main__':
 
@@ -446,13 +555,14 @@ if __name__ == '__main__':
 
     test_1r1w_llr()
 
-    test_1r1w_raw()
+    test_1r1w_rw()
 
     test_2r1w()
 
-    test_2r1w_raw()
+    test_2r1w_rw()
 
     test_1rw()
 
     test_1rw_bit_mask()
 
+    test_1r1w_bram()
