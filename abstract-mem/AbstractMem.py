@@ -124,27 +124,29 @@ class AbstractMem:
                              )
 
         # Write Port
-        if not isinstance(self.write_port, AbstractMem.WritePort):
-            raise Exception(f"Error, invalid write port: {write_port}")
+        # If None, it is a ROM.
+        if self.write_port is not None:
+            if not isinstance(self.write_port, AbstractMem.WritePort):
+                raise Exception(f"Error, invalid write port: {write_port}")
 
-        w_addr, w_data, w_en, w_mask = self.write_port.addr, self.write_port.data,\
-                                       self.write_port.en, self.write_port.mask
+            w_addr, w_data, w_en, w_mask = self.write_port.addr, self.write_port.data,\
+                                           self.write_port.en, self.write_port.mask
 
-        if w_mask is not None:
-            og_data = mem[w_addr]
-            if w_mask.bit:
-                w_data = pyrtl.concat_list(
-                        [pyrtl.select(w_en & w_mask.mask[i], w_data[i], og_data[i])
-                         for i in range(self.width)])
-            # TODO: Finish byte mask
-            # else:
-            #     mask_width = self.width >> 3
-            #     w_data = 
+            if w_mask is not None:
+                og_data = mem[w_addr]
+                if w_mask.bit:
+                    w_data = pyrtl.concat_list(
+                            [pyrtl.select(w_en & w_mask.mask[i], w_data[i], og_data[i])
+                             for i in range(self.width)])
+                # TODO: Finish byte mask
+                # else:
+                #     mask_width = self.width >> 3
+                #     w_data = 
 
-        if w_en is None:
-            mem[w_addr] <<= w_data
-        else:
-            mem[w_addr] <<= pyrtl.MemBlock.EnabledWrite(w_data, enable=w_en)
+            if w_en is None:
+                mem[w_addr] <<= w_data
+            else:
+                mem[w_addr] <<= pyrtl.MemBlock.EnabledWrite(w_data, enable=w_en)
 
         # Read Ports
         for read_port in self.read_ports:
@@ -509,7 +511,7 @@ def test_2r1w():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr1, rdata1, pyrtl.Const(1,bitwidth=1)),
                         AbstractMem.ReadPort(raddr2, rdata2, pyrtl.Const(1,bitwidth=1))],
