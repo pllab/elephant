@@ -33,6 +33,7 @@ class AbstractMem:
                  write_port=None,
                  rw_fwd=False,
                  latch_last_read=False,
+                 asynchronous=False,
                  ):
         self.width = width
         self.height = height
@@ -41,6 +42,7 @@ class AbstractMem:
         self.write_port = write_port
         self.rw_fwd = rw_fwd
         self.latch_last_read = latch_last_read
+        self.asynchronous=asynchronous
 
         if self.latch_last_read and len(self.read_ports) > 1:
             raise Exception("Error, cannot set latch_last_read with more than 1 read port")
@@ -119,7 +121,7 @@ class AbstractMem:
                              name=self.name,
                              # max_read_ports=len(self.read_ports),
                              max_write_ports=1,
-                             asynchronous=False,
+                             asynchronous=self.asynchronous,
                              block=block,
                              )
 
@@ -158,10 +160,19 @@ class AbstractMem:
             if en is None:
                 en = pyrtl.Const(1, bitwidth=1)
 
-            addr_r = pyrtl.Register(addrwidth)
-            with pyrtl.conditional_assignment:
-                with en:
-                    addr_r.next |= addr
+            if self.asynchronous:
+                addr_r = pyrtl.WireVector(addrwidth)
+            else:
+                addr_r = pyrtl.Register(addrwidth)
+
+            if self.asynchronous:
+                with pyrtl.conditional_assignment:
+                    with en:
+                        addr_r |= addr
+            else:
+                with pyrtl.conditional_assignment:
+                    with en:
+                        addr_r.next |= addr
 
             if self.rw_fwd:
                 rdata = pyrtl.select(addr_r == w_addr,
