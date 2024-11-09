@@ -252,14 +252,17 @@ class AbstractMem:
                          temperatures = [40],
                          route_supplies = "side"
                          ):
-        shared_rw = len(self.read_ports) == 1 \
-                    and self.read_ports[0].addr.name == self.write_port.addr.name
+        if (self.write_port is not None):
+            shared_rw = len(self.read_ports) == 1 \
+                        and self.read_ports[0].addr.name == self.write_port.addr.name
+        else:
+            shared_rw = False
 
         # 1rw
         num_rw = 1 if shared_rw else 0
         # Nr1w
         num_read = 0 if shared_rw else len(self.read_ports)
-        num_write = 0 if shared_rw else 1
+        num_write = 0 if (shared_rw or (self.write_port is None)) else 1
 
         s = f"""
 word_size = {self.width}
@@ -372,7 +375,6 @@ def test_1r1w():
 
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
-    print(mem.to_open_ram_sram())
 
 def test_1r1w_llr():
     pyrtl.reset_working_block()
@@ -480,7 +482,6 @@ def test_2r1w():
 
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
-    print(mem.to_open_ram_sram())
 
 def test_2r1w_rw():
     pyrtl.reset_working_block()
@@ -556,7 +557,6 @@ def test_1rw():
 
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
-    print(mem.to_open_ram_sram())
 
 def test_1rw_bit_mask():
     pyrtl.reset_working_block()
@@ -632,6 +632,47 @@ def test_1r1w_bram():
     pyrtl.working_block().sanity_check()
     print(mem.to_synthesizable_bram())
 
+def test_1r1w_openram_sram():
+    pyrtl.reset_working_block()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("test 1r1w OpenRAM SRAM")
+
+    # OpenRAM scn4m requires minimum height of 16 rows
+    addr_width = 4
+    val_width = 16
+
+    waddr = pyrtl.Input(addr_width, 'waddr')
+    raddr = pyrtl.Input(addr_width, 'raddr')
+    w_en = pyrtl.Input(1, 'w_en')
+
+    rdata = pyrtl.WireVector(val_width, 'rdata')
+    inc = pyrtl.WireVector(val_width, 'inc')
+    inc <<= rdata + 1
+
+    mem = AbstractMem(
+            width=val_width,
+            height=(addr_width ** 2),
+            name='mem',
+            read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
+            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            )
+    mem.to_pyrtl(pyrtl.working_block())
+
+    ## Expected PyRTL:
+    # mem = pyrtl.MemBlock(
+    #      bitwidth=val_width,
+    #      addrwidth=addr_width,
+    #      name='mem',
+    #      max_read_ports=1,
+    #      max_write_ports=1)
+    # data <<= mem[raddr] + 1
+    # mem[waddr] <<= pyrtl.MemBlock.EnabledWrite(data, enable=en)
+
+    data_o = pyrtl.Output(val_width, 'data_o')
+    data_o <<= inc
+
+    pyrtl.working_block().sanity_check()
+    print(mem.to_openram_sram())
 
 if __name__ == '__main__':
 
@@ -650,3 +691,5 @@ if __name__ == '__main__':
     test_1rw_bit_mask()
 
     test_1r1w_bram()
+
+    test_1r1w_openram_sram()
