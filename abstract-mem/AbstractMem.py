@@ -291,49 +291,99 @@ output_path = "macro/{{}}".format(output_name)
 """
         return s
 
-    def to_tcl(self):
-
-        s = '''
-# Create the IP directory and set the current directory
-set proj_dir $::env(PWD)
-set ip_dir ${proj_dir}/ip
-file mkdir ${ip_dir}
-cd ${ip_dir}
-create_project bram_test . -part xc7a35ticsg324-1L
-
-# Create the Block Memory Generator
-create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name bram_64x8_1rw
-
-
-# Configure the core
-set_property -dict [list \
-    CONFIG.Component_Name {bram_64x8_1rw} \
-    CONFIG.Memory_Type {Simple_Dual_Port_RAM} \
-    CONFIG.Write_Width_A {64} \
-    CONFIG.Write_Depth_A {8} \
-    CONFIG.Read_Width_A {64} \
-    CONFIG.Write_Width_B {64} \
-    CONFIG.Read_Width_B {64} \
-    CONFIG.Enable_32bit_Address {false} \
-    CONFIG.Use_Byte_Write_Enable {false} \
-    CONFIG.Byte_Size {9} \
-    CONFIG.Algorithm {Minimum_Area} \
-    CONFIG.Primitive {8kx2} \
-    CONFIG.Assume_Synchronous_Clk {true} \
-    CONFIG.Enable_A {Always_Enabled} \
-    CONFIG.Enable_B {Always_Enabled} \
-    CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
-    CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \
-    CONFIG.Port_B_Clock {100} \
-    CONFIG.Port_B_Enable_Rate {100} \
-] [get_ips bram_64x8_1rw]
-
-# Generate the IP
-generate_target all [get_ips bram_64x8_1rw]
-
-synth_design -top bram_64x8_1rw
-'''
-        return s
+    def to_vivado_bram_tcl(self):
+        """Generate Vivado TCL script for memory configuration based on AbstractMem properties."""
+    
+        # Validate ports
+        has_read = self.read_ports is not None and len(self.read_ports) > 0
+        has_write = self.write_port is not None
+    
+        # Determine memory type based on ports
+        if not has_read and not has_write:
+            raise ValueError("Memory must have at least one port")
+        elif not has_write:
+            mem_type = "Single_Port_ROM"
+        elif not has_read:
+            raise ValueError("Write-only memory not supported in Vivado BRAM")
+        elif len(self.read_ports) == 1:
+            if self.read_ports[0].addr.name == self.write_port.addr.name:
+                mem_type = "Single_Port_RAM"
+            else:
+                mem_type = "Simple_Dual_Port_RAM"
+        elif len(self.read_ports) == 2:
+            mem_type = "True_Dual_Port_RAM"
+        else:
+            raise ValueError(f"Unsupported port configuration: {len(self.read_ports)} read ports and {1 if has_write else 0} write ports")
+    
+        # Basic configuration that's always needed
+        config_dict = [
+            f'    CONFIG.Component_Name {{{self.name}}} \\',
+            f'    CONFIG.Memory_Type {{{mem_type}}} \\',
+            '    CONFIG.Enable_32bit_Address {false} \\',
+            '    CONFIG.Algorithm {Minimum_Area} \\',
+            '    CONFIG.Primitive {8kx2} \\',
+            '    CONFIG.Assume_Synchronous_Clk {true} \\'
+        ]
+    
+        # Port A configuration (write port for dual-port, read/write for single-port)
+        if has_write:
+            config_dict.extend([
+                f'    CONFIG.Write_Width_A {{{self.width}}} \\',
+                f'    CONFIG.Write_Depth_A {{{self.height}}} \\',
+                '    CONFIG.Enable_A {Always_Enabled} \\',
+                '    CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \\'
+            ])
+    
+            # Add byte write enable if width is multiple of 8
+            if self.width % 8 == 0:
+                config_dict.extend([
+                    '    CONFIG.Use_Byte_Write_Enable {true} \\',
+                    f'    CONFIG.Byte_Size {8} \\'
+                ])
+            else:
+                config_dict.extend([
+                    '    CONFIG.Use_Byte_Write_Enable {false} \\'
+                ])
+    
+        # Port B configuration (read port for dual-port)
+        if mem_type in ["Simple_Dual_Port_RAM", "True_Dual_Port_RAM"]:
+            config_dict.extend([
+                f'    CONFIG.Read_Width_B {{{self.width}}} \\',
+                '    CONFIG.Enable_B {Always_Enabled} \\',
+                '    CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \\',
+                '    CONFIG.Port_B_Clock {100} \\',
+                '    CONFIG.Port_B_Enable_Rate {100} \\'
+            ])
+            if mem_type == "True_Dual_Port_RAM":
+                config_dict.extend([
+                    f'    CONFIG.Write_Width_B {{{self.width}}} \\'
+                ])
+    
+        # Start TCL script
+        tcl = [
+            "# Create the IP directory and set the current directory",
+            "set proj_dir $::env(PWD)",
+            "set ip_dir ${proj_dir}/ip",
+            "file mkdir ${ip_dir}",
+            "cd ${ip_dir}",
+            "create_project bram_test . -part xc7a35ticsg324-1L",
+            "",
+            "# Create the Block Memory Generator",
+            f'create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name {self.name}',
+            "",
+            "# Configure the core",
+            f'set_property -dict [list \\',
+            *config_dict,
+            f'] [get_ips {self.name}]',
+            "",
+            "# Generate the IP",
+            f'generate_target all [get_ips {self.name}]',
+            "",
+            "# Run synthesis",
+            f'synth_design -top {self.name}'
+        ]
+    
+        return '\n'.join(tcl)
 
 def test_1r1w():
     pyrtl.reset_working_block()
@@ -674,6 +724,48 @@ def test_1r1w_openram_sram():
     pyrtl.working_block().sanity_check()
     print(mem.to_openram_sram())
 
+def test_1r1w_vivado_bram():
+    pyrtl.reset_working_block()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("test 1r1w OpenRAM SRAM")
+
+    # OpenRAM scn4m requires minimum height of 16 rows
+    addr_width = 4
+    val_width = 16
+    
+    waddr = pyrtl.Input(addr_width, 'waddr')
+    raddr = pyrtl.Input(addr_width, 'raddr')
+    w_en = pyrtl.Input(1, 'w_en')
+
+    rdata = pyrtl.WireVector(val_width, 'rdata')
+    inc = pyrtl.WireVector(val_width, 'inc')
+    inc <<= rdata + 1
+
+    mem = AbstractMem(
+            width=val_width,
+            height=(addr_width ** 2),
+            name='mem',
+            read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
+            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            )
+    mem.to_pyrtl(pyrtl.working_block())
+
+    ## Expected PyRTL:
+    # mem = pyrtl.MemBlock(
+    #      bitwidth=val_width,
+    #      addrwidth=addr_width,
+    #      name='mem',
+    #      max_read_ports=1,
+    #      max_write_ports=1)
+    # data <<= mem[raddr] + 1
+    # mem[waddr] <<= pyrtl.MemBlock.EnabledWrite(data, enable=en)
+    
+    data_o = pyrtl.Output(val_width, 'data_o')
+    data_o <<= inc
+
+    pyrtl.working_block().sanity_check()
+    print(mem.to_vivado_bram_tcl())
+
 if __name__ == '__main__':
 
     test_1r1w()
@@ -693,3 +785,5 @@ if __name__ == '__main__':
     test_1r1w_bram()
 
     test_1r1w_openram_sram()
+
+    test_1r1w_vivado_bram()
