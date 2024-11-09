@@ -246,33 +246,46 @@ class AbstractMem:
     
         return t
 
-    def to_open_ram_sram(self):
+    def to_open_ram_sram(self,
+                         tech_name = "scn4m_subm",
+                         supply_voltages = [5.0],
+                         temperatures = [40],
+                         route_supplies = "side"
+                         ):
+        shared_rw = len(self.read_ports) == 1 \
+                    and self.read_ports[0].addr.name == self.write_port.addr.name
 
-        s = '''
-word_size = 2
-num_words = 16
+        # 1rw
+        num_rw = 1 if shared_rw else 0
+        # Nr1w
+        num_read = 0 if shared_rw else len(self.read_ports)
+        num_write = 0 if shared_rw else 1
 
-num_rw_ports = 1
-num_r_ports = 0
-num_w_ports = 0
+        s = f"""
+word_size = {self.width}
+num_words = {self.height}
 
-tech_name = "scn4m_subm"
+num_rw_ports = {num_rw}
+num_r_ports = {num_read}
+num_w_ports = {num_write}
+
+tech_name = "{tech_name}"
 nominal_corner_only = False
 process_corners = ["TT"]
-supply_voltages = [5.0]
-temperatures = [25]
+supply_voltages = {supply_voltages}
+temperatures = {temperatures}
 
-route_supplies = "side"
+route_supplies = "{route_supplies}"
 check_lvsdrc = True
 
-output_name = "sram_{0}rw{1}r{2}w_{3}_{4}_{5}".format(num_rw_ports,
+output_name = "sram_{{0}}rw{{1}}r{{2}}w_{{3}}_{{4}}_{{5}}".format(num_rw_ports,
                                                       num_r_ports,
                                                       num_w_ports,
                                                       word_size,
                                                       num_words,
                                                       tech_name)
-output_path = "macro/{}".format(output_name)
-''' 
+output_path = "macro/{{}}".format(output_name)
+"""
         return s
 
     def to_tcl(self):
@@ -359,6 +372,7 @@ def test_1r1w():
 
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
+    print(mem.to_open_ram_sram())
 
 def test_1r1w_llr():
     pyrtl.reset_working_block()
@@ -466,6 +480,7 @@ def test_2r1w():
 
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
+    print(mem.to_open_ram_sram())
 
 def test_2r1w_rw():
     pyrtl.reset_working_block()
@@ -541,6 +556,7 @@ def test_1rw():
 
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
+    print(mem.to_open_ram_sram())
 
 def test_1rw_bit_mask():
     pyrtl.reset_working_block()
