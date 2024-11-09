@@ -246,7 +246,7 @@ class AbstractMem:
     
         return t
 
-    def to_open_ram_sram(self,
+    def to_openram_sram(self,
                          tech_name = "scn4m_subm",
                          supply_voltages = [5.0],
                          temperatures = [40],
