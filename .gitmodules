@@ -1,3 +1,0 @@
-[submodule "abstract-mem/BD-PyRTL-RV"]
-	path = abstract-mem/BD-PyRTL-RV
-	url = git@github.com:pllab/BD-PyRTL-RV.git
