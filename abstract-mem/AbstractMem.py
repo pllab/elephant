@@ -45,10 +45,6 @@ class AbstractMem:
         if self.latch_last_read and len(self.read_ports) > 1:
             raise Exception("Error, cannot set latch_last_read with more than 1 read port")
 
-    # TODO
-    def to_tcl(self):
-        return ""
-
     def to_bsg_mem(self, clock_name, reset_name):
         shared_rw = False
         if len(self.read_ports) == 1:
@@ -250,6 +246,78 @@ class AbstractMem:
     
         return t
 
+    def to_open_ram_sram(self):
+
+        s = '''
+word_size = 2
+num_words = 16
+
+num_rw_ports = 1
+num_r_ports = 0
+num_w_ports = 0
+
+tech_name = "scn4m_subm"
+nominal_corner_only = False
+process_corners = ["TT"]
+supply_voltages = [5.0]
+temperatures = [25]
+
+route_supplies = "side"
+check_lvsdrc = True
+
+output_name = "sram_{0}rw{1}r{2}w_{3}_{4}_{5}".format(num_rw_ports,
+                                                      num_r_ports,
+                                                      num_w_ports,
+                                                      word_size,
+                                                      num_words,
+                                                      tech_name)
+output_path = "macro/{}".format(output_name)
+''' 
+        return s
+
+    def to_tcl(self):
+
+        s = '''
+# Create the IP directory and set the current directory
+set proj_dir $::env(PWD)
+set ip_dir ${proj_dir}/ip
+file mkdir ${ip_dir}
+cd ${ip_dir}
+create_project bram_test . -part xc7a35ticsg324-1L
+
+# Create the Block Memory Generator
+create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name bram_64x8_1rw
+
+
+# Configure the core
+set_property -dict [list \
+    CONFIG.Component_Name {bram_64x8_1rw} \
+    CONFIG.Memory_Type {Simple_Dual_Port_RAM} \
+    CONFIG.Write_Width_A {64} \
+    CONFIG.Write_Depth_A {8} \
+    CONFIG.Read_Width_A {64} \
+    CONFIG.Write_Width_B {64} \
+    CONFIG.Read_Width_B {64} \
+    CONFIG.Enable_32bit_Address {false} \
+    CONFIG.Use_Byte_Write_Enable {false} \
+    CONFIG.Byte_Size {9} \
+    CONFIG.Algorithm {Minimum_Area} \
+    CONFIG.Primitive {8kx2} \
+    CONFIG.Assume_Synchronous_Clk {true} \
+    CONFIG.Enable_A {Always_Enabled} \
+    CONFIG.Enable_B {Always_Enabled} \
+    CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
+    CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \
+    CONFIG.Port_B_Clock {100} \
+    CONFIG.Port_B_Enable_Rate {100} \
+] [get_ips bram_64x8_1rw]
+
+# Generate the IP
+generate_target all [get_ips bram_64x8_1rw]
+
+synth_design -top bram_64x8_1rw
+'''
+        return s
 
 def test_1r1w():
     pyrtl.reset_working_block()
