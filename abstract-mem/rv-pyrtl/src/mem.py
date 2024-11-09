@@ -14,16 +14,10 @@ def inst_memory(pc):
     :return inst_mem: a reference to the memory block
     :return inst: the fetched instruction (inst_mem[pc])
     """
-    # inst_mem = pyrtl.MemBlock(
-    #     bitwidth=32, addrwidth=32, name="inst_mem", asynchronous=True
-    # )
-
     # The addresses in instruction memory are word-addressable, while the addresses produced by
     # alu operations with the immediates, pcs, etc. are byte-addressable, so we need to shift
     # the address given by two to the right to get the word address
     inst = pyrtl.WireVector(bitwidth=32, name="inst")
-    # inst <<= inst_mem[pyrtl.shift_right_logical(pc, 2)]
-
     inst_mem = AbstractMem(
             width=32,
             height=(2 ** 32),

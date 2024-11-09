@@ -22,11 +22,6 @@ def reg_file(rs1, rs2, rd, write_data, write):
     - rs2_val = R[rs2]
     - if (reg_write) R[rd] = write_data
     """
-    # rs1 = add_wire(rs1, bitwidth=5, name="rf_rs1")
-    # rs2 = add_wire(rs2, bitwidth=5, name="rf_rs2")
-    # rd = add_wire(rd, bitwidth=5, name="rf_rd")
-    # write_data = add_wire(write_data, bitwidth=32, name="rf_write_data")
-    # write = add_wire(write, bitwidth=1, name="rf_write")
 
     # PyRTL defaults to all memories having value 0. By disallowing
     # writing to the zero register with the condition in the EnabledWrite below,
@@ -35,13 +30,9 @@ def reg_file(rs1, rs2, rd, write_data, write):
     # Read async, write sync
     # NOTE: When async=False, PyRTL complains about the read-addresses not being ready,
     # since it doesn't know at this point that they're Inputs or Registers
-    # rf = pyrtl.MemBlock(bitwidth=32, addrwidth=5, name="rf", asynchronous=True)
-    # rf[rd] <<= pyrtl.MemBlock.EnabledWrite(write_data, write & (rd != 0))
 
     rs1_val = pyrtl.WireVector(bitwidth=32, name="rf_rs1_val")
     rs2_val = pyrtl.WireVector(bitwidth=32, name="rf_rs2_val")
-    # rs1_val <<= pyrtl.select(rs1 == 0, pyrtl.Const(0, bitwidth=32), rf[rs1])
-    # rs2_val <<= pyrtl.select(rs2 == 0, pyrtl.Const(0, bitwidth=32), rf[rs2])
 
     rf = AbstractMem(
             width=32,
@@ -53,7 +44,5 @@ def reg_file(rs1, rs2, rd, write_data, write):
             asynchronous=True,
             )
     rf.to_pyrtl(pyrtl.working_block())
-    # rs1_val = pyrtl.select(rs1 == 0, pyrtl.Const(0, bitwidth=32), rs1_val)
-    # rs2_val = pyrtl.select(rs2 == 0, pyrtl.Const(0, bitwidth=32), rs2_val)
 
     return rs1_val, rs2_val
