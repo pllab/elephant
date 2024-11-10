@@ -145,7 +145,7 @@ class AbstractMem:
         # If None, it is a ROM.
         if self.write_port is not None:
             if not isinstance(self.write_port, AbstractMem.WritePort):
-                raise Exception(f"Error, invalid write port: {write_port}")
+                raise Exception(f"Error, invalid write port: {self.write_port}")
 
             w_addr, w_data, w_en, w_mask = self.write_port.addr,\
                                            self.write_port.data,\
@@ -790,7 +790,7 @@ def test_1r1w_openram_sram():
 def test_1r1w_vivado_bram():
     pyrtl.reset_working_block()
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print("test 1r1w OpenRAM SRAM")
+    print("test 1r1w Vivado BRAM")
 
     # OpenRAM scn4m requires minimum height of 16 rows
     addr_width = 4
