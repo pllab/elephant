@@ -25,7 +25,6 @@ def inst_memory(pc):
             read_ports=[AbstractMem.ReadPort(pyrtl.shift_right_logical(pc, 2),
                                              inst,
                                              pyrtl.Const(1,bitwidth=1))],
-            write_port=None,
             asynchronous=True,
             )
     inst_mem.to_pyrtl(pyrtl.working_block())
@@ -52,6 +51,7 @@ def data_memory(addr, write_data, read, write, mask_mode, sign_ext):
     read_data = pyrtl.WireVector(32)
     mask_val = pyrtl.WireVector(32)
 
+    # TODO: Move this into control logic
     with pyrtl.conditional_assignment:
         with mask_mode == MaskMode.BYTE:
             with offset == 0:
@@ -70,39 +70,17 @@ def data_memory(addr, write_data, read, write, mask_mode, sign_ext):
         with pyrtl.otherwise:
             mask_val |= pyrtl.Const("32'hffffffff")
     
+    r_mask = AbstractMem.Mask(mask_val, 8, True, sign_ext)
     w_mask = AbstractMem.Mask(mask_val, 8, True)
     data_mem = AbstractMem(
             width=32,
             height=(2 ** 32),
             name="data_mem",
-            read_ports=[AbstractMem.ReadPort(real_addr, read_data, read)],
+            read_ports=[AbstractMem.ReadPort(real_addr, read_data, read, r_mask)],
             write_port=AbstractMem.WritePort(real_addr, write_data, write, w_mask),
             asynchronous=True,
             )
     data_mem.to_pyrtl(pyrtl.working_block())
 
-    # Load
-    read_data_ext = pyrtl.WireVector(len(read_data), name="mem_read_data")
-    with pyrtl.conditional_assignment:
-        with mask_mode == MaskMode.BYTE:
-            read_data_shift = pyrtl.shift_right_logical(
-                read_data, pyrtl.concat(offset, pyrtl.Const(0, bitwidth=3))
-            )[0:8]
-            read_data_ext |= pyrtl.select(
-                sign_ext,
-                read_data_shift.sign_extended(len(read_data)),
-                read_data_shift.zero_extended(len(read_data)),
-            )
-        with mask_mode == MaskMode.SHORT:
-            read_data_shift = pyrtl.shift_right_logical(
-                read_data, pyrtl.concat(offset, pyrtl.Const(0, bitwidth=3))
-            )[0:16]
-            read_data_ext |= pyrtl.select(
-                sign_ext,
-                read_data_shift.sign_extended(len(read_data)),
-                read_data_shift.zero_extended(len(read_data)),
-            )
-        with pyrtl.otherwise:  # whole word, and sign-extending is meaningless
-            read_data_ext |= read_data
+    return read_data
 
-    return add_wire(read_data_ext, name="READ_DATA_EXT")

@@ -8,16 +8,18 @@ from functools import reduce
 class AbstractMem:
 
     @dataclass
-    class ReadPort:
-        addr: pyrtl.WireVector = None
-        data: pyrtl.WireVector = None
-        en: Any = None
-
-    @dataclass
     class Mask:
         mask: pyrtl.WireVector = None
         granularity: int = 1
         offset: bool = False
+        sign: Any = None
+
+    @dataclass
+    class ReadPort:
+        addr: pyrtl.WireVector = None
+        data: pyrtl.WireVector = None
+        en: Any = None
+        mask: 'Mask' = None
 
     @dataclass
     class WritePort:
@@ -60,9 +62,9 @@ class AbstractMem:
         mask_name = ''
         if self.write_port.mask is not None:
             if self.write_port.mask.granularity == 1:
-                mask_name = 'mask_write_bit'
+                mask_name = '_mask_write_bit'
             elif self.write_port.mask.granularity == 8:
-                mask_name = 'mask_write_byte'
+                mask_name = '_mask_write_byte'
 
         parameters_list = [f".width_p({self.width})",
                            f".els_p({self.height})"]
@@ -136,6 +138,9 @@ class AbstractMem:
             xs = pyrtl.mux(1, x[::-1], x)
             return reduce(f, xs, (pyrtl.as_wires(False), 0))[1]
 
+        def count_ones(w):
+            return reduce(pyrtl.corecircuits._basic_add, w, pyrtl.Const(0, len(w)))
+
         # Write Port
         # If None, it is a ROM.
         if self.write_port is not None:
@@ -173,7 +178,7 @@ class AbstractMem:
             if not isinstance(read_port, AbstractMem.ReadPort):
                 raise Exception(f"Error, invalid read port: {read_port}")
 
-            addr, data, en = read_port.addr, read_port.data, read_port.en
+            addr, data, en, mask = read_port.addr, read_port.data, read_port.en, read_port.mask
 
             if en is None:
                 en = pyrtl.Const(1, bitwidth=1)
@@ -199,16 +204,42 @@ class AbstractMem:
             else:
                 rdata = mem[addr_r]
 
+            if mask is not None:
+                r_mask = mask.mask
+                r_sign = mask.sign
+                num_1s = count_ones(r_mask)
+                num_0s = clz(r_mask)
+                readdata_sext = pyrtl.WireVector(self.width)
+                with pyrtl.conditional_assignment:
+                    with num_1s == 8:
+                        readdata_n = pyrtl.shift_right_logical(rdata, num_0s)[0:8]
+                        readdata_sext |= pyrtl.select(
+                            r_sign,
+                            readdata_n.sign_extended(self.width),
+                            readdata_n.zero_extended(self.width),
+                        )
+                    with num_1s == 16:
+                        readdata_n = pyrtl.shift_right_logical(rdata, num_0s)[0:16]
+                        readdata_sext |= pyrtl.select(
+                            r_sign,
+                            readdata_n.sign_extended(self.width),
+                            readdata_n.zero_extended(self.width),
+                        )
+                    with pyrtl.otherwise:  # whole word, and sign-extending is meaningless
+                        readdata_sext |= rdata
+
+            final_rdata = rdata if mask is None else readdata_sext
+
             if self.latch_last_read:
                 llr_en = pyrtl.Register(1)
                 llr_data = pyrtl.Register(self.width)
 
                 llr_en.next <<= en
-                llr_data.next <<= pyrtl.select(llr_en, rdata, llr_data)
+                llr_data.next <<= pyrtl.select(llr_en, final_rdata, llr_data)
 
                 data <<= llr_data
             else:
-                data <<= rdata
+                data <<= final_rdata
 
     def to_synthesizable_bram(self):
         #modulename, type, height_define, heightlog2_define, width_define):
@@ -663,7 +694,7 @@ def test_1rw_bit_mask():
             name='mem',
             read_ports=[AbstractMem.ReadPort(addr, rdata, ~w_en)],
             write_port=AbstractMem.WritePort(addr, inc, w_en,
-                                             AbstractMem.Mask(mask, 1 False)),
+                                             AbstractMem.Mask(mask, 1, False)),
             )
     mem.to_pyrtl(pyrtl.working_block())
 
