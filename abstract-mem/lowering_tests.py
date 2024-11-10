@@ -27,14 +27,14 @@ def test_vivado_bram(height_log2, width, num_read_ports=1, num_write_ports=0):
 
     write_port = None
     if num_write_ports > 0:
-        write_port=AbstractMem.WritePort(waddrs[0], inc, w_ens[0]),
+        write_port=AbstractMem.WritePort(waddrs[0], inc, w_ens[0])
 
     mem = AbstractMem(
             width=val_width,
             height=(addr_width ** 2),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddrs[i], rdatas[i], pyrtl.Const(1,bitwidth=1)) for i in range(num_read_ports)],
-            write_port=write_port
+            write_port=write_port,
             )
     mem.to_pyrtl(pyrtl.working_block())
 
