@@ -465,7 +465,7 @@ def test_1r1w():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
             write_port=AbstractMem.WritePort(waddr, inc, w_en),
@@ -506,7 +506,7 @@ def test_1r1w_llr():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
             write_port=AbstractMem.WritePort(waddr, inc, w_en),
@@ -537,7 +537,7 @@ def test_1r1w_rw():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
             write_port=AbstractMem.WritePort(waddr, inc, w_en),
@@ -615,7 +615,7 @@ def test_2r1w_rw():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr1, rdata1, pyrtl.Const(1,bitwidth=1)),
                         AbstractMem.ReadPort(raddr2, rdata2, pyrtl.Const(1,bitwidth=1))],
@@ -657,7 +657,7 @@ def test_1rw():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(addr, rdata, ~w_en)],
             write_port=AbstractMem.WritePort(addr, inc, w_en),
@@ -722,7 +722,7 @@ def test_1r1w_bram():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
             write_port=AbstractMem.WritePort(waddr, inc, w_en),
@@ -764,7 +764,7 @@ def test_1r1w_openram_sram():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
             write_port=AbstractMem.WritePort(waddr, inc, w_en),
@@ -806,7 +806,7 @@ def test_1r1w_vivado_bram():
 
     mem = AbstractMem(
             width=val_width,
-            height=(addr_width ** 2),
+            height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
             write_port=AbstractMem.WritePort(waddr, inc, w_en),
