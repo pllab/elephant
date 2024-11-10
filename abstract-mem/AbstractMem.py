@@ -3,6 +3,7 @@ from collections import namedtuple
 from math import log2
 from dataclasses import dataclass
 from typing import Any
+from functools import reduce
 
 class AbstractMem:
 
@@ -14,9 +15,9 @@ class AbstractMem:
 
     @dataclass
     class Mask:
-        # TODO: change granularity to be a power of 2
-        bit: bool = True
         mask: pyrtl.WireVector = None
+        granularity: int = 1
+        offset: bool = False
 
     @dataclass
     class WritePort:
@@ -58,9 +59,9 @@ class AbstractMem:
 
         mask_name = ''
         if self.write_port.mask is not None:
-            if self.write_port.mask.bit:
+            if self.write_port.mask.granularity == 1:
                 mask_name = 'mask_write_bit'
-            else:
+            elif self.write_port.mask.granularity == 8:
                 mask_name = 'mask_write_byte'
 
         parameters_list = [f".width_p({self.width})",
@@ -125,30 +126,47 @@ class AbstractMem:
                              block=block,
                              )
 
+        def clz(x):
+            def f(accum, x):
+                found, count = accum
+                is_zero = x == 0
+                to_add = ~found & is_zero
+                count = count + to_add
+                return (found | ~is_zero, count)
+            xs = pyrtl.mux(1, x[::-1], x)
+            return reduce(f, xs, (pyrtl.as_wires(False), 0))[1]
+
         # Write Port
         # If None, it is a ROM.
         if self.write_port is not None:
             if not isinstance(self.write_port, AbstractMem.WritePort):
                 raise Exception(f"Error, invalid write port: {write_port}")
 
-            w_addr, w_data, w_en, w_mask = self.write_port.addr, self.write_port.data,\
-                                           self.write_port.en, self.write_port.mask
+            w_addr, w_data, w_en, w_mask = self.write_port.addr,\
+                                           self.write_port.data,\
+                                           self.write_port.en,\
+                                           self.write_port.mask
 
             if w_mask is not None:
                 og_data = mem[w_addr]
-                if w_mask.bit:
-                    w_data = pyrtl.concat_list(
+
+                if w_mask.offset == False:
+                    mask_data = pyrtl.concat_list(
                             [pyrtl.select(w_en & w_mask.mask[i], w_data[i], og_data[i])
                              for i in range(self.width)])
-                # TODO: Finish byte mask
-                # else:
-                #     mask_width = self.width >> 3
-                #     w_data = 
+                elif w_mask.offset == True:
+                    num_0s = clz(w_mask.mask)
+                    data_shifted = pyrtl.WireVector(self.width)
+                    data_shifted <<= pyrtl.shift_left_logical(w_data, num_0s)
+                    mask_data = pyrtl.concat_list(
+                            [pyrtl.select(w_en & w_mask.mask[i], data_shifted[i], og_data[i])
+                             for i in range(self.width)])
 
+            final_data = w_data if w_mask is None else mask_data
             if w_en is None:
-                mem[w_addr] <<= w_data
+                mem[w_addr] <<= final_data
             else:
-                mem[w_addr] <<= pyrtl.MemBlock.EnabledWrite(w_data, enable=w_en)
+                mem[w_addr] <<= pyrtl.MemBlock.EnabledWrite(final_data, enable=w_en)
 
         # Read Ports
         for read_port in self.read_ports:
@@ -644,7 +662,8 @@ def test_1rw_bit_mask():
             height=(addr_width ** 2),
             name='mem',
             read_ports=[AbstractMem.ReadPort(addr, rdata, ~w_en)],
-            write_port=AbstractMem.WritePort(addr, inc, w_en, AbstractMem.Mask(True, mask)),
+            write_port=AbstractMem.WritePort(addr, inc, w_en,
+                                             AbstractMem.Mask(mask, 1 False)),
             )
     mem.to_pyrtl(pyrtl.working_block())
 

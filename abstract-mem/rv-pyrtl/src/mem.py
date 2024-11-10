@@ -46,51 +46,40 @@ def data_memory(addr, write_data, read, write, mask_mode, sign_ext):
 
     :return: data read from addr
     """
-    addr = add_wire(addr, bitwidth=32, name="mem_addr")
-    write_data = add_wire(write_data, bitwidth=32, name="mem_write_data")
-    read = add_wire(read, bitwidth=1, name="mem_read")
-    write = add_wire(write, bitwidth=1, name="mem_write")
-    mask_mode = add_wire(mask_mode, bitwidth=2, name="mem_mask_mode")
-    sign_ext = add_wire(sign_ext, bitwidth=1, name="mem_sign_ext")
-
-    data_mem = pyrtl.MemBlock(
-        bitwidth=32, addrwidth=32, name="data_mem", asynchronous=True
-    )
 
     real_addr = pyrtl.shift_right_arithmetic(addr, 2)
     offset = addr[0:2]  # lower 2 bits determine if its byte 0, 1, 2, or 3 of word
-    read_data = data_mem[real_addr]
+    read_data = pyrtl.WireVector(32)
+    mask_val = pyrtl.WireVector(32)
 
-    # Store: write the particular byte/halfword/word to memory and maintain
-    # the other bytes (in the class of byte/halfword) already present
-    to_write = pyrtl.WireVector(len(write_data))
     with pyrtl.conditional_assignment:
         with mask_mode == MaskMode.BYTE:
             with offset == 0:
-                to_write |= pyrtl.concat(read_data[8:32], write_data[0:8])
+                mask_val |= pyrtl.Const("32'hff")
             with offset == 1:
-                to_write |= pyrtl.concat(
-                    read_data[16:32], write_data[0:8], read_data[0:8]
-                )
+                mask_val |= pyrtl.Const("32'hff00")
             with offset == 2:
-                to_write |= pyrtl.concat(
-                    read_data[24:32], write_data[0:8], read_data[0:16]
-                )
+                mask_val |= pyrtl.Const("32'hff0000")
             with pyrtl.otherwise:
-                to_write |= pyrtl.concat(write_data[0:8], read_data[0:24])
+                mask_val |= pyrtl.Const("32'hff000000")
         with mask_mode == MaskMode.SHORT:
             with offset == 0:
-                to_write |= pyrtl.concat(read_data[16:32], write_data[0:16])
-            with offset == 1:  # illegal non-aligned write
-                to_write |= pyrtl.concat(
-                    read_data[24:32], write_data[0:16], read_data[0:8]
-                )
+                mask_val |= pyrtl.Const("32'hffff")
             with pyrtl.otherwise:
-                to_write |= pyrtl.concat(write_data[0:16], read_data[0:16])
+                mask_val |= pyrtl.Const("32'hffff0000")
         with pyrtl.otherwise:
-            to_write |= write_data
-
-    data_mem[real_addr] <<= pyrtl.MemBlock.EnabledWrite(to_write, write)
+            mask_val |= pyrtl.Const("32'hffffffff")
+    
+    w_mask = AbstractMem.Mask(mask_val, 8, True)
+    data_mem = AbstractMem(
+            width=32,
+            height=(2 ** 32),
+            name="data_mem",
+            read_ports=[AbstractMem.ReadPort(real_addr, read_data, read)],
+            write_port=AbstractMem.WritePort(real_addr, write_data, write, w_mask),
+            asynchronous=True,
+            )
+    data_mem.to_pyrtl(pyrtl.working_block())
 
     # Load
     read_data_ext = pyrtl.WireVector(len(read_data), name="mem_read_data")
