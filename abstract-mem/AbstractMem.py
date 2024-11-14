@@ -33,7 +33,7 @@ class AbstractMem:
                  height,
                  name='',
                  read_ports=[],
-                 write_port=None,
+                 write_ports=[],
                  rw_fwd=False,
                  latch_last_read=False,
                  asynchronous=False,
@@ -42,7 +42,7 @@ class AbstractMem:
         self.height = height
         self.name = name
         self.read_ports = read_ports
-        self.write_port = write_port
+        self.write_ports = write_ports
         self.rw_fwd = rw_fwd
         self.latch_last_read = latch_last_read
         self.asynchronous=asynchronous
@@ -51,20 +51,51 @@ class AbstractMem:
             raise Exception("Error, cannot set latch_last_read with more than 1 read port")
 
     def to_bsg_mem(self, clock_name, reset_name):
+        # TODO: This isn't right. bsg_mem has a 2rw.
+        # Need to detect if it is 2rw.
+
         shared_rw = False
-        if len(self.read_ports) == 1:
-            if self.read_ports[0].addr.name == self.write_port.addr.name:
+        if len(self.read_ports) == 1 and len(self.write_ports) == 1:
+            if self.read_ports[0].addr.name == self.write_ports[0].addr.name:
                 shared_rw = True
+        elif len(self.read_ports) == 2 and len(self.write_ports) == 2:
+            if (self.read_ports[0].addr.name == self.write_ports[0].addr.name) and (self.read_ports[1].addr.name == self.write_ports[1].addr.name):
+                shared_rw = True
+
+        if not shared_rw and len(self.write_ports) > 1:
+            raise Exception("Error, bsg_mem does not support more than 1 write port")
 
         r = str(len(self.read_ports))
         w = '' if shared_rw else '1'
 
-        mask_name = ''
-        if self.write_port.mask is not None:
-            if self.write_port.mask.granularity == 1:
-                mask_name = '_mask_write_bit'
-            elif self.write_port.mask.granularity == 8:
-                mask_name = '_mask_write_byte'
+        mask_name = dict()
+        for write_port in self.write_ports:
+            if write_port.mask is not None:
+                if write_port.mask.granularity == 1:
+                    if '_mask_write_bit' in mask_name:
+                        mask_name['_mask_write_bit'].append('b')
+                    else:
+                        mask_name['_mask_write_bit'] = ['a']
+                elif write_port.mask.granularity == 8:
+                    if '_mask_write_byte' in mask_name:
+                        mask_name['_mask_write_byte'].append('b')
+                    else:
+                        mask_name['_mask_write_byte'] = ['a']
+
+        if len(mask_name) > 1:
+            raise Exception("Error, conflicting mask settings.")
+        if len(mask_name) == 0:
+            mask_name = ""
+            mask_str = ""
+        else:
+            mask_name, mask_ids = mask_name.popitem()
+            if len(mask_ids) == 1:
+                mask_str = f"   ,.w_mask_i({write_port.mask.mask.name})\n"
+            elif len(mask_ids) == 2:
+                mask_str  = f"   ,.a_mask_i({write_port.mask.mask.name})\n"
+                mask_str += f"   ,.b_mask_i({write_port.mask.mask.name})\n"
+            else:
+                mask_str = ""
 
         parameters_list = [f".width_p({self.width})",
                            f".els_p({self.height})"]
@@ -81,22 +112,31 @@ class AbstractMem:
 
         module_name = f"bsg_msm_{r}r{w}w_sync{mask_name}\n"
 
-        if shared_rw:
-            write_str = (f"   ,.data_i({self.write_port.data.name})\n" +
-                         f"   ,.addr_i({self.write_port.addr.name})\n" +
+        if shared_rw and len(self.write_ports) == 1:
+            write_str = (f"   ,.data_i({self.write_ports[0].data.name})\n" +
+                         f"   ,.addr_i({self.write_ports[0].addr.name})\n" +
                          f"   ,.v_i({self.read_ports[0].en.name})\n" +
-                         f"   ,.w_i({self.write_port.en.name})\n" +
+                         f"   ,.w_i({self.write_ports[0].en.name})\n" +
                          f"   ,.data_o({self.read_ports[0].data.name})\n"
                          )
+        elif shared_rw and len(self.write_ports) == 2:
+            write_str = (f"   ,.a_data_i({self.write_ports[0].data.name})\n" +
+                         f"   ,.a_addr_i({self.write_ports[0].addr.name})\n" +
+                         f"   ,.a_v_i({self.read_ports[0].en.name})\n" +
+                         f"   ,.a_w_i({self.write_ports[0].en.name})\n" +
+                         f"   ,.a_data_o({self.read_ports[0].data.name})\n"
+                         )
+            write_str += (f"  ,.b_data_i({self.write_ports[1].data.name})\n" +
+                         f"   ,.b_addr_i({self.write_ports[1].addr.name})\n" +
+                         f"   ,.b_v_i({self.read_ports[1].en.name})\n" +
+                         f"   ,.b_w_i({self.write_ports[1].en.name})\n" +
+                         f"   ,.b_data_o({self.read_ports[1].data.name})\n"
+                         )
         else:
-            write_str = (f"   ,.w_v_i({self.write_port.en.name})\n" +
-                         f"   ,.w_addr_i({self.write_port.addr.name})\n" +
-                         f"   ,.w_data_i({self.write_port.data.name})\n\n")
+            write_str = (f"   ,.w_v_i({self.write_ports[0].en.name})\n" +
+                         f"   ,.w_addr_i({self.write_ports[0].addr.name})\n" +
+                         f"   ,.w_data_i({self.write_ports[0].data.name})\n\n")
 
-        if mask_name != '':
-            mask_str = f"   ,.w_mask_i({self.write_port.mask.mask.name})\n"
-        else:
-            mask_str = ""
 
         read_str = ""
         if not shared_rw:
@@ -122,8 +162,8 @@ class AbstractMem:
         mem = pyrtl.MemBlock(bitwidth=self.width,
                              addrwidth=addrwidth,
                              name=self.name,
-                             # max_read_ports=len(self.read_ports),
-                             max_write_ports=1,
+                             #max_read_ports=len(self.read_ports),
+                             max_write_ports=len(self.write_ports),
                              asynchronous=self.asynchronous,
                              block=block,
                              )
@@ -142,15 +182,14 @@ class AbstractMem:
             return reduce(pyrtl.corecircuits._basic_add, w, pyrtl.Const(0, len(w)))
 
         # Write Port
-        # If None, it is a ROM.
-        if self.write_port is not None:
-            if not isinstance(self.write_port, AbstractMem.WritePort):
-                raise Exception(f"Error, invalid write port: {self.write_port}")
+        for write_port in self.write_ports:
+            if not isinstance(write_port, AbstractMem.WritePort):
+                raise Exception(f"Error, invalid write port: {write_port}")
 
-            w_addr, w_data, w_en, w_mask = self.write_port.addr,\
-                                           self.write_port.data,\
-                                           self.write_port.en,\
-                                           self.write_port.mask
+            w_addr, w_data, w_en, w_mask = write_port.addr,\
+                                           write_port.data,\
+                                           write_port.en,\
+                                           write_port.mask
 
             if w_mask is not None:
                 og_data = mem[w_addr]
@@ -248,9 +287,15 @@ class AbstractMem:
         heightlog2_define = int(log2(self.height))
         width_define = self.width
 
+        if len(self.write_ports) > 1:
+            raise Exception("Error: Synthesizable BRAM does not support more than one write port.")
+
+        write_port = self.write_ports[0]
+
         shared_rw = False
         if len(self.read_ports) == 1:
-            if self.read_ports[0].addr.name == self.write_port.addr.name:
+            if self.read_ports[0].addr.name == write_port.addr.name:
+
                 shared_rw = True
 
         r = str(len(self.read_ports))
@@ -314,9 +359,9 @@ class AbstractMem:
                          temperatures = [40],
                          route_supplies = "side"
                          ):
-        if (self.write_port is not None):
+        if len(self.write_ports) == 1:
             shared_rw = len(self.read_ports) == 1 \
-                        and self.read_ports[0].addr.name == self.write_port.addr.name
+                        and self.read_ports[0].addr.name == self.write_ports[0].addr.name
         else:
             shared_rw = False
 
@@ -324,7 +369,7 @@ class AbstractMem:
         num_rw = 1 if shared_rw else 0
         # Nr1w
         num_read = 0 if shared_rw else len(self.read_ports)
-        num_write = 0 if (shared_rw or (self.write_port is None)) else 1
+        num_write = 0 if (shared_rw or (len(self.write_ports) == 0)) else 1
 
         s = f"""
 word_size = {self.width}
@@ -358,7 +403,7 @@ output_path = "macro/{{}}".format(output_name)
     
         # Validate ports
         has_read = self.read_ports is not None and len(self.read_ports) > 0
-        has_write = self.write_port is not None
+        has_write = self.write_ports is not None and len(self.write_ports) > 0
     
         # Determine memory type based on ports
         if not has_read and not has_write:
@@ -368,7 +413,7 @@ output_path = "macro/{{}}".format(output_name)
         elif not has_read:
             raise ValueError("Write-only memory not supported in Vivado BRAM")
         elif len(self.read_ports) == 1:
-            if self.read_ports[0].addr.name == self.write_port.addr.name:
+            if self.read_ports[0].addr.name == self.write_ports[0].addr.name:
                 mem_type = "Single_Port_RAM"
             else:
                 mem_type = "Simple_Dual_Port_RAM"
@@ -468,7 +513,7 @@ def test_1r1w():
             height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
-            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            write_ports=[AbstractMem.WritePort(waddr, inc, w_en)],
             )
     mem.to_pyrtl(pyrtl.working_block())
 
@@ -509,7 +554,7 @@ def test_1r1w_llr():
             height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
-            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            write_ports=[AbstractMem.WritePort(waddr, inc, w_en)],
             latch_last_read=True,
             )
     mem.to_pyrtl(pyrtl.working_block())
@@ -540,7 +585,7 @@ def test_1r1w_rw():
             height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
-            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            write_ports=[AbstractMem.WritePort(waddr, inc, w_en)],
             rw_fwd=True,
             )
     mem.to_pyrtl(pyrtl.working_block())
@@ -575,19 +620,9 @@ def test_2r1w():
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr1, rdata1, pyrtl.Const(1,bitwidth=1)),
                         AbstractMem.ReadPort(raddr2, rdata2, pyrtl.Const(1,bitwidth=1))],
-            write_port=AbstractMem.WritePort(waddr, sum, w_en),
+            write_ports=[AbstractMem.WritePort(waddr, sum, w_en)],
             )
     mem.to_pyrtl(pyrtl.working_block())
-
-    ## Expected PyRTL:
-    # mem = pyrtl.MemBlock(
-    #      bitwidth=val_width,
-    #      addrwidth=addr_width,
-    #      name='mem',
-    #      max_read_ports=2,
-    #      max_write_ports=1)
-    # data <<= mem[raddr] + 1
-    # mem[waddr] <<= pyrtl.MemBlock.EnabledWrite(data, enable=en)
     
     data_o = pyrtl.Output(val_width, 'data_o')
     data_o <<= sum
@@ -619,21 +654,11 @@ def test_2r1w_rw():
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr1, rdata1, pyrtl.Const(1,bitwidth=1)),
                         AbstractMem.ReadPort(raddr2, rdata2, pyrtl.Const(1,bitwidth=1))],
-            write_port=AbstractMem.WritePort(waddr, sum, w_en),
+            write_ports=[AbstractMem.WritePort(waddr, sum, w_en)],
             rw_fwd=True,
             )
     mem.to_pyrtl(pyrtl.working_block())
 
-    ## Expected PyRTL:
-    # mem = pyrtl.MemBlock(
-    #      bitwidth=val_width,
-    #      addrwidth=addr_width,
-    #      name='mem',
-    #      max_read_ports=2,
-    #      max_write_ports=1)
-    # data <<= mem[raddr] + 1
-    # mem[waddr] <<= pyrtl.MemBlock.EnabledWrite(data, enable=en)
-    
     data_o = pyrtl.Output(val_width, 'data_o')
     data_o <<= sum
 
@@ -660,7 +685,7 @@ def test_1rw():
             height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(addr, rdata, ~w_en)],
-            write_port=AbstractMem.WritePort(addr, inc, w_en),
+            write_ports=[AbstractMem.WritePort(addr, inc, w_en)],
             )
     mem.to_pyrtl(pyrtl.working_block())
 
@@ -693,13 +718,51 @@ def test_1rw_bit_mask():
             height=(addr_width ** 2),
             name='mem',
             read_ports=[AbstractMem.ReadPort(addr, rdata, ~w_en)],
-            write_port=AbstractMem.WritePort(addr, inc, w_en,
-                                             AbstractMem.Mask(mask, 1, False)),
+            write_ports=[AbstractMem.WritePort(addr, inc, w_en,
+                                             AbstractMem.Mask(mask, 1, False))],
             )
     mem.to_pyrtl(pyrtl.working_block())
 
     data_o = pyrtl.Output(val_width, 'data_o')
     data_o <<= inc
+
+    pyrtl.working_block().sanity_check()
+    print(mem.to_bsg_mem('clk_i', 'reset_i'))
+
+def test_2rw():
+    pyrtl.reset_working_block()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("test 2rw")
+
+    addr_width = 2
+    val_width = 2
+    
+    a_addr = pyrtl.Input(addr_width, 'a_addr')
+    b_addr = pyrtl.Input(addr_width, 'b_addr')
+    a_en = pyrtl.Input(1, 'a_en')
+    b_en = pyrtl.Input(1, 'b_en')
+
+    a_data_i = pyrtl.Input(val_width, 'a_data_i')
+    b_data_i = pyrtl.Input(val_width, 'b_data_i')
+
+    a_data = pyrtl.WireVector(val_width, 'a_data')
+    b_data = pyrtl.WireVector(val_width, 'b_data')
+
+    mem = AbstractMem(
+            width=val_width,
+            height=(2 ** addr_width),
+            name='mem',
+            read_ports=[AbstractMem.ReadPort(a_addr, a_data, ~a_en),
+                        AbstractMem.ReadPort(b_addr, b_data, ~b_en)],
+            write_ports=[AbstractMem.WritePort(a_addr, a_data_i, a_en),
+                         AbstractMem.WritePort(b_addr, b_data_i, b_en)],
+            )
+    mem.to_pyrtl(pyrtl.working_block())
+
+    a_data_o = pyrtl.Output(val_width, 'a_data_o')
+    b_data_o = pyrtl.Output(val_width, 'b_data_o')
+    a_data_o <<= a_data
+    b_data_o <<= b_data
 
     pyrtl.working_block().sanity_check()
     print(mem.to_bsg_mem('clk_i', 'reset_i'))
@@ -725,19 +788,9 @@ def test_1r1w_bram():
             height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
-            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            write_ports=[AbstractMem.WritePort(waddr, inc, w_en)],
             )
     mem.to_pyrtl(pyrtl.working_block())
-
-    ## Expected PyRTL:
-    # mem = pyrtl.MemBlock(
-    #      bitwidth=val_width,
-    #      addrwidth=addr_width,
-    #      name='mem',
-    #      max_read_ports=1,
-    #      max_write_ports=1)
-    # data <<= mem[raddr] + 1
-    # mem[waddr] <<= pyrtl.MemBlock.EnabledWrite(data, enable=en)
     
     data_o = pyrtl.Output(val_width, 'data_o')
     data_o <<= inc
@@ -767,19 +820,9 @@ def test_1r1w_openram_sram():
             height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
-            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            write_ports=[AbstractMem.WritePort(waddr, inc, w_en)],
             )
     mem.to_pyrtl(pyrtl.working_block())
-
-    ## Expected PyRTL:
-    # mem = pyrtl.MemBlock(
-    #      bitwidth=val_width,
-    #      addrwidth=addr_width,
-    #      name='mem',
-    #      max_read_ports=1,
-    #      max_write_ports=1)
-    # data <<= mem[raddr] + 1
-    # mem[waddr] <<= pyrtl.MemBlock.EnabledWrite(data, enable=en)
 
     data_o = pyrtl.Output(val_width, 'data_o')
     data_o <<= inc
@@ -809,19 +852,9 @@ def test_1r1w_vivado_bram():
             height=(2 ** addr_width),
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
-            write_port=AbstractMem.WritePort(waddr, inc, w_en),
+            write_ports=[AbstractMem.WritePort(waddr, inc, w_en)],
             )
     mem.to_pyrtl(pyrtl.working_block())
-
-    ## Expected PyRTL:
-    # mem = pyrtl.MemBlock(
-    #      bitwidth=val_width,
-    #      addrwidth=addr_width,
-    #      name='mem',
-    #      max_read_ports=1,
-    #      max_write_ports=1)
-    # data <<= mem[raddr] + 1
-    # mem[waddr] <<= pyrtl.MemBlock.EnabledWrite(data, enable=en)
     
     data_o = pyrtl.Output(val_width, 'data_o')
     data_o <<= inc
@@ -844,6 +877,8 @@ if __name__ == '__main__':
     test_1rw()
 
     test_1rw_bit_mask()
+
+    test_2rw()
 
     test_1r1w_bram()
 
