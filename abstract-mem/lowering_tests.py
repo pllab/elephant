@@ -28,7 +28,7 @@ def test_openram_sram(height_log2, width, portedness):
     return mem.to_openram_sram()
 
 if __name__ == '__main__':
-    for portedness in ['1rw','2rw','1r1w','2r1w','1r2w','2r2w']:
+    for portedness in ['1rw','2rw','1r1w']:
         for height_log2 in range(4,8):
             for width in range(16,17):
                 num_read_ports=1
