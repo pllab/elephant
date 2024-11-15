@@ -2387,6 +2387,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * picorv32
  ***************************************************************/
 
+(* dont_touch = "yes" *)
 module picorv32 #(
 	parameter [ 0:0] ENABLE_COUNTERS = 1,
 	parameter [ 0:0] ENABLE_COUNTERS64 = 1,
@@ -4549,6 +4550,7 @@ endmodule
 // memory resources to implement the processor register file.
 // Note that your implementation must match the requirements of
 // the PicoRV32 configuration. (e.g. QREGS, etc)
+(* dont_touch = "yes" *)
 module picorv32_regs (
 	input clk, wen,
 	input [5:0] waddr,
@@ -4572,6 +4574,7 @@ endmodule
  * picorv32_pcpi_mul
  ***************************************************************/
 
+(* dont_touch = "yes" *)
 module picorv32_pcpi_mul #(
 	parameter STEPS_AT_ONCE = 1,
 	parameter CARRY_CHAIN = 4
@@ -4693,6 +4696,7 @@ module picorv32_pcpi_mul #(
 	end
 endmodule
 
+(* dont_touch = "yes" *)
 module picorv32_pcpi_fast_mul #(
 	parameter EXTRA_MUL_FFS = 0,
 	parameter EXTRA_INSN_FFS = 0,
@@ -4795,6 +4799,7 @@ endmodule
  * picorv32_pcpi_div
  ***************************************************************/
 
+(* dont_touch = "yes" *)
 module picorv32_pcpi_div (
 	input clk, resetn,
 
@@ -4892,6 +4897,7 @@ endmodule
  * picorv32_axi
  ***************************************************************/
 
+(* dont_touch = "yes" *)
 module picorv32_axi #(
 	parameter [ 0:0] ENABLE_COUNTERS = 1,
 	parameter [ 0:0] ENABLE_COUNTERS64 = 1,
@@ -5106,6 +5112,7 @@ endmodule
  * picorv32_axi_adapter
  ***************************************************************/
 
+(* dont_touch = "yes" *)
 module picorv32_axi_adapter (
 	input clk, resetn,
 
@@ -5190,6 +5197,7 @@ endmodule
  * picorv32_wb
  ***************************************************************/
 
+(* dont_touch = "yes" *)
 module picorv32_wb #(
 	parameter [ 0:0] ENABLE_COUNTERS = 1,
 	parameter [ 0:0] ENABLE_COUNTERS64 = 1,
@@ -5451,6 +5459,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+(* dont_touch = "yes" *)
 module pico_reset(
     input wire gclk,
     input wire rst_n,

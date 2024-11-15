@@ -50,6 +50,97 @@ class AbstractMem:
         if self.latch_last_read and len(self.read_ports) > 1:
             raise Exception("Error, cannot set latch_last_read with more than 1 read port")
 
+    def create_mem(width, height_log2, name='', config='1rw', **kwargs):
+        """
+        Factory function to create AbstractMem instances with standard configurations.
+        
+        Args:
+            width (int): Width of each memory word
+            height_log2 (int): Log2 of number of words in memory
+            name (str): Base name for the memory and its ports
+            config (str): Memory configuration string:
+                - '1rw': One read/write port
+                - '2rw': Two read/write ports
+                - '1r1w': One read port, one write port
+                - '2r1w': Two read ports, one write port
+                - '1r2w': One read port, two write ports
+                - '2r2w': Two read ports, two write ports
+            **kwargs: Additional arguments passed to AbstractMem constructor
+                e.g., rw_fwd=True, latch_last_read=True, asynchronous=False
+        
+        Returns:
+            AbstractMem: Configured memory instance
+        """
+        
+        # Calculate address width
+        addr_width = height_log2
+        
+        # Parse configuration string
+        config = config.lower()
+        # Parse the configuration string using simpler split approach
+        parts = config.split('r')  # Split on 'r' first
+        if len(parts) != 2:
+            raise ValueError(f"Invalid config string '{config}', must contain exactly one 'r'")
+            
+        num_r = int(parts[0])
+        if 'w' in parts[1]:
+            w_parts = parts[1].split('w')
+            if len(w_parts) != 2 or w_parts[1] == '':
+                num_w = 1
+            else:
+                num_w = int(w_parts[0])
+        else:
+            num_w = num_r  # RW ports
+            
+        # Validate configuration
+        if num_r > 2 or num_w > 2:
+            raise ValueError("Maximum 2 read and 2 write ports supported")
+
+
+        # Create ports
+        read_ports = []
+        write_ports = []
+        
+        # For RW ports (when config is '1rw' or '2rw')
+        if 'w' not in config:
+            for i in range(num_r):
+                suffix = '' if num_r == 1 else f'_{i}'
+                addr = pyrtl.Input(addr_width, f'{name}_addr{suffix}')
+                rdata = pyrtl.WireVector(width, f'{name}_rdata{suffix}')
+                wdata = pyrtl.Input(width, f'{name}_wdata{suffix}')
+                wen = pyrtl.Input(1, f'{name}_wen{suffix}')
+                
+                read_ports.append(AbstractMem.ReadPort(addr=addr, data=rdata, en=~wen))
+                write_ports.append(AbstractMem.WritePort(addr=addr, data=wdata, en=wen))
+        
+        # For separate R/W ports
+        else:
+            # Create read ports
+            for i in range(num_r):
+                suffix = '' if num_r == 1 else f'_{i}'
+                addr = pyrtl.Input(addr_width, f'{name}_raddr{suffix}')
+                data = pyrtl.WireVector(width, f'{name}_rdata{suffix}')
+                en = pyrtl.Input(1, f'{name}_ren{suffix}')
+                read_ports.append(AbstractMem.ReadPort(addr=addr, data=data, en=en))
+                
+            # Create write ports
+            for i in range(num_w):
+                suffix = '' if num_w == 1 else f'_{i}'
+                addr = pyrtl.Input(addr_width, f'{name}_waddr{suffix}')
+                data = pyrtl.Input(width, f'{name}_wdata{suffix}')
+                en = pyrtl.Input(1, f'{name}_wen{suffix}')
+                write_ports.append(AbstractMem.WritePort(addr=addr, data=data, en=en))
+        
+        # Create and return the memory
+        return AbstractMem(
+            width=width,
+            height=2**height_log2,
+            name=name,
+            read_ports=read_ports,
+            write_ports=write_ports,
+            **kwargs
+        )
+
     def to_bsg_mem(self, clock_name, reset_name):
         # TODO: This isn't right. bsg_mem has a 2rw.
         # Need to detect if it is 2rw.
@@ -400,11 +491,25 @@ output_path = "macro/{{}}".format(output_name)
 
     def to_vivado_bram_tcl(self):
         """Generate Vivado TCL script for memory configuration based on AbstractMem properties."""
-    
         # Validate ports
         has_read = self.read_ports is not None and len(self.read_ports) > 0
         has_write = self.write_ports is not None and len(self.write_ports) > 0
-    
+        num_read = len(self.read_ports) if has_read else 0
+        num_write = len(self.write_ports) if has_write else 0
+
+        if num_write > 2:
+            raise ValueError("Vivado BRAM supports maximum 2 write ports")
+        if num_read > 2:
+            raise ValueError("Vivado BRAM supports maximum 2 read ports")
+
+        # Determine if ports are shared (same address for read/write)
+        shared_ports = []
+        if has_read and has_write:
+            for r_port in self.read_ports:
+                for w_port in self.write_ports:
+                    if r_port.addr.name == w_port.addr.name:
+                        shared_ports.append((r_port, w_port))
+
         # Determine memory type based on ports
         if not has_read and not has_write:
             raise ValueError("Memory must have at least one port")
@@ -412,17 +517,18 @@ output_path = "macro/{{}}".format(output_name)
             mem_type = "Single_Port_ROM"
         elif not has_read:
             raise ValueError("Write-only memory not supported in Vivado BRAM")
-        elif len(self.read_ports) == 1:
-            if self.read_ports[0].addr.name == self.write_ports[0].addr.name:
-                mem_type = "Single_Port_RAM"
-            else:
-                mem_type = "Simple_Dual_Port_RAM"
-        elif len(self.read_ports) == 2:
-            mem_type = "True_Dual_Port_RAM"
+        elif len(shared_ports) == 2:
+            mem_type = "True_Dual_Port_RAM"  # Two RW ports
+        elif len(shared_ports) == 1 and num_read == 1 and num_write == 1:
+            mem_type = "Single_Port_RAM"  # One RW port
+        elif num_write == 2 or (num_read == 2 and num_write >= 1):
+            mem_type = "True_Dual_Port_RAM"  # Need dual port capabilities
+        elif num_read == 1 and num_write == 1:
+            mem_type = "Simple_Dual_Port_RAM"
         else:
-            raise ValueError(f"Unsupported port configuration: {len(self.read_ports)} read ports and {1 if has_write else 0} write ports")
-    
-        # Basic configuration that's always needed
+            raise ValueError(f"Unsupported port configuration: {num_read} read ports and {num_write} write ports")
+
+        # Basic configuration
         config_dict = [
             f'    CONFIG.Component_Name {{{self.name}}} \\',
             f'    CONFIG.Memory_Type {{{mem_type}}} \\',
@@ -431,42 +537,48 @@ output_path = "macro/{{}}".format(output_name)
             '    CONFIG.Primitive {8kx2} \\',
             '    CONFIG.Assume_Synchronous_Clk {true} \\'
         ]
-    
-        # Port A configuration (write port for dual-port, read/write for single-port)
+
+        # Port A configuration
         if has_write:
             config_dict.extend([
                 f'    CONFIG.Write_Width_A {{{self.width}}} \\',
                 f'    CONFIG.Write_Depth_A {{{self.height}}} \\',
-                '    CONFIG.Enable_A {Always_Enabled} \\',
-                '    CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \\'
+                '    CONFIG.Enable_A {Use_ENA_Pin} \\',  # Changed to use enable pin
+                '    CONFIG.Register_PortA_Output_of_Memory_Primitives {true} \\'
             ])
-    
-            # Add byte write enable if width is multiple of 8
-            if self.width % 8 == 0:
+
+            # Add write mask configuration if first write port has a mask
+            if self.write_ports[0].mask is not None:
                 config_dict.extend([
                     '    CONFIG.Use_Byte_Write_Enable {true} \\',
-                    f'    CONFIG.Byte_Size {8} \\'
+                    f'    CONFIG.Byte_Size {self.write_ports[0].mask.granularity} \\'
                 ])
             else:
                 config_dict.extend([
                     '    CONFIG.Use_Byte_Write_Enable {false} \\'
                 ])
-    
-        # Port B configuration (read port for dual-port)
+
+        # Port B configuration (needed for dual port modes)
         if mem_type in ["Simple_Dual_Port_RAM", "True_Dual_Port_RAM"]:
             config_dict.extend([
                 f'    CONFIG.Read_Width_B {{{self.width}}} \\',
-                '    CONFIG.Enable_B {Always_Enabled} \\',
-                '    CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \\',
-                '    CONFIG.Port_B_Clock {100} \\',
-                '    CONFIG.Port_B_Enable_Rate {100} \\'
+                '    CONFIG.Enable_B {Use_ENB_Pin} \\',  # Changed to use enable pin
+                '    CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \\'
             ])
+
             if mem_type == "True_Dual_Port_RAM":
                 config_dict.extend([
-                    f'    CONFIG.Write_Width_B {{{self.width}}} \\'
+                    f'    CONFIG.Write_Width_B {{{self.width}}} \\',
+                    '    CONFIG.Use_RSTB_Pin {false} \\'
                 ])
-    
-        # Start TCL script
+
+                # Add write mask configuration if second write port exists and has a mask
+                if num_write > 1 and self.write_ports[1].mask is not None:
+                    config_dict.append('    CONFIG.Use_Byte_Write_Enable_B {true} \\')
+                else:
+                    config_dict.append('    CONFIG.Use_Byte_Write_Enable_B {false} \\')
+
+        # Generate TCL script
         tcl = [
             "# Create the IP directory and set the current directory",
             "set proj_dir $::env(PWD)",
@@ -489,7 +601,7 @@ output_path = "macro/{{}}".format(output_name)
             "# Run synthesis",
             f'synth_design -top {self.name}'
         ]
-    
+
         return '\n'.join(tcl)
 
 def test_1r1w():

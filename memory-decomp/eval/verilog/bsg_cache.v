@@ -1,5 +1,6 @@
 
 
+(* dont_touch = "yes" *)
 module top
 (
   clk_i,
