@@ -572,12 +572,6 @@ output_path = "macro/{{}}".format(output_name)
                     '    CONFIG.Use_RSTB_Pin {false} \\'
                 ])
 
-                # Add write mask configuration if second write port exists and has a mask
-                if num_write > 1 and self.write_ports[1].mask is not None:
-                    config_dict.append('    CONFIG.Use_Byte_Write_Enable_B {true} \\')
-                else:
-                    config_dict.append('    CONFIG.Use_Byte_Write_Enable_B {false} \\')
-
         # Generate TCL script
         tcl = [
             "# Create the IP directory and set the current directory",
@@ -599,7 +593,8 @@ output_path = "macro/{{}}".format(output_name)
             f'generate_target all [get_ips {self.name}]',
             "",
             "# Run synthesis",
-            f'synth_design -top {self.name}'
+            f'synth_design -top {self.name}',
+            'exit'
         ]
 
         return '\n'.join(tcl)
