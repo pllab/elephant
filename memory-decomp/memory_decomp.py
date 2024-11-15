@@ -834,18 +834,26 @@ def get_read_port(mem, block):
         unions[name] = union
 
     ## Output to Churchroad
-    # print("(include \"./churchroad.egg\"))")
-    # for _,let in lets.items():
-    #     print(let)
-    # for _,union in unions.items():
-    #     print(union)
-    # for _,port in ports.items():
-    #     print(port)
-    # for _,delete in deletes.items():
-    #     print(delete)
-    # print("(run-schedule (repeat 15 (saturate core typing misc) (saturate decomp)))")
-    # for _,extract in extracts.items():
-    #     print(extract)
+    churchroad = ["(include \"./churchroad.egg\"))"]
+    for _,let in lets.items():
+        #print(let)
+        churchroad.append(let)
+    for _,union in unions.items():
+        #print(union)
+        churchroad.append(union)
+    for _,port in ports.items():
+        #print(port)
+        churchroad.append(port)
+    for _,delete in deletes.items():
+        #print(delete)
+        churchroad.append(delete)
+    churchroad.append("(run-schedule (repeat 15 (saturate core typing misc) (saturate decomp)))")
+    for _,extract in extracts.items():
+        #print(extract)
+        churchroad.append(extract)
+
+    with open(mem.name+'.egg', 'w') as f:
+        f.write('\n'.join(churchroad))
 
     # with open('readports.svg', 'w') as f:
     #     pyrtl.output_to_svg(f, block=readblock)
@@ -878,7 +886,7 @@ def get_memories(final_regs, block):
             for reg in mem.reg_list:
                 final_regs.append(reg)
             bad_mems.append(mem)
-        # get_read_port(mem, block)
+        get_read_port(mem, block)
     
     for mem in bad_mems:
         mems.remove(mem)
@@ -971,8 +979,8 @@ NAME = args.blif
 top = args.top
 clock = args.clock
 
-with open(NAME, "r") as f: # for alu_scale
-    s = f.read() # for alu_scale
+with open(NAME, "r") as f:
+    s = f.read()
 
 pyrtl.importexport.input_from_blif(s, merge_io_vectors=False, clock_name=clock, top_model=top)
 
@@ -1018,5 +1026,5 @@ for final_mem in final_mems:
 # pyrtl.optimize()
 # print(pyrtl.working_block())
 
-print(times[0], sum(times[1:]))
+print(f"decomp time: {sum(times[1:])} s")
 
