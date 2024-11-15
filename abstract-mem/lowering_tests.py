@@ -7,7 +7,7 @@ def test_vivado_bram(height_log2, width, portedness):
     print(f"test {portedness} Vivado BRAM h{2**height_log2}_w{width}")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    mem = AbstractMem.create_mem(width, height_log2, name='openram_h{0}_w{1}_{2}'.format(2 ** height_log2, width, portedness), config=portedness)
+    mem = AbstractMem.create_mem(width, height_log2, name='vivado_bram_h{0}_w{1}_{2}'.format(2 ** height_log2, width, portedness), config=portedness)
 
     mem.to_pyrtl(pyrtl.working_block())
     pyrtl.working_block().sanity_check()
