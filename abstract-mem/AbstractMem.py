@@ -582,7 +582,7 @@ output_path = "macro/{{}}".format(output_name)
         tcl = [
             "# Create the IP directory and set the current directory",
             "set proj_dir $::env(PWD)",
-            "set ip_dir ${proj_dir}/ip",
+            f"set ip_dir ${{proj_dir}}/{self.name}",
             "file mkdir ${ip_dir}",
             "cd ${ip_dir}",
             "create_project bram_test . -part xc7a35ticsg324-1L",
