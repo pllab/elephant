@@ -2,6 +2,7 @@ import pyrtl
 import csv
 import sys
 import time
+from argparse import ArgumentParser
 
 op_map = {
     '~': 'Not',
@@ -942,9 +943,9 @@ sys.setrecursionlimit(100000)
 # clock = "clk"
 # top = "toplevel"
 
-NAME = "eval/verilog/bsg_assembler"
-clock = "clk"
-top = "top"
+# NAME = "eval/verilog/bsg_assembler"
+# clock = "clk"
+# top = "top"
 
 # NAME = "eval/verilog/bsg_cache"
 # clock = "clk_i"
@@ -954,7 +955,23 @@ top = "top"
 # clock = "clk"
 # top = "picorv32"
 
-with open(NAME + ".blif", "r") as f: # for alu_scale
+parser = ArgumentParser("Run the memory decompiler!")
+parser.add_argument(
+    "--top", type=str, dest="top", help="name of top module"
+)
+parser.add_argument(
+    "--clock", type=str, dest="clock", help="name of the clock"
+)
+parser.add_argument(
+    "--blif", type=str, dest="blif", help="name of the blif file"
+)
+args = parser.parse_args()
+
+NAME = args.blif
+top = args.top
+clock = args.clock
+
+with open(NAME, "r") as f: # for alu_scale
     s = f.read() # for alu_scale
 
 pyrtl.importexport.input_from_blif(s, merge_io_vectors=False, clock_name=clock, top_model=top)
