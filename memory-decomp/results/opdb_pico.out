@@ -1,0 +1,13 @@
+Error: allocated registers are not the same width
+Error: allocated registers are not the same width
+++++++++++
+mem_tmp11130
+addr_width: 5
+val_width: 32
+reg_list: reg_tmp86432/32R reg_tmp86384/32R reg_tmp86444/32R reg_tmp86414/32R reg_tmp86480/32R reg_tmp86381/32R reg_tmp86363/32R reg_tmp86462/32R reg_tmp86358/32R reg_tmp86411/32R reg_tmp86472/32R reg_tmp86476/32R reg_tmp86377/32R reg_tmp86456/32R reg_tmp86402/32R reg_tmp86422/32R reg_tmp86396/32R reg_tmp86429/32R reg_tmp86426/32R reg_tmp86437/32R reg_tmp86371/32R reg_tmp86467/32R reg_tmp86387/32R reg_tmp86452/32R reg_tmp86399/32R reg_tmp86447/32R reg_tmp86459/32R reg_tmp86367/32R reg_tmp86392/32R reg_tmp86407/32R reg_tmp86417/32R reg_tmp86441/32R 
+enable: tmp11130/1W
+write_address: tmp4872_o/1W tmp4877_o/1W tmp4881_o/1W tmp4885_o/1W tmp4889_o/1W 
+write_port: tmp34370/1W tmp34670/1W tmp34690/1W tmp34290/1W tmp34630/1W tmp34330/1W tmp34590/1W tmp34570/1W tmp34510/1W tmp34650/1W tmp34130/1W tmp34430/1W tmp34390/1W tmp34270/1W tmp34530/1W tmp34350/1W tmp34310/1W tmp34190/1W tmp34470/1W tmp34210/1W tmp34450/1W tmp34710/1W tmp34230/1W tmp34490/1W tmp34090/1W tmp34250/1W tmp34550/1W tmp34170/1W tmp34410/1W tmp34110/1W tmp34610/1W tmp34150/1W 
+read_port: 
+----------
+eval/verilog/opdb_pico 110.4716420173645

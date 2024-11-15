@@ -82,8 +82,8 @@ def alu(val_width, addr_width):
 
 if __name__=="__main__":
 
-    rf = alu(3, 2)
+    rf = alu(32, 5)
     pyrtl.synthesize()
 
-    with open('alu-small.v', 'w') as f:
+    with open('alu.v', 'w') as f:
         pyrtl.output_to_verilog(f, add_reset=False)

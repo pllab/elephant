@@ -172,9 +172,9 @@ def traverse_down(node, enable, visited, connections, uses):
 # modification of traverse_up() for more general purposes
 def up(node, visited, connections):
     visited[node] = 1
-    print(node.name)
-    if node in connections:
-        print(connections[node])
+    # print(node.name)
+    # if node in connections:
+    #     print(connections[node])
 
     if node in connections:
         parents = parse_net_connection(str(connections[node]))
@@ -338,12 +338,12 @@ def get_write_addr(reg_enables, block, mem):
     for reg_enable in reg_enables:
         nets = [defs[reg_enable]]
         next_round = []
-        print('reg_enable', reg_enable)
+        # print('reg_enable', reg_enable)
         while n >= 0:
-            print('n', n)
+            # print('n', n)
             while nets:
                 net = nets.pop()
-                print(' net', net)
+                # print(' net', net)
                 if net.op in '~&':
                     addr_logic[net.dests[0].name] = net
                     if n == 0:
@@ -360,7 +360,7 @@ def get_write_addr(reg_enables, block, mem):
             n -= 1
         n = mem.addr_width
 
-    print(' ~~> possible address inputs!!')
+    # print(' ~~> possible address inputs!!')
     popular = {}
     for i in input_logic:
         # if i.op not in "~&":
@@ -368,7 +368,7 @@ def get_write_addr(reg_enables, block, mem):
         # if i.op == '&' and mem.enable.name in [a.name for a in i.args]:
         #     print(' ~~>',i)
         # else:
-        print(' ~~>',i)
+        # print(' ~~>',i)
         # This is annoyingly heuristic.
         # The answer is sort of like:
         # Check if there is a N-element subset that all share at least one input
@@ -381,11 +381,48 @@ def get_write_addr(reg_enables, block, mem):
     # If the popular-est input is part of an &,
     # then the address wire is probably the _other_ input.
     # Otherwise, it's just the output wire of the gate?
-    for k,v in popular.items():
-        print(k, v)
+    # for k,v in popular.items():
+    #     print(k, v)
 
 
+#def get_exp_addr(node, block, enable):
+#    connections = block.net_connections()[0]
+#
+#    ret = ""
+#    ct = 0
+#    addr = []
+#    # print(node)
+#    if node in connections:
+#        net = connections[node]
+#        if net.op == "&":
+#            args = net.args
+#            if args[0].name == enable.name:
+#                addr = [args[1]]
+#                ret = args[1].name
+#                ct += 1
+#            elif args[1].name == enable.name:
+#                addr = [args[0]]
+#                ret = args[0].name
+#                ct += 1
+#            else:
+#                addr0, ret0, ct0 = get_exp_addr(args[0], block, enable)
+#                addr1, ret1, ct1 = get_exp_addr(args[1], block, enable)
+#                addr = addr0 + addr1
+#                ret = ret0 + f" {net.op} " + ret1
+#                ct += ct0 + ct1
+#        elif net.op == "~":
+#            addr, ret0, ct0 = get_exp_addr(net.args[0], block, enable)
+#            ret = "(~" + ret0 + ")"
+#            ct += ct0
+#        else:
+#            ret = node.name
+#            addr = [block.wirevector_by_name.get(ret)]
+#            ct += 1
+#    return addr, ret, ct
+
+# gets the address logic for each register in a memblock
 def get_exp_addr(node, block, enable):
+
     connections = block.net_connections()[0]
 
     ret = ""
@@ -393,71 +430,34 @@ def get_exp_addr(node, block, enable):
     addr = []
     # print(node)
     if node in connections:
-        net = connections[node]
-        if net.op == "&":
-            args = net.args
-            if args[0].name == enable.name:
-                addr = [args[1]]
-                ret = args[1].name
+        edge = str(connections[node])
+        # print(edge)
+        oper = edge[ edge.index("<-- ") + 4 ]
+        parents = parse_net_connection(edge)
+        if oper == "&":
+            if parents[0].split("/")[0] == enable.name:
+                ret = parents[1].split("/")[0]
+                addr = [block.wirevector_by_name.get(ret)]
                 ct += 1
-            elif args[1].name == enable.name:
-                addr = [args[0]]
-                ret = args[0].name
+            elif parents[1].split("/")[0] == enable.name:
+                ret = parents[0].split("/")[0]
+                addr = [block.wirevector_by_name.get(ret)]
                 ct += 1
             else:
-                addr0, ret0, ct0 = get_exp_addr(args[0], block, enable)
-                addr1, ret1, ct1 = get_exp_addr(args[1], block, enable)
-                addr = addr0 + addr1
-                ret = ret0 + f" {net.op} " + ret1
-                ct += ct0 + ct1
-        elif net.op == "~":
-            addr, ret0, ct0 = get_exp_addr(net.args[0], block, enable)
-            ret = "(~" + ret0 + ")"
-            ct += ct0
+                aa, a, ac = get_exp_addr(pyrtl.working_block().wirevector_by_name.get(parents[0].split("/")[0]), block, enable)
+                ba, b, bc = get_exp_addr(pyrtl.working_block().wirevector_by_name.get(parents[1].split("/")[0]), block, enable)
+                ret = " " + a + " & " + b + " "
+                addr = aa + ba
+                ct += ac + bc
+        elif oper == "~":
+            addr, a, ac = get_exp_addr(pyrtl.working_block().wirevector_by_name.get(parents[0].split("/")[0]), block, enable)
+            ret = "(~" + a + ")"
+            ct += ac
         else:
             ret = node.name
             addr = [block.wirevector_by_name.get(ret)]
             ct += 1
     return addr, ret, ct
-
-# gets the address logic for each register in a memblock
-# def get_exp_addr(node, block, enable):
-#
-#     connections = block.net_connections()[0]
-#
-#     ret = ""
-#     ct = 0
-#     addr = []
-#     # print(node)
-#     if node in connections:
-#         edge = str(connections[node])
-#         # print(edge)
-#         oper = edge[ edge.index("<-- ") + 4 ]
-#         parents = parse_net_connection(edge)
-#         if oper == "&":
-#             if parents[0].split("/")[0] == enable.name:
-#                 ret = parents[1].split("/")[0]
-#                 addr = [block.wirevector_by_name.get(ret)]
-#                 ct += 1
-#             elif parents[1].split("/")[0] == enable.name:
-#                 ret = parents[0].split("/")[0]
-#                 addr = [block.wirevector_by_name.get(ret)]
-#                 ct += 1
-#             else:
-#                 aa, a, ac = get_exp_addr(pyrtl.working_block().wirevector_by_name.get(parents[0].split("/")[0]), block, enable)
-#                 ba, b, bc = get_exp_addr(pyrtl.working_block().wirevector_by_name.get(parents[1].split("/")[0]), block, enable)
-#                 ret = " " + a + " & " + b + " "
-#                 addr = aa + ba
-#                 ct += ac + bc
-#         elif oper == "~":
-#             addr, a, ac = get_exp_addr(pyrtl.working_block().wirevector_by_name.get(parents[0].split("/")[0]), block, enable)
-#             ret = "(~" + a + ")"
-#             ct += ac
-#         else:
-#             ret = node.name
-#             addr = [block.wirevector_by_name.get(ret)]
-#             ct += 1
-#     return addr, ret, ct
 
 # log 2 with integer ceiling for inferring address width from the number of registers in a memblock
 def log_2_int(x):
@@ -528,7 +528,7 @@ def create_mems_from_en_addr(final_regs, block):
             # mem.address, expr, ct = get_write_addr(good_parent_grps[mem.enable][r], block, mem.enable)
             mem.address, expr, ct = get_exp_addr(good_parent_grps[mem.enable][r], block, mem.enable)
             # print(f'{r} ct {ct} expr addr {expr}')
-            print(f"mem.address {len(mem.address)} {[a.name for a in mem.address]}")
+            # print(f"mem.address {len(mem.address)} {[a.name for a in mem.address]}")
             if ct != mem.addr_width:
                 print("Error: addr_width from address logic not the same as from register count")
                 bad = True
@@ -542,9 +542,9 @@ def create_mems_from_en_addr(final_regs, block):
         mems.remove(mem)
     times.append(time.time() - start_time)
 
-    print("-->mems at this point!")
-    for mem in mems:
-        print(mem)
+    # print("-->mems at this point!")
+    # for mem in mems:
+    #     print(mem)
                 
     return mems
 
@@ -617,7 +617,7 @@ def get_write_port(mem, block):
 # 1. At least one of the gates inputs is marked
 # 2. The gate has only one fanout, `pyrtl.analysis.fanout(w)`
 def get_read_port(mem, block):
-    print('...\nget read ports:')
+    #print('...\nget read ports:')
     connections, uses = block.net_connections(include_virtual_nodes=True)
 
     marked = set()
@@ -641,7 +641,7 @@ def get_read_port(mem, block):
         for net in uses[block.wirevector_by_name.get(r.name)]:
             # Since registers are grouped, first net must be select.
             if net.op != 's':
-                print("Whoopsie: Expected a select here.")
+                # print("Whoopsie: Expected a select here.")
                 return
             marked.add(net)
             for subnet in uses[block.wirevector_by_name.get(net.dests[0].name)]:
@@ -846,8 +846,8 @@ def get_read_port(mem, block):
     # for _,extract in extracts.items():
     #     print(extract)
 
-    with open('readports.svg', 'w') as f:
-        pyrtl.output_to_svg(f, block=readblock)
+    # with open('readports.svg', 'w') as f:
+    #     pyrtl.output_to_svg(f, block=readblock)
 
     return
 
@@ -877,7 +877,7 @@ def get_memories(final_regs, block):
             for reg in mem.reg_list:
                 final_regs.append(reg)
             bad_mems.append(mem)
-        get_read_port(mem, block)
+        # get_read_port(mem, block)
     
     for mem in bad_mems:
         mems.remove(mem)
@@ -933,22 +933,25 @@ def write_to_csv(regs, mems, file_path):
 
 sys.setrecursionlimit(100000)
 
-# NAME = "mask_demo"
-# NAME = "counter_memblock"
-# NAME = "alu"
+
+# NAME = "eval/pyrtl/alu"
+# clock = "clk"
+# top = "toplevel"
+
 # NAME = "eval/pyrtl/fifo"
-# NAME = "eval/verilog/opdb_pico"
+# clock = "clk"
+# top = "toplevel"
 
-# small alu example (not not-working):
-NAME = "alu-small"
+NAME = "eval/verilog/bsg_assembler"
 clock = "clk"
-top = "toplevel"
+top = "top"
 
-# nerv example (not working):
-# NAME = "eval/verilog/nerv"
-# clock = "clock"
-# top = "nerv"
+# NAME = "eval/verilog/bsg_cache"
+# clock = "clk_i"
+# top = "top"
 
+# NAME = "eval/verilog/opdb_pico"
+# clock = "clk"
 # top = "picorv32"
 
 with open(NAME + ".blif", "r") as f: # for alu_scale
@@ -961,7 +964,7 @@ times = [NAME]
 start_time = time.time()
 remove_concat_select()
 times.append(time.time() - start_time)
-print("finished remove_concat_select")
+# print("finished remove_concat_select")
 start_time = time.time()
 pyrtl.passes.optimize(update_working_block=True, block=pyrtl.working_block())
 times.append(time.time() - start_time)
@@ -969,7 +972,7 @@ times.append(time.time() - start_time)
 regs = pyrtl.working_block().wirevector_subset(pyrtl.Register)
 nodes = pyrtl.working_block().wirevector_subset()
 connections = pyrtl.working_block().net_connections()[0]
-print(len(regs))
+# print(len(regs))
 
 # with open ("pyrtl_blif_svgs/pyrtl_blif_eval_" + NAME + ".svg", 'w') as svg:
 #    pyrtl.visualization.output_to_svg(svg)
@@ -978,19 +981,19 @@ print(len(regs))
 visited = {}
 final_regs = get_final_regs(regs, nodes, visited, pyrtl.working_block())
 
-for final_reg in final_regs:
-    final_reg.print_reg()
+# for final_reg in final_regs:
+#     final_reg.print_reg()
 
 start_time = time.time()
 old_block = pyrtl.working_block()
 reg_rewrite_block = pyrtl.core.Block()
 reg_block_rewrites(final_regs, old_block, reg_rewrite_block)#, "reg_agg_svgs/reg_agg_eval_" + NAME + ".svg")
 times.append(time.time() - start_time)
-print("finished rewrites")
+#print("finished rewrites")
 
-MIN_MEM_ADDR_WIDTH = 2
+MIN_MEM_ADDR_WIDTH = 1
 final_mems = get_memories(final_regs, pyrtl.working_block())
-print("got memblocks")
+#print("got memblocks")
 
 for final_mem in final_mems:
     final_mem.print_mem()
@@ -998,5 +1001,5 @@ for final_mem in final_mems:
 # pyrtl.optimize()
 # print(pyrtl.working_block())
 
-# print(times)
+print(times[0], sum(times[1:]))
 
