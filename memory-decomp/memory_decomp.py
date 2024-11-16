@@ -4,6 +4,8 @@ import sys
 import time
 from argparse import ArgumentParser
 
+NAME=""
+
 op_map = {
     '~': 'Not',
     '&': 'And',
@@ -852,7 +854,7 @@ def get_read_port(mem, block):
         #print(extract)
         churchroad.append(extract)
 
-    with open(mem.name+'.egg', 'w') as f:
+    with open(NAME.split('.')[0]+'_'+mem.name+'.egg', 'w') as f:
         f.write('\n'.join(churchroad))
 
     # with open('readports.svg', 'w') as f:
