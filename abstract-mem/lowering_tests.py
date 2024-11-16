@@ -30,7 +30,7 @@ def test_openram_sram(height_log2, width, portedness):
 if __name__ == '__main__':
     for portedness in ['1rw','2rw','1r1w']:
         for height_log2 in range(4,8):
-            for width in range(16,17):
+            for width in range(32,33):
                 num_read_ports=1
                 num_write_ports=1
                 with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
