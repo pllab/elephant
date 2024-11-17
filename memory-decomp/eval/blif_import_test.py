@@ -25,8 +25,8 @@ pyrtl.input_from_blif(blif,
 
 # print(pyrtl.working_block())
 
-for reg in pyrtl.working_block().wirevector_subset(pyrtl.Register):
-    print(reg)
+#for reg in pyrtl.working_block().wirevector_subset(pyrtl.Register):
+#    print(reg)
 
 print("regs: {}, wires: {}, gates: {}".format(
     len(pyrtl.working_block().wirevector_subset(pyrtl.Register)),
