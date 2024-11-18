@@ -102,11 +102,11 @@ class AbstractMem:
         write_ports = []
         
         # For RW ports (when config is '1rw' or '2rw')
-        if 'w' not in config:
+        if 'rw' in config:
             for i in range(num_r):
                 suffix = '' if num_r == 1 else f'_{i}'
                 addr = pyrtl.Input(addr_width, f'{name}_addr{suffix}')
-                rdata = pyrtl.WireVector(width, f'{name}_rdata{suffix}')
+                rdata = pyrtl.Output(width, f'{name}_rdata{suffix}')
                 wdata = pyrtl.Input(width, f'{name}_wdata{suffix}')
                 wen = pyrtl.Input(1, f'{name}_wen{suffix}')
                 
@@ -119,7 +119,7 @@ class AbstractMem:
             for i in range(num_r):
                 suffix = '' if num_r == 1 else f'_{i}'
                 addr = pyrtl.Input(addr_width, f'{name}_raddr{suffix}')
-                data = pyrtl.WireVector(width, f'{name}_rdata{suffix}')
+                data = pyrtl.Output(width, f'{name}_rdata{suffix}')
                 en = pyrtl.Input(1, f'{name}_ren{suffix}')
                 read_ports.append(AbstractMem.ReadPort(addr=addr, data=data, en=en))
                 
