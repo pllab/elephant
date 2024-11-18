@@ -110,19 +110,12 @@ class Memory:
         print()
         print("write enable:",end=" ")
         print(self.write_enable)
-        print("write_address:",end=" ")
-        for w in self.write_address:
-            print(w, end=" ")
-        print()
-        print("write_port:",end=" ")
-        for w in self.write_port:
-            print(w, end=" ")
-        print()
+        print(f"write_address: ({len(self.write_address)}), {[str(a) for a in self.write_address]}")
+        print(f"write_port: ({len(self.write_port)}), {[str(a) for a in self.write_port]}")
         print("read_ports:")
         for rps in self.read_ports.values():
             for k,v in rps.items():
                 print(f" {k}: {v}")
-        print()
         print("----------")
 
 # gets the names of the args from a net connection
@@ -625,7 +618,7 @@ def get_write_port(mem, block):
 # Then mark any gate that satisfies the following:
 # 1. At least one of the gates inputs is marked
 # 2. The gate has only one fanout, `pyrtl.analysis.fanout(w)`
-def get_read_ports(mem, block):
+def get_read_ports(mem, grouped_regs, block):
     #print('...\nget read ports:')
     connections, uses = block.net_connections(include_virtual_nodes=True)
 
@@ -640,7 +633,8 @@ def get_read_ports(mem, block):
             grandparent_gate = connections[parent_gate.args[0]]
             if grandparent_gate in marked \
                     or type(parent_gate.args[0]) == pyrtl.Input \
-                    or type(parent_gate.args[0]) == pyrtl.Register:
+                    or type(parent_gate.args[0]) == pyrtl.Register \
+                    or parent_gate.args[0].name[-2:] == "_o":
                 return parent_gate
         return None
 
@@ -650,8 +644,8 @@ def get_read_ports(mem, block):
         for net in uses[block.wirevector_by_name.get(r.name)]:
             # Since registers are grouped, first net must be select.
             if net.op != 's':
-                # print("Whoopsie: Expected a select here.")
-                return
+                raise Exception("Whoopsie: Expected a select here.")
+                # return
             marked.add(net)
             for subnet in uses[block.wirevector_by_name.get(net.dests[0].name)]:
                 if subnet.op == 'x':
@@ -767,11 +761,22 @@ def get_read_ports(mem, block):
                     bundles[i_keys] = [i.name, j.name]
     portnum = 0
     read_defs, read_uses = readblock.net_connections()
+    # if the address is a register and it has an enable then that is the read enable
     for outs,ins in bundles.items():
         # print(f"{set(ins)} --> {outs}")
         # bundle the inputs
         newinput = pyrtl.Input(bitwidth=len(ins), name=f"read_addr_{portnum}", block=readblock)
-        readports[portnum] = {'addr': ins}
+        readports[portnum] = {'addr': (str(newinput), ins)}
+        ren = set()
+        for i in ins:
+            if i[-2:] != '_o':
+                break
+            for grouped_reg in grouped_regs:
+                for ff in grouped_reg.ff_list:
+                    if i[:-2] == ff.name:
+                        ren.add(grouped_reg.enable.name)
+        if len(ren) == 1:
+            readports[portnum]['enable'] = ren.pop()
         readblock.add_wirevector(newinput)
         for i in range(len(ins)):
             i_dest = readblock.get_wirevector_by_name(ins[i])
@@ -795,7 +800,7 @@ def get_read_ports(mem, block):
             readblock.add_net(sel)
         # bundle the outs
         newoutput = pyrtl.Output(bitwidth=len(outs), name=f"read_data_{portnum}", block=readblock)
-        readports[portnum]['data'] = outs
+        readports[portnum]['data'] = (str(newoutput), outs)
         readblock.add_wirevector(newoutput)
         concat_args = []
         for out in outs:
@@ -877,8 +882,8 @@ def get_read_ports(mem, block):
     # with open(NAME.split('.')[0]+'_'+mem.name+'.egg', 'w') as f:
     #     f.write('\n'.join(churchroad))
 
-    # with open('readports.svg', 'w') as f:
-    #     pyrtl.output_to_svg(f, block=readblock)
+    with open('readports.svg', 'w') as f:
+        pyrtl.output_to_svg(f, block=readblock)
 
     return readports
 
@@ -908,7 +913,7 @@ def get_memories(final_regs, block):
             for reg in mem.reg_list:
                 final_regs.append(reg)
             bad_mems.append(mem)
-        mem.read_ports = get_read_ports(mem, block)
+        mem.read_ports = get_read_ports(mem, final_regs, block)
     
     for mem in bad_mems:
         mems.remove(mem)
@@ -1028,8 +1033,8 @@ connections = pyrtl.working_block().net_connections()[0]
 visited = {}
 final_regs = get_final_regs(regs, nodes, visited, pyrtl.working_block())
 
-# for final_reg in final_regs:
-#     final_reg.print_reg()
+for final_reg in final_regs:
+    final_reg.print_reg()
 
 start_time = time.time()
 old_block = pyrtl.working_block()
@@ -1046,7 +1051,7 @@ for final_mem in final_mems:
     final_mem.print_mem()
 
 # pyrtl.optimize()
-# print(pyrtl.working_block())
+print(pyrtl.working_block())
 
 print(f"decomp time: {sum(times[1:])} s")
 
