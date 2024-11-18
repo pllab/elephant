@@ -13,7 +13,7 @@ op_map = {
     '^': 'Xor',
     'n': 'Nand',
     'x': 'Mux',
-    's': 'Extract',
+    's': 'Select',
     'w': 'Wire',
     'r': 'Reg',
 }
@@ -25,12 +25,12 @@ def _make_expr(net):
     if net.op in '~&|^nx':
         argvars = " ".join((_sanitize(arg.name) for arg in net.args))
         argn = len(net.args)
-        return f"Op{argn} ({op_map[net.op]}) {argvars}"
+        return f"{op_map[net.op]} {argvars}"
     elif net.op == 'c':
         def _nest_concat(args):
             if len(args) == 2:
-                return f"Op2 (Concat) {args[0]} {args[1]}"
-            return f"Op2 (Concat) {args[0]} ({_nest_concat(args[1:])})"
+                return f"Concat {args[0]} {args[1]}"
+            return f"Concat {args[0]} ({_nest_concat(args[1:])})"
         return _nest_concat([arg.name for arg in net.args])
     elif net.op == 's':
         extract_exp = ""
@@ -44,14 +44,19 @@ def _make_expr(net):
             monotone = True
             s = slices[i]
         if monotone:
-            low = str(slices[0])
-            high = str(slices[-1])
-            extract_exp = f"{op_map[net.op]} {high} {low}"
+            if slices[0] == slices[-1]:
+                extract_exp = f"{op_map[net.op]} {slices[0]}"
+            else:
+                raise Exception("Error: Unsupported select type.")
+                return
+                # low = str(slices[0])
+                # high = str(slices[-1])
+                # extract_exp = f"{op_map[net.op]} {high} {low}"
         else:
             print("Error: Unsupported select type.")
             return
         dest = _sanitize(net.args[0].name)
-        return f"Op1 ({extract_exp}) {dest}"
+        return f"{extract_exp} {dest}"
     else:
         print("Unsupported op", net.op)
         return None
@@ -82,15 +87,15 @@ class RegisterEn:
         print()
 
 class Memory:
-    def __init__(self, name, addr_width, val_width, reg_list, enable, address, write_port, read_port):
+    def __init__(self, name, addr_width, val_width, reg_list, write_enable, write_address, write_port, read_ports={}):
         self.name = name
         self.addr_width = addr_width
         self.val_width = val_width
         self.reg_list = reg_list
-        self.enable = enable
-        self.address = address
+        self.write_enable = write_enable
+        self.write_address = write_address
         self.write_port = write_port
-        self.read_port = read_port
+        self.read_ports = read_ports
 
     def print_mem(self):
         print("++++++++++")
@@ -103,19 +108,20 @@ class Memory:
         for r in self.reg_list:
             print(pyrtl.working_block().wirevector_by_name.get(r.name), end=" ")
         print()
-        print("enable:",end=" ")
-        print(self.enable)
+        print("write enable:",end=" ")
+        print(self.write_enable)
         print("write_address:",end=" ")
-        for w in self.address:
+        for w in self.write_address:
             print(w, end=" ")
         print()
         print("write_port:",end=" ")
         for w in self.write_port:
             print(w, end=" ")
         print()
-        print("read_port:",end=" ")
-        # for w in mem.read_port:
-        #     print(w, end=" ")
+        print("read_ports:")
+        for rps in self.read_ports.values():
+            for k,v in rps.items():
+                print(f" {k}: {v}")
         print()
         print("----------")
 
@@ -354,7 +360,7 @@ def get_write_addr(reg_enables, block, mem):
                     if net.op == '~':
                         nets.append(defs[net.args[0]])
                     for arg in net.args:
-                        if arg.name == mem.enable.name:
+                        if arg.name == mem.write_enable.name:
                             continue
                         if arg in defs:
                             next_round.append(defs[arg])
@@ -518,7 +524,7 @@ def create_mems_from_en_addr(final_regs, block):
                     if reg in final_regs:
                         final_regs.remove(reg)
                 good_parent_grps[key] = good_parents
-                mems.append( Memory( "mem_" + key.name, log_2_int( len(en_parents[key]) ), val_width, reg_list, key, None, None, None) )
+                mems.append( Memory( "mem_" + key.name, log_2_int( len(en_parents[key]) ), val_width, reg_list, key, None, None) )
             # print()
     times.append(time.time() - start_time)
 
@@ -527,11 +533,11 @@ def create_mems_from_en_addr(final_regs, block):
     for mem in mems:
         bad = False
         # get_write_addr([w for w in good_parent_grps[mem.enable]], block, mem)
-        for r in good_parent_grps[mem.enable]:
-            # mem.address, expr, ct = get_write_addr(good_parent_grps[mem.enable][r], block, mem.enable)
-            mem.address, expr, ct = get_exp_addr(good_parent_grps[mem.enable][r], block, mem.enable)
+        for r in good_parent_grps[mem.write_enable]:
+            # mem.write_address, expr, ct = get_write_addr(good_parent_grps[mem.write_enable][r], block, mem.enable)
+            mem.write_address, expr, ct = get_exp_addr(good_parent_grps[mem.write_enable][r], block, mem.write_enable)
             # print(f'{r} ct {ct} expr addr {expr}')
-            # print(f"mem.address {len(mem.address)} {[a.name for a in mem.address]}")
+            # print(f"mem.write_address {len(mem.write_address)} {[a.name for a in mem.write_address]}")
             if ct != mem.addr_width:
                 print("Error: addr_width from address logic not the same as from register count")
                 bad = True
@@ -589,9 +595,9 @@ def get_write_port(mem, block):
             d = connections[net.args[2]]
             # print(d)
             # var[d.dests[0].name] = _make_expr(d)
-            if d.op == "&" and d.args[0].name == mem.enable.name:
+            if d.op == "&" and d.args[0].name == mem.write_enable.name:
                 wp.append( d.args[1] )
-            elif d.op == "&" and d.args[1].name == mem.enable.name:
+            elif d.op == "&" and d.args[1].name == mem.write_enable.name:
                 wp.append( d.args[0] )
             else:
                 wp.append( net.args[2] )
@@ -619,7 +625,7 @@ def get_write_port(mem, block):
 # Then mark any gate that satisfies the following:
 # 1. At least one of the gates inputs is marked
 # 2. The gate has only one fanout, `pyrtl.analysis.fanout(w)`
-def get_read_port(mem, block):
+def get_read_ports(mem, block):
     #print('...\nget read ports:')
     connections, uses = block.net_connections(include_virtual_nodes=True)
 
@@ -730,6 +736,8 @@ def get_read_port(mem, block):
     deletes = {}
     extracts = {}
 
+    readports = dict()
+
     # Compute paths from all non-reg inputs to outputs in readblock.
     # Use this to "bundle" output wires by port.
     # "Bundling" is adding selects (from inputs) and concats (to outputs).
@@ -763,6 +771,7 @@ def get_read_port(mem, block):
         # print(f"{set(ins)} --> {outs}")
         # bundle the inputs
         newinput = pyrtl.Input(bitwidth=len(ins), name=f"read_addr_{portnum}", block=readblock)
+        readports[portnum] = {'addr': ins}
         readblock.add_wirevector(newinput)
         for i in range(len(ins)):
             i_dest = readblock.get_wirevector_by_name(ins[i])
@@ -786,6 +795,7 @@ def get_read_port(mem, block):
             readblock.add_net(sel)
         # bundle the outs
         newoutput = pyrtl.Output(bitwidth=len(outs), name=f"read_data_{portnum}", block=readblock)
+        readports[portnum]['data'] = outs
         readblock.add_wirevector(newoutput)
         concat_args = []
         for out in outs:
@@ -822,9 +832,9 @@ def get_read_port(mem, block):
             lets[name] = let
 
             if name not in ports and type(wire) == pyrtl.Input:
-                ports[name] = f"(IsPort \"\" \"{name}\" (Input) {name})"
+                ports[name] = f";(IsPort \"\" \"{name}\" (Input) {name})"
             elif name not in ports and type(wire) == pyrtl.Output:
-                ports[name] = f"(IsPort \"\" \"{name}\" (Output) {name})"
+                ports[name] = f";(IsPort \"\" \"{name}\" (Output) {name})"
                 deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
                 extracts[name] = f"(query-extract {name})"
             elif name not in deletes:
@@ -836,7 +846,7 @@ def get_read_port(mem, block):
         unions[name] = union
 
     ## Output to Churchroad
-    churchroad = ["(include \"./churchroad.egg\"))"]
+    churchroad = ["(include \"./elephant.egg\")"]
     for _,let in lets.items():
         #print(let)
         churchroad.append(let)
@@ -849,18 +859,28 @@ def get_read_port(mem, block):
     for _,delete in deletes.items():
         #print(delete)
         churchroad.append(delete)
-    churchroad.append("(run-schedule (repeat 15 (saturate core typing misc) (saturate decomp)))")
-    for _,extract in extracts.items():
+    read_rule = "\n(rule\n"
+    read_rule += " ((= d (Concat\n"
+    for i in range(mem.val_width):
+        read_rule += f"   (Mux a (MapSelect {i} x))\n"
+    read_rule += "   ))\n"
+    read_rule += "  (HasType a (Bitvector n))\n"
+    read_rule += "  (= (log2 (vec-length x)) n))\n"
+    read_rule += " ((union d (Read a x)))\n"
+    read_rule += ":ruleset decomp)\n"
+    churchroad.append(read_rule)
+    churchroad.append("(run-schedule (repeat 15 (saturate typing) (saturate decomp)))")
+    for _,extract in sorted(extracts.items()):
         #print(extract)
         churchroad.append(extract)
 
-    with open(NAME.split('.')[0]+'_'+mem.name+'.egg', 'w') as f:
-        f.write('\n'.join(churchroad))
+    # with open(NAME.split('.')[0]+'_'+mem.name+'.egg', 'w') as f:
+    #     f.write('\n'.join(churchroad))
 
     # with open('readports.svg', 'w') as f:
     #     pyrtl.output_to_svg(f, block=readblock)
 
-    return
+    return readports
 
 # driver method to aggregate memblocks
 def get_memories(final_regs, block):
@@ -888,7 +908,7 @@ def get_memories(final_regs, block):
             for reg in mem.reg_list:
                 final_regs.append(reg)
             bad_mems.append(mem)
-        get_read_port(mem, block)
+        mem.read_ports = get_read_ports(mem, block)
     
     for mem in bad_mems:
         mems.remove(mem)
