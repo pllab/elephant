@@ -1051,7 +1051,7 @@ for final_mem in final_mems:
     final_mem.print_mem()
 
 # pyrtl.optimize()
-print(pyrtl.working_block())
+# print(pyrtl.working_block())
 
 print(f"decomp time: {sum(times[1:])} s")
 
