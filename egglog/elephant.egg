@@ -1,5 +1,6 @@
 (sort Expr)
 (sort ExprVec (Vec Expr))
+(sort IVec (Vec i64))
 
 (function Wire (String i64) Expr)
 (function Reg (String i64) Expr)
@@ -10,6 +11,7 @@
 (function Not (Expr) Expr)
 (function Select (i64 Expr) Expr :cost 1000)
 (function MapSelect (i64 ExprVec) Expr)
+(function SelectFromVec (IVec Expr) Expr)
 (function Concat (Expr Expr) Expr)
 (function Read (Expr ExprVec) Expr)
 
@@ -86,6 +88,11 @@
  :ruleset typing)
 
 (rule
+ ((SelectFromVec iv w))
+ ((HasType (SelectFromVec iv w) (Bitvector (vec-length iv))))
+ :ruleset typing)
+
+(rule
   ((Mux s i)
    (HasType s (Bitvector m))
    (HasType i (Bitvector n))
@@ -111,6 +118,15 @@
  ((union mux (Mux s (Concat a b))))
  :ruleset decomp)
 
+(rewrite
+ (Or a b)
+ (Or b a)
+ :ruleset decomp)
+(rewrite
+ (And a b)
+ (And b a)
+ :ruleset decomp)
+
 (rule
  ((= m_a (Mux s a))
   (HasType s (Bitvector n_s))
@@ -133,12 +149,13 @@
  (MapSelect i (vec-append a b))
  :ruleset decomp)
 
-;(rule
-; ((= d (Concat
-;        (Mux a (MapSelect 0 x))
-;        (Mux a (MapSelect 1 x))))
-;  (HasType a (Bitvector n))
-;  (= (log2 (vec-length x)) n))
-; ((union d (Read a x)))
-; :ruleset decomp)
+(rewrite
+ (Select i a)
+ (SelectFromVec (vec-of i) a)
+ :ruleset decomp)
+
+(rewrite
+ (Concat (SelectFromVec i a) (SelectFromVec j a))
+ (SelectFromVec (vec-append i j) a)
+ :ruleset decomp)
 

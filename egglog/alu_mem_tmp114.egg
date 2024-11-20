@@ -525,6 +525,39 @@
 ; ((union d (Read a x)))
 ;:ruleset decomp)
 
+;(rule
+; ((= d
+;  (Concat
+;   (Mux a (MapSelect i x))
+;  (Concat
+;   (Mux a (MapSelect j x))
+;   (Mux a (MapSelect k x))
+;   )))
+;  (!= i j)
+;  (!= i k)
+;  (!= k j)
+;  (HasType a (Bitvector n))
+;  (= (log2 (vec-length x)) n)) ;; ~~>
+; ((union d (Read a x)))
+;:ruleset decomp)
+
+(rule
+ ((= d
+  (Concat
+   (Mux a (MapSelect i x))
+  (Concat
+   (Mux a (MapSelect j x))
+   (Mux a (MapSelect k x))
+   )))
+  ;(= a (SelectFromVec (vec-of i j k) addr))
+  (!= i j)
+  (!= i k)
+  (!= k j)
+  (HasType a (Bitvector n))
+  (= (log2 (vec-length x)) n)) ;; ~~>
+ ((union d (Read a x)))
+:ruleset decomp)
+
 (run-schedule (repeat 15 (saturate typing) (saturate decomp)))
 (query-extract read_data_0)
-(query-extract read_data_1)
+;(query-extract read_data_1)
