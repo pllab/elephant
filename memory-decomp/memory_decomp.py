@@ -2,6 +2,7 @@ import pyrtl
 import csv
 import sys
 import time
+import itertools
 from argparse import ArgumentParser
 
 NAME=""
@@ -22,16 +23,27 @@ def _sanitize(name):
     return name.replace('[', '_').replace(']', '')
 
 def _make_expr(net):
-    if net.op in '~&|^nx':
+    if net.op in '~&|^n':
         argvars = " ".join((_sanitize(arg.name) for arg in net.args))
         argn = len(net.args)
-        return f"{op_map[net.op]} {argvars}"
+        return f"({op_map[net.op]} {argvars})"
+    elif net.op == 'x':
+        argnames = [_sanitize(arg.name) for arg in net.args]
+        s = argnames[0]
+        a = argnames[1]
+        b = argnames[2]
+        # return f"(Or (And {a} (Not {s})) (And {b} {s}))"
+        return f"({op_map[net.op]} {argnames[0]} (Concat {argnames[1]} {argnames[2]}))"
     elif net.op == 'c':
         def _nest_concat(args):
             if len(args) == 2:
                 return f"Concat {args[0]} {args[1]}"
             return f"Concat {args[0]} ({_nest_concat(args[1:])})"
-        return _nest_concat([arg.name for arg in net.args])
+        return '('+_nest_concat([arg.name for arg in net.args])+')'
+    elif net.op in 'w':
+        return _sanitize(net.args[0].name)
+    elif net.op in 'r':
+        return _sanitize(net.args[0].name)
     elif net.op == 's':
         extract_exp = ""
         slices = [a for a in net.op_param]
@@ -56,7 +68,7 @@ def _make_expr(net):
             print("Error: Unsupported select type.")
             return
         dest = _sanitize(net.args[0].name)
-        return f"{extract_exp} {dest}"
+        return f"({extract_exp} {dest})"
     else:
         print("Unsupported op", net.op)
         return None
@@ -907,17 +919,18 @@ def get_memories(final_regs, block):
     start_time = time.time()
     bad_mems = []
     for mem in mems:
-        mem.write_port = get_write_port(mem, block)
-        if len(mem.write_port) == 0:
-            print("Error: memory correct write_port not located")
-            for reg in mem.reg_list:
-                final_regs.append(reg)
-            bad_mems.append(mem)
-        mem.read_ports = get_read_ports(mem, final_regs, block)
-    
-    for mem in bad_mems:
-        mems.remove(mem)
-    times.append(time.time() - start_time)
+        to_churchroad(mem, block)
+    #     mem.write_port = get_write_port(mem, block)
+    #     if len(mem.write_port) == 0:
+    #         print("Error: memory correct write_port not located")
+    #         for reg in mem.reg_list:
+    #             final_regs.append(reg)
+    #         bad_mems.append(mem)
+    #     mem.read_ports = get_read_ports(mem, final_regs, block)
+    # 
+    # for mem in bad_mems:
+    #     mems.remove(mem)
+    # times.append(time.time() - start_time)
 
     return mems
 
@@ -966,6 +979,84 @@ def write_to_csv(regs, mems, file_path):
     with open(file_path, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile,delimiter=" ")
         writer.writerows(output)
+
+def to_churchroad(mem, block):
+
+    lets = {}
+    unions = {}
+    ports = {}
+    deletes = {}
+    extracts = {}
+        
+    for net in block:
+        # print(net)
+        for wire in (net.dests + net.args):
+            name = _sanitize(wire.name)
+
+            if name in lets:
+                continue
+
+            let = f"(let {name} (Wire \"{name}\" {wire.bitwidth}))"
+            lets[name] = let
+
+            if name not in ports and type(wire) == pyrtl.Input:
+                ports[name] = f";(IsPort \"\" \"{name}\" (Input) {name})"
+            elif name not in ports and type(wire) == pyrtl.Output:
+                ports[name] = f";(IsPort \"\" \"{name}\" (Output) {name})"
+                deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
+                extracts[name] = f"(query-extract {name})"
+            elif name not in deletes:
+                deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
+
+        dest = net.dests[0]
+        name = _sanitize(dest.name)
+        union = f"(union {name} {_make_expr(net)})"
+        unions[name] = union
+
+    ## Output to Churchroad
+    churchroad = ["(include \"./elephant.egg\")"]
+    for _,let in lets.items():
+        #print(let)
+        churchroad.append(let)
+    for _,union in unions.items():
+        #print(union)
+        churchroad.append(union)
+    # for _,port in ports.items():
+    #     #print(port)
+    #     churchroad.append(port)
+    for _,delete in deletes.items():
+        #print(delete)
+        churchroad.append(delete)
+    read_rule = "\n(rule\n"
+    read_rule += " ((= d \n"
+    for i in range(mem.val_width):
+        if i < (mem.val_width - 2):
+            read_rule += f"  (Concat (Mux a (MapSelect i{i} x))\n"
+        else:
+            read_rule += f"  (Concat (Mux a (MapSelect i{i} x)) (Mux a (MapSelect i{i+1} x))\n"
+            break
+    read_rule += '  ' + ')' * (mem.val_width) + '\n'
+    # for i in range(mem.val_width):
+    #     read_rule += f"   (Mux a (MapSelect {i} x))\n"
+    # read_rule += "   ))\n"
+    index_checks = itertools.combinations(range(mem.val_width), 2)
+    for pair in index_checks:
+        read_rule += f"  (!= i{pair[0]} i{pair[1]})\n"
+    read_rule += "  (HasType a (Bitvector n))\n"
+    read_rule += "  (= (log2 (vec-length x)) n))\n"
+    read_rule += " ((union d (Read a x)))\n"
+    read_rule += ":ruleset decomp)\n"
+    churchroad.append(read_rule)
+    churchroad.append("(run-schedule (repeat 15 (saturate typing) (saturate decomp)))")
+    for _,extract in sorted(extracts.items()):
+        #print(extract)
+        churchroad.append(extract)
+
+    eggfile = NAME.split('.')[0]+'_'+mem.name+'.egg'
+    with open(eggfile, 'w') as f:
+        f.write('\n'.join(churchroad))
+    import os
+    os.system(f"cp {eggfile} ../egglog/")
 
 sys.setrecursionlimit(100000)
 
@@ -1047,11 +1138,11 @@ MIN_MEM_ADDR_WIDTH = 1
 final_mems = get_memories(final_regs, pyrtl.working_block())
 #print("got memblocks")
 
-for final_mem in final_mems:
-    final_mem.print_mem()
+# for final_mem in final_mems:
+#     final_mem.print_mem()
 
 # pyrtl.optimize()
 # print(pyrtl.working_block())
 
-print(f"decomp time: {sum(times[1:])} s")
+# print(f"decomp time: {sum(times[1:])} s")
 
