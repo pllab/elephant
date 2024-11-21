@@ -22,13 +22,19 @@ op_map = {
 def _sanitize(name):
     return name.replace('[', '_').replace(']', '')
 
+def _sanitize_in_make_expr(name):
+    name = _sanitize(name)
+    if "reg" in name:
+        name += "_i"
+    return name
+
 def _make_expr(net):
     if net.op in '~&|^n':
-        argvars = " ".join((_sanitize(arg.name) for arg in net.args))
+        argvars = " ".join((_sanitize_in_make_expr(arg.name) for arg in net.args))
         argn = len(net.args)
         return f"({op_map[net.op]} {argvars})"
     elif net.op == 'x':
-        argnames = [_sanitize(arg.name) for arg in net.args]
+        argnames = [_sanitize_in_make_expr(arg.name) for arg in net.args]
         s = argnames[0]
         a = argnames[1]
         b = argnames[2]
@@ -41,9 +47,9 @@ def _make_expr(net):
             return f"Concat {args[0]} ({_nest_concat(args[1:])})"
         return '('+_nest_concat([arg.name for arg in net.args])+')'
     elif net.op in 'w':
-        return _sanitize(net.args[0].name)
+        return _sanitize_in_make_expr(net.args[0].name)
     elif net.op in 'r':
-        return _sanitize(net.args[0].name)
+        return _sanitize_in_make_expr(net.args[0].name)
     elif net.op == 's':
         extract_exp = ""
         slices = [a for a in net.op_param]
@@ -67,7 +73,7 @@ def _make_expr(net):
         else:
             print("Error: Unsupported select type.")
             return
-        dest = _sanitize(net.args[0].name)
+        dest = _sanitize_in_make_expr(net.args[0].name)
         return f"({extract_exp} {dest})"
     else:
         print("Unsupported op", net.op)
@@ -996,7 +1002,12 @@ def to_churchroad(mem, block):
             if name in lets:
                 continue
 
-            let = f"(let {name} (Wire \"{name}\" {wire.bitwidth}))"
+            if type(wire) == pyrtl.Register:
+                let_i = f"(let {name + '_i'} (Wire \"{name + '_i'}\" {wire.bitwidth}))"
+                let_o = f"(let {name + '_o'} (Wire \"{name + '_o'}\" {wire.bitwidth}))"
+                let = let_i + '\n' + let_o
+            else:
+                let = f"(let {name} (Wire \"{name}\" {wire.bitwidth}))"
             lets[name] = let
 
             if name not in ports and type(wire) == pyrtl.Input:
@@ -1006,10 +1017,20 @@ def to_churchroad(mem, block):
                 deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
                 extracts[name] = f"(query-extract {name})"
             elif name not in deletes:
-                deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
+                if type(wire) == pyrtl.Register:
+                    # del_i = f"(delete (Wire \"{name + '_i'}\" {wire.bitwidth}))"
+                    del_o = f"(delete (Wire \"{name + '_o'}\" {wire.bitwidth}))"
+                    # deletes[name] = del_i + '\n' + del_o
+                    deletes[name] = del_o
+                else:
+                    if "_i" in name:
+                        continue
+                    deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
 
         dest = net.dests[0]
         name = _sanitize(dest.name)
+        if "reg" in name:
+            name = name + "_o"
         union = f"(union {name} {_make_expr(net)})"
         unions[name] = union
 
