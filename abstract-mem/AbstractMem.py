@@ -450,14 +450,14 @@ class AbstractMem:
                          temperatures = [40],
                          route_supplies = "side"
                          ):
-        if len(self.write_ports) == 1:
-            shared_rw = len(self.read_ports) == 1 \
-                        and self.read_ports[0].addr.name == self.write_ports[0].addr.name
+        if len(self.write_ports) == len(self.read_ports) \
+            and all(self.read_ports[i].addr.name == self.write_ports[i].addr.name for i in range(len(self.read_ports))):
+            shared_rw = True
         else:
             shared_rw = False
 
         # 1rw
-        num_rw = 1 if shared_rw else 0
+        num_rw = len(self.read_ports) if shared_rw else 0
         # Nr1w
         num_read = 0 if shared_rw else len(self.read_ports)
         num_write = 0 if (shared_rw or (len(self.write_ports) == 0)) else 1
@@ -470,6 +470,8 @@ num_rw_ports = {num_rw}
 num_r_ports = {num_read}
 num_w_ports = {num_write}
 
+netlist_only = True
+
 tech_name = "{tech_name}"
 nominal_corner_only = False
 process_corners = ["TT"]
@@ -477,7 +479,7 @@ supply_voltages = {supply_voltages}
 temperatures = {temperatures}
 
 route_supplies = "{route_supplies}"
-check_lvsdrc = True
+check_lvsdrc = False
 
 output_name = "sram_{{0}}rw{{1}}r{{2}}w_{{3}}_{{4}}_{{5}}".format(num_rw_ports,
                                                       num_r_ports,
