@@ -12,6 +12,7 @@ BENCHMARKS=(
   "netlist_h128_w16_1rw.v toplevel"
   "netlist_h128_w16_2rw.v toplevel"
   "pico.pickle.v picorv32"
+  "sparc_ffu.pickle.v sparc_ffu_nospu_wrap"
 )
 
 execute_blif() {
@@ -38,5 +39,5 @@ export -f execute_map
 
 JOBS=32
 
-parallel --results /tmp/eval-blif --progress --jobs ${JOBS} --colsep ' ' execute_blif ::: "${BENCHMARKS[@]}"
+#parallel --results /tmp/eval-blif --progress --jobs ${JOBS} --colsep ' ' execute_blif ::: "${BENCHMARKS[@]}"
 parallel --results /tmp/eval-map --progress --jobs ${JOBS} --colsep ' ' execute_map ::: "${BENCHMARKS[@]}"

@@ -6,6 +6,7 @@ proc vivado_synth { vsource vtop elabed mapped stats } {
     read_verilog ${vsource}
 
     puts "Elaborating design ${vsource}:${vtop} -> ${elabed}"
+    set_property -quiet file_type "SystemVerilog" [get_files ${vsource}]
     synth_design -top ${vtop} -rtl -rtl_skip_constraints -rtl_skip_mlo
     write_verilog -force ${elabed}
 
