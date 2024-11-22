@@ -13,8 +13,8 @@ proc vivado_synth { vsource vtop elabed mapped stats } {
     #synth_design -top ${vtop}
     #write_verilog -force ${mapped}
 
-    puts "Reporting usage"
-    report_utilization > ${stats}
+    #puts "Reporting usage"
+    #report_utilization > ${stats}
 }
 
 if { ${argc} != 5} {

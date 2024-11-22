@@ -11,4 +11,18 @@
     - For example, run: `./collect_stats.sh microbenchmarks/*.v`
 * `stats_to_csv.sh`
     - Takes as argument one or more `.dat` files produced from `collect_stats.sh`.
-    - For example, run: `./stats_to_csv.sh microbenchmarks/*.dat`
+    - For example, run: `./stats_to_csv.sh microbenchmarks/*.dat
+
+Pack results with:
+        gzip microbenchmarks/*.elabed.v
+        gzip microbenchmarks/*.blif
+        gzip microbenchmarks/*.dat
+        gzip microbenchmarks/*.util
+
+Unpack results with:
+        gunzip microbenchmarks/*.elabed.v
+        gunzip microbenchmarks/*.blif
+        gunzip microbenchmarks/*.dat
+        gunzip microbenchmarks/*.util
+
+
