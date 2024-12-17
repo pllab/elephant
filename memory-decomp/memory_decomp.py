@@ -100,8 +100,8 @@ class RegisterEn:
     def print_reg(self):
         print(self.name, end="[")
         print(self.width, end="]: ")
-        for ff in self.ff_list:
-            print(ff.name, end=" ")
+        # for ff in self.ff_list:
+        #     print(ff.name, end=" ")
         print()
 
 class Memory:
@@ -122,10 +122,10 @@ class Memory:
         print(self.addr_width)
         print("val_width:",end=" ")
         print(self.val_width)
-        print("reg_list:",end=" ")
-        for r in self.reg_list:
-            print(pyrtl.working_block().wirevector_by_name.get(r.name), end=" ")
-        print()
+        # print("reg_list:",end=" ")
+        # for r in self.reg_list:
+        #     print(pyrtl.working_block().wirevector_by_name.get(r.name), end=" ")
+        # print()
         print("write enable:",end=" ")
         print(self.write_enable)
         print(f"write_address: ({len(self.write_address)}), {[str(a) for a in self.write_address]}")
@@ -585,7 +585,7 @@ def is_permutation(a, b):
 
 # bundles the write port of a memblock
 def get_write_port(mem, block):
-    connections, uses = block.net_connections()
+    connections, uses = block.net_connections(include_virtual_nodes=True)
     
     # TODO: can continue until reach register's "_i" wire
     reg_write_ports = []
@@ -600,15 +600,15 @@ def get_write_port(mem, block):
                 continue
             # var[net.dests[0].name] = _make_expr(net)
             # print(net.args[2])
-            if net.args[2] not in connections:
-                print("Error: register inputs not suitable for write_port")
-                return []
+            # if net.args[2] not in connections:
+            #     print("Error: register inputs not suitable for write_port")
+            #     return []
             d = connections[net.args[2]]
             # print(d)
             # var[d.dests[0].name] = _make_expr(d)
-            if d.op == "&" and d.args[0].name == mem.write_enable.name:
+            if not isinstance(d, pyrtl.Input) and d.op == "&" and d.args[0].name == mem.write_enable.name:
                 wp.append( d.args[1] )
-            elif d.op == "&" and d.args[1].name == mem.write_enable.name:
+            elif not isinstance(d, pyrtl.Input) and d.op == "&" and d.args[1].name == mem.write_enable.name:
                 wp.append( d.args[0] )
             else:
                 wp.append( net.args[2] )
@@ -778,14 +778,16 @@ def get_read_ports(mem, grouped_regs, block):
                 else:
                     bundles[i_keys] = [i.name, j.name]
     portnum = 0
-    read_defs, read_uses = readblock.net_connections()
-    # if the address is a register and it has an enable then that is the read enable
+    read_defs, read_uses = readblock.net_connections(include_virtual_nodes=False)
     for outs,ins in bundles.items():
-        # print(f"{set(ins)} --> {outs}")
+        print(f"{set(ins)}({len(ins)})({len(set(ins))}) --> {outs}, ({mem.addr_width} x {mem.val_width})")
+        if (len(outs) != mem.val_width) or (len(ins) != mem.addr_width):
+            continue
         # bundle the inputs
         newinput = pyrtl.Input(bitwidth=len(ins), name=f"read_addr_{portnum}", block=readblock)
         readports[portnum] = {'addr': (str(newinput), ins)}
         ren = set()
+        # if the address is a register and it has an enable then that is the read enable
         for i in ins:
             if i[-2:] != '_o':
                 break
@@ -807,8 +809,11 @@ def get_read_ports(mem, grouped_regs, block):
                     for arg_idx in range(len(args)):
                         if args[arg_idx].name == i_dest.name:
                             args[arg_idx] = new_i
+                    #for used_dest in use_net.dests:
+                    #    print("  use_net.dest", used_dest, w in readblock.wirevector_set)
                     new_net = pyrtl.LogicNet(use_net.op, use_net.op_param,
                                              tuple(args), use_net.dests)
+                    #print("  new_net", str(new_net))
                     readblock.add_net(new_net)
                     readblock.logic.remove(use_net)
                 readblock.remove_wirevector(i_dest)
@@ -833,6 +838,7 @@ def get_read_ports(mem, grouped_regs, block):
                                      op_param=o_net.op_param,
                                      args=o_net.args,
                                      dests=(new_o,))
+            print(f"{[str(a) for a in o_net.args]}, {str(new_o)}")
             readblock.add_net(new_net)
             readblock.logic.remove(o_net)
             readblock.remove_wirevector(o_wire)
@@ -843,65 +849,65 @@ def get_read_ports(mem, grouped_regs, block):
 
         portnum += 1
         
-    for net in readblock:
-        # print(net)
-        for wire in (net.dests + net.args):
-            name = _sanitize(wire.name)
+    #for net in readblock:
+    #    # print(net)
+    #    for wire in (net.dests + net.args):
+    #        name = _sanitize(wire.name)
 
-            if name in lets:
-                continue
+    #        if name in lets:
+    #            continue
 
-            let = f"(let {name} (Wire \"{name}\" {wire.bitwidth}))"
-            lets[name] = let
+    #        let = f"(let {name} (Wire \"{name}\" {wire.bitwidth}))"
+    #        lets[name] = let
 
-            if name not in ports and type(wire) == pyrtl.Input:
-                ports[name] = f";(IsPort \"\" \"{name}\" (Input) {name})"
-            elif name not in ports and type(wire) == pyrtl.Output:
-                ports[name] = f";(IsPort \"\" \"{name}\" (Output) {name})"
-                deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
-                extracts[name] = f"(query-extract {name})"
-            elif name not in deletes:
-                deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
+    #        if name not in ports and type(wire) == pyrtl.Input:
+    #            ports[name] = f";(IsPort \"\" \"{name}\" (Input) {name})"
+    #        elif name not in ports and type(wire) == pyrtl.Output:
+    #            ports[name] = f";(IsPort \"\" \"{name}\" (Output) {name})"
+    #            deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
+    #            extracts[name] = f"(query-extract {name})"
+    #        elif name not in deletes:
+    #            deletes[name] = f"(delete (Wire \"{name}\" {wire.bitwidth}))"
 
-        dest = net.dests[0]
-        name = _sanitize(dest.name)
-        union = f"(union {name} ({_make_expr(net)}))"
-        unions[name] = union
+    #    dest = net.dests[0]
+    #    name = _sanitize(dest.name)
+    #    union = f"(union {name} ({_make_expr(net)}))"
+    #    unions[name] = union
 
-    ## Output to Churchroad
-    churchroad = ["(include \"./elephant.egg\")"]
-    for _,let in lets.items():
-        #print(let)
-        churchroad.append(let)
-    for _,union in unions.items():
-        #print(union)
-        churchroad.append(union)
-    for _,port in ports.items():
-        #print(port)
-        churchroad.append(port)
-    for _,delete in deletes.items():
-        #print(delete)
-        churchroad.append(delete)
-    read_rule = "\n(rule\n"
-    read_rule += " ((= d (Concat\n"
-    for i in range(mem.val_width):
-        read_rule += f"   (Mux a (MapSelect {i} x))\n"
-    read_rule += "   ))\n"
-    read_rule += "  (HasType a (Bitvector n))\n"
-    read_rule += "  (= (log2 (vec-length x)) n))\n"
-    read_rule += " ((union d (Read a x)))\n"
-    read_rule += ":ruleset decomp)\n"
-    churchroad.append(read_rule)
-    churchroad.append("(run-schedule (repeat 15 (saturate typing) (saturate decomp)))")
-    for _,extract in sorted(extracts.items()):
-        #print(extract)
-        churchroad.append(extract)
+    ### Output to Churchroad
+    #churchroad = ["(include \"./elephant.egg\")"]
+    #for _,let in lets.items():
+    #    #print(let)
+    #    churchroad.append(let)
+    #for _,union in unions.items():
+    #    #print(union)
+    #    churchroad.append(union)
+    #for _,port in ports.items():
+    #    #print(port)
+    #    churchroad.append(port)
+    #for _,delete in deletes.items():
+    #    #print(delete)
+    #    churchroad.append(delete)
+    #read_rule = "\n(rule\n"
+    #read_rule += " ((= d (Concat\n"
+    #for i in range(mem.val_width):
+    #    read_rule += f"   (Mux a (MapSelect {i} x))\n"
+    #read_rule += "   ))\n"
+    #read_rule += "  (HasType a (Bitvector n))\n"
+    #read_rule += "  (= (log2 (vec-length x)) n))\n"
+    #read_rule += " ((union d (Read a x)))\n"
+    #read_rule += ":ruleset decomp)\n"
+    #churchroad.append(read_rule)
+    #churchroad.append("(run-schedule (repeat 15 (saturate typing) (saturate decomp)))")
+    #for _,extract in sorted(extracts.items()):
+    #    #print(extract)
+    #    churchroad.append(extract)
 
     # with open(NAME.split('.')[0]+'_'+mem.name+'.egg', 'w') as f:
     #     f.write('\n'.join(churchroad))
 
-    with open('readports.svg', 'w') as f:
-        pyrtl.output_to_svg(f, block=readblock)
+    # with open('readports.svg', 'w') as f:
+    #     pyrtl.output_to_svg(f, block=readblock)
 
     return readports
 
@@ -1130,7 +1136,13 @@ remove_concat_select()
 times.append(time.time() - start_time)
 # print("finished remove_concat_select")
 start_time = time.time()
-pyrtl.passes.optimize(update_working_block=True, block=pyrtl.working_block())
+#pyrtl.combine_slice_concats()
+#pyrtl.passes.optimize(update_working_block=True, block=pyrtl.working_block())
+pyrtl.passes._remove_wire_nets(pyrtl.working_block(), skip_sanity_check=True)
+pyrtl.passes._remove_slice_nets(pyrtl.working_block(), skip_sanity_check=True)
+pyrtl.passes.constant_propagation(pyrtl.working_block(), True)
+pyrtl.passes._remove_unlistened_nets(pyrtl.working_block())
+pyrtl.passes.common_subexp_elimination(block=pyrtl.working_block())
 times.append(time.time() - start_time)
 
 regs = pyrtl.working_block().wirevector_subset(pyrtl.Register)

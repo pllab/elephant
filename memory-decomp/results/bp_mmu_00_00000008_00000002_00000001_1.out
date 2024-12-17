@@ -1,0 +1,160 @@
+Input Wire, r_eaddr_i[3] has been deemed useless by optimization
+Input Wire, r_eaddr_i[4] has been deemed useless by optimization
+Input Wire, r_eaddr_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[7] has been deemed useless by optimization
+Input Wire, r_eaddr_i[8] has been deemed useless by optimization
+Input Wire, r_eaddr_i[9] has been deemed useless by optimization
+Input Wire, r_eaddr_i[10] has been deemed useless by optimization
+Input Wire, r_eaddr_i[11] has been deemed useless by optimization
+Input Wire, w_entry_i[5] has been deemed useless by optimization
+Input Wire, hio_mask_i[1] has been deemed useless by optimization
+Input Wire, hio_mask_i[2] has been deemed useless by optimization
+Input Wire, hio_mask_i[3] has been deemed useless by optimization
+Input Wire, hio_mask_i[4] has been deemed useless by optimization
+Input Wire, hio_mask_i[5] has been deemed useless by optimization
+Input Wire, hio_mask_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[9] has been deemed useless by optimization
+Input Wire, hio_mask_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[3] has been deemed useless by optimization
+Input Wire, r_eaddr_i[4] has been deemed useless by optimization
+Input Wire, r_eaddr_i[7] has been deemed useless by optimization
+Input Wire, hio_mask_i[1] has been deemed useless by optimization
+Input Wire, r_eaddr_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[6] has been deemed useless by optimization
+Input Wire, hio_mask_i[2] has been deemed useless by optimization
+Input Wire, w_entry_i[5] has been deemed useless by optimization
+Input Wire, hio_mask_i[3] has been deemed useless by optimization
+Input Wire, r_eaddr_i[11] has been deemed useless by optimization
+Input Wire, hio_mask_i[4] has been deemed useless by optimization
+Input Wire, r_eaddr_i[8] has been deemed useless by optimization
+Input Wire, r_eaddr_i[10] has been deemed useless by optimization
+Input Wire, hio_mask_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[9] has been deemed useless by optimization
+Input Wire, r_eaddr_i[10] has been deemed useless by optimization
+Input Wire, w_entry_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[11] has been deemed useless by optimization
+Input Wire, r_eaddr_i[7] has been deemed useless by optimization
+Input Wire, hio_mask_i[1] has been deemed useless by optimization
+Input Wire, hio_mask_i[3] has been deemed useless by optimization
+Input Wire, hio_mask_i[4] has been deemed useless by optimization
+Input Wire, hio_mask_i[2] has been deemed useless by optimization
+Input Wire, hio_mask_i[5] has been deemed useless by optimization
+Input Wire, hio_mask_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[3] has been deemed useless by optimization
+Input Wire, r_eaddr_i[4] has been deemed useless by optimization
+Input Wire, r_eaddr_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[8] has been deemed useless by optimization
+Input Wire, r_eaddr_i[9] has been deemed useless by optimization
+Input Wire, r_eaddr_i[8] has been deemed useless by optimization
+Input Wire, r_eaddr_i[10] has been deemed useless by optimization
+Input Wire, w_entry_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[11] has been deemed useless by optimization
+Input Wire, r_eaddr_i[7] has been deemed useless by optimization
+Input Wire, hio_mask_i[1] has been deemed useless by optimization
+Input Wire, hio_mask_i[3] has been deemed useless by optimization
+Input Wire, hio_mask_i[4] has been deemed useless by optimization
+Input Wire, hio_mask_i[5] has been deemed useless by optimization
+Input Wire, hio_mask_i[2] has been deemed useless by optimization
+Input Wire, hio_mask_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[3] has been deemed useless by optimization
+Input Wire, r_eaddr_i[4] has been deemed useless by optimization
+Input Wire, r_eaddr_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[9] has been deemed useless by optimization
+Input Wire, r_eaddr_i[10] has been deemed useless by optimization
+Input Wire, w_entry_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[11] has been deemed useless by optimization
+Input Wire, r_eaddr_i[7] has been deemed useless by optimization
+Input Wire, hio_mask_i[1] has been deemed useless by optimization
+Input Wire, hio_mask_i[3] has been deemed useless by optimization
+Input Wire, hio_mask_i[4] has been deemed useless by optimization
+Input Wire, hio_mask_i[5] has been deemed useless by optimization
+Input Wire, hio_mask_i[2] has been deemed useless by optimization
+Input Wire, hio_mask_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[3] has been deemed useless by optimization
+Input Wire, r_eaddr_i[4] has been deemed useless by optimization
+Input Wire, r_eaddr_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[8] has been deemed useless by optimization
+Input Wire, hio_mask_i[1] has been deemed useless by optimization
+Input Wire, hio_mask_i[2] has been deemed useless by optimization
+Input Wire, hio_mask_i[3] has been deemed useless by optimization
+Input Wire, hio_mask_i[4] has been deemed useless by optimization
+Input Wire, hio_mask_i[5] has been deemed useless by optimization
+Input Wire, hio_mask_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[3] has been deemed useless by optimization
+Input Wire, r_eaddr_i[4] has been deemed useless by optimization
+Input Wire, r_eaddr_i[5] has been deemed useless by optimization
+Input Wire, r_eaddr_i[6] has been deemed useless by optimization
+Input Wire, r_eaddr_i[7] has been deemed useless by optimization
+Input Wire, r_eaddr_i[8] has been deemed useless by optimization
+Input Wire, r_eaddr_i[9] has been deemed useless by optimization
+Input Wire, r_eaddr_i[10] has been deemed useless by optimization
+Input Wire, r_eaddr_i[11] has been deemed useless by optimization
+Input Wire, w_entry_i[5] has been deemed useless by optimization
+reg_tmp26405[27]: 
+reg_tmp36005[33]: 
+reg_tmp35401[27]: 
+reg_tmp36119[33]: 
+reg_tmp35439[27]: 
+reg_tmp35591[27]: 
+reg_tmp36157[24]: 
+reg_tmp35719[15]: 
+reg_tmp35629[27]: 
+reg_tmp4079[27]: 
+reg_tmp36081[33]: 
+reg_tmp35477[27]: 
+reg_tmp24099[27]: 
+reg_tmp36170[24]: 
+reg_tmp35363[27]: 
+reg_tmp36062[33]: 
+reg_tmp36043[33]: 
+reg_tmp35553[27]: 
+reg_tmp36138[33]: 
+reg_tmp36100[33]: 
+reg_tmp26367[27]: 
+reg_tmp35515[27]: 
+reg_tmp36024[33]: 
+Error: addr_width from address logic not the same as from register count
+Error: addr_width from address logic not the same as from register count
+Error: addr_width from address logic not the same as from register count
+Error: addr_width from address logic not the same as from register count
+Error: addr_width from address logic not the same as from register count
+Error: addr_width from address logic not the same as from register count
+Error: addr_width from address logic not the same as from register count
+Error: addr_width from address logic not the same as from register count
+mem_tmp26361, 1 x 27
+{'tmp24725', 'tmp25166', 'tmp24813', 'tmp25106', 'tmp1738', 'tmp25025'}(6)(6) --> ('tmp26424',), (1 x 27)
+{'tmp160_o', 'tmp223_o', 'tmp274_o', 'tmp300_o', 'tmp319_o', 'tmp1647_o', 'tmp163_o', 'tmp316_o', 'tmp109_o', 'tmp326_o', 'tmp284_o', 'tmp94_o', 'tmp337_o', 'tmp220_o', 'tmp361_o', 'tmp167_o', 'tmp297_o', 'tmp105_o', 'tmp358_o', 'tmp151_o', 'tmp287_o', 'tmp265_o', 'tmp235_o', 'tmp226_o', 'tmp244_o', 'tmp355_o', 'tmp348_o'}(27)(27) --> ('tmp26424', 'tmp26386'), (1 x 27)
+mem_tmp35752, 3 x 33
+mem_tmp35738, 1 x 24
+++++++++++
+mem_tmp26361
+addr_width: 1
+val_width: 27
+write enable: tmp26361/1W
+write_address: (1), ['tmp35973/1W']
+write_port: (27), ['tmp2959/1W', 'tmp2883/1W', 'tmp2978/1W', 'tmp2788/1W', 'tmp2807/1W', 'tmp2864/1W', 'tmp2769/1W', 'tmp2541/1W', 'tmp2617/1W', 'tmp2731/1W', 'tmp3035/1W', 'tmp2712/1W', 'tmp2921/1W', 'tmp2997/1W', 'tmp2598/1W', 'tmp2674/1W', 'tmp2940/1W', 'tmp3016/1W', 'tmp2845/1W', 'tmp2579/1W', 'tmp2655/1W', 'tmp2560/1W', 'tmp2750/1W', 'tmp2902/1W', 'tmp2636/1W', 'tmp2693/1W', 'tmp2826/1W']
+read_ports:
+----------
+++++++++++
+mem_tmp35752
+addr_width: 3
+val_width: 33
+write enable: tmp35752/1W
+write_address: (3), ['tmp22574/1W', 'tmp22593/1W', 'tmp22612/1W']
+write_port: (33), ['w_entry_i[28]/1I', 'w_entry_i[30]/1I', 'w_entry_i[31]/1I', 'w_entry_i[26]/1I', 'w_entry_i[25]/1I', 'w_entry_i[0]/1I', 'w_entry_i[24]/1I', 'w_entry_i[1]/1I', 'w_entry_i[33]/1I', 'w_entry_i[35]/1I', 'w_entry_i[9]/1I', 'w_entry_i[13]/1I', 'w_entry_i[16]/1I', 'w_entry_i[10]/1I', 'w_entry_i[8]/1I', 'w_entry_i[2]/1I', 'w_entry_i[11]/1I', 'w_entry_i[12]/1I', 'w_entry_i[20]/1I', 'w_entry_i[19]/1I', 'w_entry_i[4]/1I', 'w_entry_i[18]/1I', 'w_entry_i[21]/1I', 'w_entry_i[23]/1I', 'w_entry_i[29]/1I', 'w_entry_i[34]/1I', 'w_entry_i[27]/1I', 'w_entry_i[3]/1I', 'w_entry_i[22]/1I', 'w_entry_i[14]/1I', 'w_entry_i[17]/1I', 'w_entry_i[32]/1I', 'w_entry_i[15]/1I']
+read_ports:
+----------
+++++++++++
+mem_tmp35738
+addr_width: 1
+val_width: 24
+write enable: tmp35738/1W
+write_address: (1), ['tmp20705/1W']
+write_port: (24), ['w_entry_i[20]/1I', 'w_entry_i[25]/1I', 'w_entry_i[4]/1I', 'w_entry_i[28]/1I', 'w_entry_i[3]/1I', 'w_entry_i[27]/1I', 'w_entry_i[22]/1I', 'w_entry_i[32]/1I', 'w_entry_i[21]/1I', 'w_entry_i[18]/1I', 'w_entry_i[30]/1I', 'w_entry_i[0]/1I', 'w_entry_i[19]/1I', 'w_entry_i[26]/1I', 'w_entry_i[23]/1I', 'w_entry_i[29]/1I', 'w_entry_i[33]/1I', 'w_entry_i[35]/1I', 'w_entry_i[17]/1I', 'w_entry_i[24]/1I', 'w_entry_i[34]/1I', 'w_entry_i[1]/1I', 'w_entry_i[31]/1I', 'w_entry_i[2]/1I']
+read_ports:
+----------
+decomp time: 5.403716802597046 s

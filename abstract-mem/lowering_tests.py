@@ -42,13 +42,53 @@ def test_pyrtl_netlist(height_log2, width, portedness):
         pyrtl.output_to_verilog(f, add_reset=False)
 
 if __name__ == '__main__':
-    for portedness in ['1rw','2rw','1r1w']:
-        for height_log2 in range(4,8):
-            for width in range(16,17):
-                num_read_ports=1
-                num_write_ports=1
-                with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
-                    f.write(test_vivado_bram(height_log2, width, portedness))
-                with open('openram_h{0}_w{1}_{2}.py'.format(2 ** height_log2, width, portedness), 'w') as f:
-                    f.write(test_openram_sram(height_log2, width, portedness))
-                test_pyrtl_netlist(height_log2, width, portedness)
+    height_log2 = 4
+    width = 43
+    portedness = '1r1w'
+    with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+        f.write(test_vivado_bram(height_log2, width, portedness))
+
+    height_log2 = 9
+    width = 8
+    with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+        f.write(test_vivado_bram(height_log2, width, portedness))
+    
+    height_log2 = 6
+    width = 50
+    with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+        f.write(test_vivado_bram(height_log2, width, portedness))
+    
+    height_log2 = 3
+    width = 33
+    with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+        f.write(test_vivado_bram(height_log2, width, portedness))
+    
+    height_log2 = 1
+    width = 27
+    with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+        f.write(test_vivado_bram(height_log2, width, portedness))
+    
+    height_log2 = 1
+    width = 24
+    with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+        f.write(test_vivado_bram(height_log2, width, portedness))
+    
+    height_log2 = 2
+    width = 114
+    with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+        f.write(test_vivado_bram(height_log2, width, portedness))
+    
+    height_log2 = 3
+    width = 174
+    with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+        f.write(test_vivado_bram(height_log2, width, portedness))
+    #for portedness in ['1rw','2rw','1r1w']:
+    #    for height_log2 in range(4,8):
+    #        for width in range(16,17):
+    #            num_read_ports=1
+    #            num_write_ports=1
+    #            with open('vivadotcl_h{0}_w{1}_{2}.tcl'.format(2**height_log2, width, portedness), 'w') as f:
+    #                f.write(test_vivado_bram(height_log2, width, portedness))
+    #            with open('openram_h{0}_w{1}_{2}.py'.format(2 ** height_log2, width, portedness), 'w') as f:
+    #                f.write(test_openram_sram(height_log2, width, portedness))
+    #            test_pyrtl_netlist(height_log2, width, portedness)

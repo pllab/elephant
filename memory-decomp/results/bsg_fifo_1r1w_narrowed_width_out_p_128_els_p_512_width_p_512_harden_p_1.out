@@ -1,0 +1,15 @@
+Input Wire, clk_i has been deemed useless by optimization
+Input Wire, clk_i has been deemed useless by optimization
+Input Wire, clk_i has been deemed useless by optimization
+Input Wire, clk_i has been deemed useless by optimization
+Traceback (most recent call last):
+  File "/home/zsisco/elephant/memory-decomp/memory_decomp.py", line 1047, in <module>
+    final_regs = get_final_regs(regs, nodes, visited, pyrtl.working_block())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zsisco/elephant/memory-decomp/memory_decomp.py", line 240, in get_final_regs
+    visited[node] = 0
+    ~~~~~~~^^^^^^
+  File "/home/zsisco/pyrtl-arch-venv/lib/python3.11/site-packages/pyrtl/wire.py", line 157, in __hash__
+    def __hash__(self):
+
+KeyboardInterrupt
