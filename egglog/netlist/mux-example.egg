@@ -1,4 +1,4 @@
-(include "./elephant.egg")
+(include "./netlist.egg")
 
 ;; Here are some small examples to demonstrate how we apply rewrites to netlists
 ;; to decompile higher-level abstractions.
@@ -34,29 +34,33 @@
 ;; Let's try a slightly bigger example.
 ;; This is the logic for a 4-to-1 mux with 2-bit selector.
 ;; These are the data wires.
-(let x0 (Wire "x0" 1))
-(let x1 (Wire "x1" 1))
-(let x2 (Wire "x2" 1))
-(let x3 (Wire "x3" 1))
+;; Comment out these lines as you go (removing the `;`)
+
+;(let x0 (Wire "x0" 1))
+;(let x1 (Wire "x1" 1))
+;(let x2 (Wire "x2" 1))
+;(let x3 (Wire "x3" 1))
+
 ;; These are the select wires.
-(let a0 (Wire "a0" 1))
-(let a1 (Wire "a1" 1))
+;(let a0 (Wire "a0" 1))
+;(let a1 (Wire "a1" 1))
 
-(let circuit2
- (Or
-  (And
-   (Or
-    (And x0 (Not a0))
-	(And x1 a0))
-   (Not a1))
-  (And
-   (Or
-    (And x2 (Not a0))
-	(And x3 a0))
-   a1)))
+;(let circuit2
+; (Or
+;  (And
+;   (Or
+;    (And x0 (Not a0))
+;	(And x1 a0))
+;   (Not a1))
+;  (And
+;   (Or
+;    (And x2 (Not a0))
+;	(And x3 a0))
+;   a1)))
 
-(run-schedule (repeat 5 (saturate typing) (saturate decomp)))
-(query-extract circuit2)
+;(run-schedule (repeat 5 (saturate typing) (saturate decomp)))
+;(query-extract circuit2)
+
 ;; Running the rewrites we'll get the following output:
 ;; [INFO ] extracted with cost 23: (Mux (Concat (Wire "a0" 1) (Wire "a1" 1)) (Concat (Concat (Wire "x0" 1) (Wire "x1" 1)) (Concat (Wire "x2" 1) (Wire "x3" 1))))
 
