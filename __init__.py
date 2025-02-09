@@ -1,1 +1,1 @@
-import database
+from . import database

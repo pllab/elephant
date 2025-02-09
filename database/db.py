@@ -1,5 +1,7 @@
 import sqlite3
-import formatter
+import pyrtl
+from .AbstractMem import AbstractMem
+from . import formatter
 
 
 def create_tables(conn: sqlite3.Connection):
@@ -111,6 +113,7 @@ class NetlistDatabase(sqlite3.Connection):
         "concat": ["input", "output"],
         "selector": ["input", "output"],
     }
+    target_blif: dict
 
     def __init__(self, db_path: str = ":memory:"):
         super().__init__(db_path)
@@ -118,6 +121,7 @@ class NetlistDatabase(sqlite3.Connection):
 
 
     def build_from_blif(self, blif: dict, target_module: str, ignore_errors: bool = False):
+        self.target_blif = blif["modules"][target_module]
         netlist = formatter.blif_to_db(blif, target_module, ignore_errors)
         wire_data = [(w["id"], w["width"]) for w in netlist["wires"]]
         binary_gate_data = [(g["a"], g["b"], g["y"], g["type"]) for g in netlist["binary_gates"]]
@@ -131,4 +135,22 @@ class NetlistDatabase(sqlite3.Connection):
         insert_records(self, "unary_gate", unary_gate_data)
         insert_records(self, "mux", mux_data)
 
-    def to_pyrtl(self) 
+    def to_pyrtl(self) -> pyrtl.Block:
+        pyrtl.reset_working_block()
+        wire_id_to_pyrtl = {}
+
+        # define inputs & outputs
+        ports = self.target_blif["ports"]
+        for alias, port in ports.items():
+            if port["direction"] == "input":
+                bundle = {bit: pyrtl.Input(bitwidth=1, name=f"{alias}[{bit}]") for bit in port["bits"]}
+            elif port["direction"] == "output":
+                bundle = {bit: pyrtl.Output(bitwidth=1, name=f"{alias}[{bit}]") for bit in port["bits"]}
+            else:
+                raise ValueError(f"Invalid port direction: {port['direction']}")
+            wire_id_to_pyrtl.update(bundle)
+
+        # define internal wires
+        # TODO: handle internal wires
+
+        return pyrtl.working_block()
