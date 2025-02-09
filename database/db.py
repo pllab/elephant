@@ -130,3 +130,5 @@ class NetlistDatabase(sqlite3.Connection):
         insert_records(self, "dffe_xx", dffe_xx_data)
         insert_records(self, "unary_gate", unary_gate_data)
         insert_records(self, "mux", mux_data)
+
+    def to_pyrtl(self) 
