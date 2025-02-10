@@ -819,7 +819,7 @@ def find_or_create_unary_gate(netlist: db.NetlistDatabase, a: int, type: str) ->
     return y
 
 
-def create_write_port_from_wes(netlist: db.NetlistDatabase, wes: list[int]) -> bool:
+def create_write_port_from_wes(netlist: db.NetlistDatabase, wes: list[int]) -> tuple[int, int] | None:
     """
     It creates a write port and repairs the connections: use a reversed write port
     """
@@ -894,8 +894,7 @@ def create_write_port_from_wes(netlist: db.NetlistDatabase, wes: list[int]) -> b
     )
     netlist.commit()
 
-    print(f"wen: {wen}, waddr: {waddr}")
-    return True
+    return wen, waddr
 
 
 if __name__ == "__main__":
