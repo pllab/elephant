@@ -256,8 +256,7 @@ class NetlistDatabase(sqlite3.Connection):
     def to_pyrtl(self) -> pyrtl.Block:
         pyrtl.reset_working_block()
         wire_id_to_pyrtl: dict[int, pyrtl.WireVector] = {}
-        input_ids = set()
-        output_ids = set()
+        input_ids, output_ids = set(), set()
 
         # define inputs & outputs
         ports = self.target_blif["ports"]
@@ -282,7 +281,9 @@ class NetlistDatabase(sqlite3.Connection):
 
         # extract memories
         mems = rewriter.find_memory(self)
-        for mem, (readports, writeports) in mems.items():
+        mem_input_ids, mem_output_ids = set(), set()
+
+        for _, (readports, writeports) in mems.items():
             if len(readports) == 0: # not a memory
                 continue
             if len(writeports) > 1:
@@ -335,9 +336,11 @@ class NetlistDatabase(sqlite3.Connection):
 
         # define internal wires
         # dfs from outputs
-        sources = input_ids | 
+        sources = input_ids | mem_output_ids
         for output_id in output_ids:
-            
+            self._build_from_sink(wire_id_to_pyrtl, sources, output_id)
         # dfs from memory inputs
+        for mem_input_id in mem_input_ids:
+            self._build_from_sink(wire_id_to_pyrtl, sources, mem_input_id)
 
         return pyrtl.working_block()

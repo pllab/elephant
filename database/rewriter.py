@@ -1,4 +1,3 @@
-from . import db
 import sqlite3
 
 
@@ -11,7 +10,7 @@ def id_generator():
 global_id = id_generator()
 
 
-def rewrite_dffe_pn_to_pp(netlist: db.NetlistDatabase) -> bool:
+def rewrite_dffe_pn_to_pp(netlist) -> bool:
     cur = netlist.cursor()
     cur.execute(
         """
@@ -56,7 +55,7 @@ def rewrite_dffe_pn_to_pp(netlist: db.NetlistDatabase) -> bool:
     return True
 
 
-def group_dffe_pp(netlist: db.NetlistDatabase) -> bool:
+def group_dffe_pp(netlist) -> bool:
     """
     Based on the fact that all DFF groups are disjoint,
     we can group all of them in one go.
@@ -124,7 +123,7 @@ def group_dffe_pp(netlist: db.NetlistDatabase) -> bool:
     return True
 
 
-def saturate_comm(netlist: db.NetlistDatabase, target: str) -> int:
+def saturate_comm(netlist, target: str) -> int:
     """
     It finds all commutative binary gates
     and saturates them
@@ -149,7 +148,7 @@ def saturate_comm(netlist: db.NetlistDatabase, target: str) -> int:
     return cur.rowcount
 
 
-def merge_equiv_wires(netlist: db.NetlistDatabase, rhs: int, lhs: int):
+def merge_equiv_wires(netlist, rhs: int, lhs: int):
     """
     It merges two equivalent wires
     lhs := rhs
@@ -179,7 +178,7 @@ def merge_equiv_wires(netlist: db.NetlistDatabase, rhs: int, lhs: int):
     netlist.commit()
 
 
-def saturate_idemp(netlist: db.NetlistDatabase, target: str = "$_NOT_") -> bool:
+def saturate_idemp(netlist, target: str = "$_NOT_") -> bool:
     """
     It finds a pair of idempotent unary gates
     and saturates it
@@ -204,7 +203,7 @@ def saturate_idemp(netlist: db.NetlistDatabase, target: str = "$_NOT_") -> bool:
     return True
 
 
-def saturate_demorgan(netlist: db.NetlistDatabase, target: str, to: str) -> bool:
+def saturate_demorgan(netlist, target: str, to: str) -> bool:
     """
     It finds the pattern: !(a & b) -> !a | !b
     """
@@ -277,7 +276,7 @@ def saturate_demorgan(netlist: db.NetlistDatabase, target: str, to: str) -> bool
     return True
 
 
-def saturate_2_1_mux(netlist: db.NetlistDatabase) -> int:
+def saturate_2_1_mux(netlist) -> int:
     """
     It finds the pattern: s'a + sb
     """
@@ -301,7 +300,7 @@ def saturate_2_1_mux(netlist: db.NetlistDatabase) -> int:
     return cur.rowcount
 
 
-def rewrite_2_1_mux_to_binary_gate(netlist: db.NetlistDatabase) -> bool:
+def rewrite_2_1_mux_to_binary_gate(netlist) -> bool:
     cur = netlist.cursor()
     cur.execute(
         """
@@ -350,7 +349,7 @@ def rewrite_2_1_mux_to_binary_gate(netlist: db.NetlistDatabase) -> bool:
     return True
 
 
-def find_concat(netlist: db.NetlistDatabase, a: int, b: int) -> int | None:
+def find_concat(netlist, a: int, b: int) -> int | None:
     """
     It finds the concat(a, b)
     """
@@ -369,7 +368,7 @@ def find_concat(netlist: db.NetlistDatabase, a: int, b: int) -> int | None:
     return res[0] if res else None
 
 
-def reduce_mux(netlist: db.NetlistDatabase) -> bool:
+def reduce_mux(netlist) -> bool:
     """
     The mux should be in form of binary gate!
     """
@@ -516,7 +515,7 @@ def reduce_mux_once(netlist) -> bool:
     return cur.rowcount > 0
 
 
-def find_selectors_by_output(netlist: db.NetlistDatabase, out: int) -> list[tuple[int, int]] | None:
+def find_selectors_by_output(netlist, out: int) -> list[tuple[int, int]] | None:
     # returns (input, index) if all inputs are found
     cur = netlist.cursor()
     cur.execute("SELECT input, left FROM selector WHERE output = ?;", (out,))
@@ -536,7 +535,7 @@ def find_selectors_by_output(netlist: db.NetlistDatabase, out: int) -> list[tupl
     return inputs
 
 
-def find_single_selector_by_output(netlist: db.NetlistDatabase, w: int) -> list[int]:
+def find_single_selector_by_output(netlist, w: int) -> list[int]:
     # returns input if found
     cur = netlist.cursor()
     cur.execute("SELECT input FROM selector WHERE output = ? LIMIT 1;", (w,))
@@ -559,7 +558,7 @@ def find_single_selector_by_output(netlist: db.NetlistDatabase, w: int) -> list[
     return inputs
 
 
-def find_single_dffe_by_q(netlist: db.NetlistDatabase, w: int) -> tuple[int, int, int] | None:
+def find_single_dffe_by_q(netlist, w: int) -> tuple[int, int, int] | None:
     # returns (d, c, e) if found
     cur = netlist.cursor()
     dffe = None
@@ -581,7 +580,7 @@ def find_single_dffe_by_q(netlist: db.NetlistDatabase, w: int) -> tuple[int, int
     return dffe
 
 
-def saturate_readport(netlist: db.NetlistDatabase) -> list:
+def saturate_readport(netlist) -> list:
     cur = netlist.cursor()
     cur.execute(
         """
@@ -622,7 +621,7 @@ def saturate_readport(netlist: db.NetlistDatabase) -> list:
     return ports
 
 
-def saturate_1_2_demux(netlist: db.NetlistDatabase) -> int:
+def saturate_1_2_demux(netlist) -> int:
     """
     It finds the pattern: {xs', xs} -> demux(x, s)
     """
@@ -666,7 +665,7 @@ def saturate_1_2_demux(netlist: db.NetlistDatabase) -> int:
     return len(demuxes)
 
 
-# def saturate_1_2_demux(netlist: db.NetlistDatabase) -> int:
+# def saturate_1_2_demux(netlist) -> int:
 #     """
 #     It finds the pattern: {xs', xs} -> demux(x, s)
 #     """
@@ -710,7 +709,7 @@ def saturate_1_2_demux(netlist: db.NetlistDatabase) -> int:
 #     return len(demuxes)
 
 
-def rewrite_andnot_to_and_not(netlist: db.NetlistDatabase) -> int:
+def rewrite_andnot_to_and_not(netlist) -> int:
     cur = netlist.cursor()
     cur.execute("SELECT a, b, y FROM binary_gate WHERE type = \"$_ANDNOT_\"")
     abys = cur.fetchall()
@@ -732,7 +731,7 @@ def rewrite_andnot_to_and_not(netlist: db.NetlistDatabase) -> int:
     return cur.rowcount
 
 
-def find_memory(netlist: db.NetlistDatabase) -> dict:
+def find_memory(netlist) -> dict:
     readports = saturate_readport(netlist)
     memories = {}   # qs -> ([(width, rd, ra)], [(wd, wes)])
     for a, y, selectors, w in readports:
@@ -775,7 +774,7 @@ def find_memory(netlist: db.NetlistDatabase) -> dict:
     return memories
 
 
-def find_or_create_binary_gate(netlist: db.NetlistDatabase, a: int, b: int, type: str) -> int:
+def find_or_create_binary_gate(netlist, a: int, b: int, type: str) -> int:
     cur = netlist.cursor()
     cur.execute(
         "SELECT y FROM binary_gate WHERE a = ? AND b = ? AND type = ?;",
@@ -797,7 +796,7 @@ def find_or_create_binary_gate(netlist: db.NetlistDatabase, a: int, b: int, type
     return y
 
 
-def find_or_create_unary_gate(netlist: db.NetlistDatabase, a: int, type: str) -> int:
+def find_or_create_unary_gate(netlist, a: int, type: str) -> int:
     cur = netlist.cursor()
     cur.execute(
         "SELECT y FROM unary_gate WHERE a = ? AND type = ?;",
@@ -819,7 +818,7 @@ def find_or_create_unary_gate(netlist: db.NetlistDatabase, a: int, type: str) ->
     return y
 
 
-def create_write_port_from_wes(netlist: db.NetlistDatabase, wes: list[int]) -> tuple[int, int] | None:
+def create_write_port_from_wes(netlist, wes: list[int]) -> tuple[int, int] | None:
     """
     It creates a write port and repairs the connections: use a reversed write port
     """
@@ -903,6 +902,7 @@ if __name__ == "__main__":
 
     import time
     import json
+    from . import db
     start = time.time()
     with open(NETLIST_FILE, "r") as f:
         blif = json.load(f)
