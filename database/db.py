@@ -188,6 +188,21 @@ class NetlistDatabase(sqlite3.Connection):
             raise ValueError(f"Unsupported unary gate type: {type}")
 
 
+    def _find_concat_inputs(self, output: int) -> list[int] | None:
+        # return None if it's not a concat or the inputs are not 1-bit
+        cur = self.cursor()
+        cur.execute(f"SELECT input, left, right FROM concat WHERE output = ? ORDER BY left;", (output,))
+        rows = cur.fetchall()
+        if not rows:    # not a concat
+            return None
+        for i, (_, left, right) in enumerate(rows):
+            if left != i:
+                return None
+            if right != i + 1:
+                return None
+        return [row[0] for row in rows]
+
+
     def _build_from_sink(
         self,
         wire_id_to_pyrtl: dict[int, pyrtl.WireVector],
@@ -299,13 +314,24 @@ class NetlistDatabase(sqlite3.Connection):
             # create a write port
             wdata, wens = writeports[0]
             wen, waddr = rewriter.create_write_port_from_wes(self, wens)
+            mem_input_ids.add(wen)
             # create a write data bundle
             wdata_bundle_bits = [pyrtl.WireVector(bitwidth=1) for _ in range(width)]
             wdata_bundle = pyrtl.concat(*wdata_bundle_bits)
             for i, bit in enumerate(wdata):
                 wire_id_to_pyrtl[bit] = wdata_bundle_bits[i]
+                mem_input_ids.add(bit)
+            # create a write address bundle
+            waddr_bits = self._find_concat_inputs(waddr)
+            if waddr_bits is None:
+                raise ValueError("Write address is not a concat")
+            waddr_bundle_bits = [pyrtl.WireVector(bitwidth=1) for _ in range(len(waddr_bits))]
+            waddr_bundle = pyrtl.concat(*waddr_bundle_bits)
+            for i, bit in enumerate(waddr_bits):
+                wire_id_to_pyrtl[bit] = waddr_bundle_bits[i]
+                mem_input_ids.add(bit)
             wp = AbstractMem.WritePort(
-                addr=self._get_wire(wire_id_to_pyrtl, waddr, log2(height)),
+                addr=waddr_bundle,
                 data=wdata_bundle,
                 enable=self._get_wire(wire_id_to_pyrtl, wen)
             )
@@ -318,8 +344,18 @@ class NetlistDatabase(sqlite3.Connection):
                 rdata_bundle_bits = pyrtl.chop(rdata_bundle, *(1 for _ in range(width)))
                 for i, bit in enumerate(rdata):
                     wire_id_to_pyrtl[bit] = rdata_bundle_bits[i]
+                    mem_output_ids.add(bit)
+                # create a read address bundle
+                raddr_bits = self._find_concat_inputs(raddr)
+                if raddr_bits is None:
+                    raise ValueError("Read address is not a concat")
+                raddr_bundle_bits = [pyrtl.WireVector(bitwidth=1) for _ in range(len(raddr_bits))]
+                raddr_bundle = pyrtl.concat(*raddr_bundle_bits)
+                for i, bit in enumerate(raddr_bits):
+                    wire_id_to_pyrtl[bit] = raddr_bundle_bits[i]
+                    mem_input_ids.add(bit)
                 rp = AbstractMem.ReadPort(
-                    addr=self._get_wire(wire_id_to_pyrtl, raddr, log2(height)),
+                    addr=raddr_bundle,
                     data=rdata_bundle,
                     en=pyrtl.Const(1)
                 )
