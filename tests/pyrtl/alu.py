@@ -82,7 +82,7 @@ def alu(val_width, addr_width):
 
 if __name__=="__main__":
 
-    rf = alu(32, 5)
+    rf = alu(4, 2)
     pyrtl.synthesize()
 
     with open('alu.v', 'w') as f:

@@ -3,7 +3,6 @@ import pyrtl
 from .AbstractMem import AbstractMem
 from . import formatter
 from . import rewriter
-from math import log2
 
 
 def create_tables(conn: sqlite3.Connection):
@@ -172,9 +171,7 @@ class NetlistDatabase(sqlite3.Connection):
         # clk is not used
         if type == "$_DFFE_PP_":
             reg = pyrtl.Register(bitwidth=1)
-            with pyrtl.conditional_assignment:
-                with e:
-                    reg.next |= d
+            reg.next <<= pyrtl.mux(e, d, reg)
             q <<= reg
         else:
             raise ValueError(f"Unsupported DFFE type: {type}")
@@ -189,43 +186,48 @@ class NetlistDatabase(sqlite3.Connection):
 
 
     def _find_concat_inputs(self, output: int) -> list[int] | None:
-        # return None if it's not a concat or the inputs are not 1-bit
+        # return None if it's not a concat
+        # return a list of 1-bit input wires if it's a concat
         cur = self.cursor()
         cur.execute(f"SELECT input, left, right FROM concat WHERE output = ? ORDER BY left;", (output,))
         rows = cur.fetchall()
         if not rows:    # not a concat
             return None
-        for i, (_, left, right) in enumerate(rows):
-            if left != i:
-                return None
-            if right != i + 1:
-                return None
-        return [row[0] for row in rows]
+        inputs = []
+        for input, left, right in rows:
+            if left == right:
+                inputs.append(input)
+            else:
+                subinputs = self._find_concat_inputs(input)
+                if subinputs is None:
+                    return None
+                inputs.extend(subinputs)
+        return inputs
 
 
     def _build_from_sink(
         self,
         wire_id_to_pyrtl: dict[int, pyrtl.WireVector],
-        sources: set[int],  # source wires, e.g. inputs, memory outputs
-        sink: int
+        sink: int,
+        y: pyrtl.WireVector
     ):
-        # assume sink is already in wire_id_to_pyrtl (created)
-        if sink in sources:
+        print(f"Building {sink}")
+        if sink in wire_id_to_pyrtl:
+            print(f"Built {sink}")
             return
+        wire_id_to_pyrtl[sink] = y
         cur = self.cursor()
         # if it's an output of a binary gate
-        cur.execute(f"SELECT a, b, type FROM binary_gate WHERE y = ? LIMIT 1;", (sink,))
+        cur.execute(f"SELECT a, b, type FROM binary_gate WHERE y = ? AND type != '$_MUX_' LIMIT 1;", (sink,))
         row = cur.fetchone()
-        y = wire_id_to_pyrtl[sink]
         if row:
             a, b, type = row
             if a not in wire_id_to_pyrtl:
-                wire_id_to_pyrtl[a] = pyrtl.WireVector(bitwidth=1)
-                self.build_from_sink(wire_id_to_pyrtl, sources, a)
+                self._build_from_sink(wire_id_to_pyrtl, a, pyrtl.WireVector(bitwidth=1))
             if b not in wire_id_to_pyrtl:
-                wire_id_to_pyrtl[b] = pyrtl.WireVector(bitwidth=1)
-                self.build_from_sink(wire_id_to_pyrtl, sources, b)
+                self._build_from_sink(wire_id_to_pyrtl, b, pyrtl.WireVector(bitwidth=1))
             self._build_binary_gate(wire_id_to_pyrtl[a], wire_id_to_pyrtl[b], y, type)
+            print(f"Built {sink}")
             return
         # if it's an output of a unary gate
         cur.execute(f"SELECT a, type FROM unary_gate WHERE y = ? LIMIT 1;", (sink,))
@@ -233,9 +235,9 @@ class NetlistDatabase(sqlite3.Connection):
         if row:
             a, type = row
             if a not in wire_id_to_pyrtl:
-                wire_id_to_pyrtl[a] = pyrtl.WireVector(bitwidth=1)
-                self.build_from_sink(wire_id_to_pyrtl, sources, a)
+                self._build_from_sink(wire_id_to_pyrtl, a, pyrtl.WireVector(bitwidth=1))
             self._build_unary_gate(wire_id_to_pyrtl[a], y, type)
+            print(f"Built {sink}")
             return
         # if it's an output of a mux
         cur.execute(f"SELECT a, b, s FROM mux WHERE y = ? LIMIT 1;", (sink,))
@@ -243,60 +245,66 @@ class NetlistDatabase(sqlite3.Connection):
         if row:
             a, b, s = row
             if a not in wire_id_to_pyrtl:
-                wire_id_to_pyrtl[a] = pyrtl.WireVector(bitwidth=1)
-                self.build_from_sink(wire_id_to_pyrtl, sources, a)
+                self._build_from_sink(wire_id_to_pyrtl, a, pyrtl.WireVector(bitwidth=1))
             if b not in wire_id_to_pyrtl:
-                wire_id_to_pyrtl[b] = pyrtl.WireVector(bitwidth=1)
-                self.build_from_sink(wire_id_to_pyrtl, sources, b)
+                self._build_from_sink(wire_id_to_pyrtl, b, pyrtl.WireVector(bitwidth=1))
             if s not in wire_id_to_pyrtl:
-                wire_id_to_pyrtl[s] = pyrtl.WireVector(bitwidth=1)
-                self.build_from_sink(wire_id_to_pyrtl, sources, s)
+                self._build_from_sink(wire_id_to_pyrtl, s, pyrtl.WireVector(bitwidth=1))
             y <<= pyrtl.mux(wire_id_to_pyrtl[s], wire_id_to_pyrtl[a], wire_id_to_pyrtl[b])
+            print(f"Built {sink}")
             return
         cur.execute(f"SELECT d, e, type FROM dffe_xx WHERE q = ? LIMIT 1;", (sink,))
         row = cur.fetchone()
         if row:
             d, e, type = row
             if d not in wire_id_to_pyrtl:
-                wire_id_to_pyrtl[d] = pyrtl.WireVector(bitwidth=1)
-                self.build_from_sink(wire_id_to_pyrtl, sources, d)
+                self._build_from_sink(wire_id_to_pyrtl, d, pyrtl.WireVector(bitwidth=1))
             if e not in wire_id_to_pyrtl:
-                wire_id_to_pyrtl[e] = pyrtl.WireVector(bitwidth=1)
-                self.build_from_sink(wire_id_to_pyrtl, sources, e)
+                self._build_from_sink(wire_id_to_pyrtl, e, pyrtl.WireVector(bitwidth=1))
             self._build_dffe_xx(wire_id_to_pyrtl[d], wire_id_to_pyrtl[e], y, type)
+            print(f"Built {sink}")
             return
         raise ValueError(f"Sink {sink} is not connected to any source")
 
 
     def to_pyrtl(self) -> pyrtl.Block:
         pyrtl.reset_working_block()
-        wire_id_to_pyrtl: dict[int, pyrtl.WireVector] = {}
-        input_ids, output_ids = set(), set()
+
+        # these are ports ready to be connected
+        input_to_pyrtl: dict[int, pyrtl.WireVector] = {}
+        output_to_pyrtl: dict[int, pyrtl.WireVector] = {}
 
         # define inputs & outputs
         ports = self.target_blif["ports"]
         for alias, port in ports.items():
             bits = port["bits"]
             if port["direction"] == "input":
+                # rule out clk and clock
+                if alias.lower() in ["clk", "clock"]:
+                    continue
                 input = pyrtl.Input(bitwidth=len(bits), name=alias)
                 bits_in_input = pyrtl.chop(input, *(1 for _ in range(len(bits))))
                 for i, bit in enumerate(bits):
-                    wire_id_to_pyrtl[bit] = bits_in_input[i]
-                    input_ids.add(bit)
+                    input_to_pyrtl[bit] = bits_in_input[i]
             elif port["direction"] == "output":
-                bits_in_output = [pyrtl.WireVector(bitwidth=1) for _ in range(len(bits))]
-                for i, bit in enumerate(bits):
-                    wire_id_to_pyrtl[bit] = bits_in_output[i]
-                    output_ids.add(bit)
-                bits = pyrtl.concat(*bits_in_output)
+                output_bits: list[pyrtl.WireVector] = []
+                for bit in bits:
+                    if bit in input_to_pyrtl: # output is connected to input
+                        output_bits.append(input_to_pyrtl[bit])
+                    else:
+                        output_bit = pyrtl.WireVector(bitwidth=1)
+                        output_bits.append(output_bit)
+                        output_to_pyrtl[bit] = output_bit
                 output = pyrtl.Output(bitwidth=len(bits), name=alias)
-                output <<= bits
+                output_tmp = pyrtl.concat(*output_bits)
+                output <<= output_tmp
             else:
                 raise ValueError(f"Invalid port direction: {port['direction']}")
 
         # extract memories
         mems = rewriter.find_memory(self)
-        mem_input_ids, mem_output_ids = set(), set()
+        mem_input_to_pyrtl: dict[int, pyrtl.WireVector] = {}
+        mem_output_to_pyrtl: dict[int, pyrtl.WireVector] = {}
 
         for _, (readports, writeports) in mems.items():
             if len(readports) == 0: # not a memory
@@ -309,18 +317,17 @@ class NetlistDatabase(sqlite3.Connection):
                 f"SELECT width FROM wire WHERE id = ?;",
                 (readports[0][2],)
             )
-            height = cur.fetchone()[0]
+            height = 2 ** cur.fetchone()[0]
 
             # create a write port
             wdata, wens = writeports[0]
             wen, waddr = rewriter.create_write_port_from_wes(self, wens)
-            mem_input_ids.add(wen)
+            mem_input_to_pyrtl[wen] = pyrtl.WireVector(bitwidth=1)
             # create a write data bundle
             wdata_bundle_bits = [pyrtl.WireVector(bitwidth=1) for _ in range(width)]
             wdata_bundle = pyrtl.concat(*wdata_bundle_bits)
             for i, bit in enumerate(wdata):
-                wire_id_to_pyrtl[bit] = wdata_bundle_bits[i]
-                mem_input_ids.add(bit)
+                mem_input_to_pyrtl[bit] = wdata_bundle_bits[i]
             # create a write address bundle
             waddr_bits = self._find_concat_inputs(waddr)
             if waddr_bits is None:
@@ -328,12 +335,11 @@ class NetlistDatabase(sqlite3.Connection):
             waddr_bundle_bits = [pyrtl.WireVector(bitwidth=1) for _ in range(len(waddr_bits))]
             waddr_bundle = pyrtl.concat(*waddr_bundle_bits)
             for i, bit in enumerate(waddr_bits):
-                wire_id_to_pyrtl[bit] = waddr_bundle_bits[i]
-                mem_input_ids.add(bit)
+                mem_input_to_pyrtl[bit] = waddr_bundle_bits[i]
             wp = AbstractMem.WritePort(
                 addr=waddr_bundle,
                 data=wdata_bundle,
-                enable=self._get_wire(wire_id_to_pyrtl, wen)
+                en=mem_input_to_pyrtl[wen]
             )
 
             # create read ports
@@ -343,17 +349,20 @@ class NetlistDatabase(sqlite3.Connection):
                 rdata_bundle = pyrtl.WireVector(bitwidth=width)
                 rdata_bundle_bits = pyrtl.chop(rdata_bundle, *(1 for _ in range(width)))
                 for i, bit in enumerate(rdata):
-                    wire_id_to_pyrtl[bit] = rdata_bundle_bits[i]
-                    mem_output_ids.add(bit)
+                    mem_output_to_pyrtl[bit] = rdata_bundle_bits[i]
                 # create a read address bundle
                 raddr_bits = self._find_concat_inputs(raddr)
                 if raddr_bits is None:
                     raise ValueError("Read address is not a concat")
-                raddr_bundle_bits = [pyrtl.WireVector(bitwidth=1) for _ in range(len(raddr_bits))]
+                raddr_bundle_bits = []
+                for bit in raddr_bits:
+                    if bit in input_to_pyrtl:   # read address is connected to an input
+                        raddr_bundle_bits.append(input_to_pyrtl[bit])
+                    else:
+                        bit_tmp = pyrtl.WireVector(bitwidth=1)
+                        raddr_bundle_bits.append(bit_tmp)
+                        mem_input_to_pyrtl[bit] = bit_tmp
                 raddr_bundle = pyrtl.concat(*raddr_bundle_bits)
-                for i, bit in enumerate(raddr_bits):
-                    wire_id_to_pyrtl[bit] = raddr_bundle_bits[i]
-                    mem_input_ids.add(bit)
                 rp = AbstractMem.ReadPort(
                     addr=raddr_bundle,
                     data=rdata_bundle,
@@ -372,11 +381,25 @@ class NetlistDatabase(sqlite3.Connection):
 
         # define internal wires
         # dfs from outputs
-        sources = input_ids | mem_output_ids
-        for output_id in output_ids:
-            self._build_from_sink(wire_id_to_pyrtl, sources, output_id)
-        # dfs from memory inputs
-        for mem_input_id in mem_input_ids:
-            self._build_from_sink(wire_id_to_pyrtl, sources, mem_input_id)
+        # these are wires already created
+        wire_id_to_pyrtl: dict[int, pyrtl.WireVector] = {}
+        # sources
+        wire_id_to_pyrtl.update(input_to_pyrtl)
+        wire_id_to_pyrtl.update(mem_output_to_pyrtl)
+
+        # build from outputs of the module
+        for output, y in output_to_pyrtl.items():
+            self._build_from_sink(wire_id_to_pyrtl, output, y)
+
+        # build from inputs of the memories
+        for input, y in mem_input_to_pyrtl.items():
+            if input in output_to_pyrtl: # it's driven by an output
+                y <<= output_to_pyrtl[input]
+            else:
+                self._build_from_sink(wire_id_to_pyrtl, input, y)
+
+        with open("id_to_pyrtl.txt", "w") as f:
+            for id, wire in wire_id_to_pyrtl.items():
+                f.write(f"{id}: {wire}\n")
 
         return pyrtl.working_block()

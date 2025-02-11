@@ -344,7 +344,7 @@ def rewrite_2_1_mux_to_binary_gate(netlist) -> bool:
             "INSERT OR IGNORE INTO binary_gate VALUES (?, ?, ?, ?);",
             (s, ab, y, "$_MUX_")
         )
-    cur.execute("DELETE FROM mux;")
+    # cur.execute("DELETE FROM mux;")
     netlist.commit()
     return True
 
@@ -782,7 +782,7 @@ def find_or_create_binary_gate(netlist, a: int, b: int, type: str) -> int:
     )
     res = cur.fetchone()
     if res:
-        print(f"Found binary gate {a} {b} {type} -> {res[0]}")
+        # print(f"Found binary gate {a} {b} {type} -> {res[0]}")
         return res[0]
     y = next(global_id)
     cur.execute(
