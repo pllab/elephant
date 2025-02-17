@@ -8,7 +8,9 @@ NETLIST_FILES = [
     ("alu", "toplevel"),
     ("nerv", "nerv"),
     ("pico", "picorv32"),
-    ("sparc_ffu", "sparc_ffu")
+    ("sparc_ffu", "sparc_ffu"),
+    ("sram_1rw_128x78", "sram_1rw_128x78"),
+    ("bsg_fifo_1r1w_64_256", "top")
 ]
 
 # pyrtl.set_debug_mode(True)
@@ -70,4 +72,4 @@ def test_extract_mems(name: str, top: str):
 if __name__ == "__main__":
     # test_to_pyrtl()
     # test_extract_mems(*NETLIST_FILES[0])
-    test_extract_mems(*NETLIST_FILES[3])
+    test_extract_mems(*NETLIST_FILES[2])

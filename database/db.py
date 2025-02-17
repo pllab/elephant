@@ -294,7 +294,9 @@ class NetlistDatabase(sqlite3.Connection):
 
         cursor = self.cursor()
         cursor.execute("SELECT wire.width, COUNT(*) FROM binary_gate JOIN wire ON binary_gate.b = wire.id WHERE type = '$_MUX_' GROUP BY wire.width")
-        print(cursor.fetchall())
+        res = cursor.fetchall()
+        for width, count in res:
+            print(f"Number of {width}-1 Muxes: {count}")
 
         times.append(time.time() - time_start) # saturation time
         time_start = time.time()
