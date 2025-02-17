@@ -2,12 +2,19 @@ from elephant import db, rewriter
 import pyrtl
 import json
 
-NETLIST_FILE = "elephant/tests/json/alu.json"
+NETLIST_PATH = "elephant/tests/json/"
 
-pyrtl.set_debug_mode(True)
+NETLIST_FILES = [
+    ("alu", "toplevel"),
+    ("nerv", "nerv"),
+    ("pico", "picorv32"),
+    ("sparc_ffu", "sparc_ffu")
+]
+
+# pyrtl.set_debug_mode(True)
 
 
-if __name__ == "__main__":
+def test_to_pyrtl():
     netlist = db.NetlistDatabase()
     with open(NETLIST_FILE, "r") as f:
         netlist.build_from_blif(json.load(f), "toplevel", True)
@@ -29,25 +36,38 @@ if __name__ == "__main__":
     while rewriter.reduce_mux_once(netlist):
         pass
 
-    cur = netlist.cursor()
-    with open("binary_gate.json", "w") as f:
-        cur.execute("SELECT * FROM binary_gate;")
-        json.dump(cur.fetchall(), f)
-    with open("concat.json", "w") as f:
-        cur.execute("SELECT * FROM concat;")
-        json.dump(cur.fetchall(), f)
-    with open("mux.json", "w") as f:
-        cur.execute("SELECT * FROM mux;")
-        json.dump(cur.fetchall(), f)
-    with open("dffe_xx.json", "w") as f:
-        cur.execute("SELECT * FROM dffe_xx;")
-        json.dump(cur.fetchall(), f)
-    with open("selector.json", "w") as f:
-        cur.execute("SELECT * FROM selector;")
-        json.dump(cur.fetchall(), f)
-    with open("unary_gate.json", "w") as f:
-        cur.execute("SELECT * FROM unary_gate;")
-        json.dump(cur.fetchall(), f)
+    # cur = netlist.cursor()
+    # with open("binary_gate.json", "w") as f:
+    #     cur.execute("SELECT * FROM binary_gate;")
+    #     json.dump(cur.fetchall(), f)
+    # with open("concat.json", "w") as f:
+    #     cur.execute("SELECT * FROM concat;")
+    #     json.dump(cur.fetchall(), f)
+    # with open("mux.json", "w") as f:
+    #     cur.execute("SELECT * FROM mux;")
+    #     json.dump(cur.fetchall(), f)
+    # with open("dffe_xx.json", "w") as f:
+    #     cur.execute("SELECT * FROM dffe_xx;")
+    #     json.dump(cur.fetchall(), f)
+    # with open("selector.json", "w") as f:
+    #     cur.execute("SELECT * FROM selector;")
+    #     json.dump(cur.fetchall(), f)
+    # with open("unary_gate.json", "w") as f:
+    #     cur.execute("SELECT * FROM unary_gate;")
+    #     json.dump(cur.fetchall(), f)
     block: pyrtl.Block = netlist.to_pyrtl()
     with open("pyrtl.text", "w") as f:
         f.write(str(block))
+
+
+def test_extract_mems(name: str, top: str):
+    netlist = db.NetlistDatabase()
+    with open(NETLIST_PATH + name + ".json", "r") as f:
+        netlist.build_from_blif(json.load(f), top, True)
+    netlist.extract_mems()
+
+
+if __name__ == "__main__":
+    # test_to_pyrtl()
+    # test_extract_mems(*NETLIST_FILES[0])
+    test_extract_mems(*NETLIST_FILES[3])

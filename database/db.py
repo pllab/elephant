@@ -1,5 +1,6 @@
 import sqlite3
 import pyrtl
+import time
 from .AbstractMem import AbstractMem
 from . import formatter
 from . import rewriter
@@ -265,6 +266,66 @@ class NetlistDatabase(sqlite3.Connection):
             print(f"Built {sink}")
             return
         raise ValueError(f"Sink {sink} is not connected to any source")
+
+
+    def extract_mems(self):
+        times = []
+        # saturate
+        time_start = time.time()
+
+        # group registers
+        rewriter.rewrite_dffe_pn_to_pp(self)
+        rewriter.group_dffe_pp(self)
+
+        # basic boolean rules
+        # updated = True
+        # while updated:
+        #     updated = False
+        #     updated = True if rewriter.saturate_comm(self, "$_AND_") > 0 else updated
+        #     updated = True if rewriter.saturate_comm(self, "$_OR_") > 0 else updated
+        #     updated = True if rewriter.saturate_demorgan(self, "$_AND_", "$_OR_") else updated
+        #     updated = True if rewriter.saturate_demorgan(self, "$_OR_", "$_AND_") else updated
+        #     updated = True if rewriter.saturate_idemp(self, "$_NOT_") else updated
+
+        # reduce muxes
+        rewriter.rewrite_2_1_mux_to_binary_gate(self)
+        while rewriter.reduce_mux_once(self):
+            pass
+
+        cursor = self.cursor()
+        cursor.execute("SELECT wire.width, COUNT(*) FROM binary_gate JOIN wire ON binary_gate.b = wire.id WHERE type = '$_MUX_' GROUP BY wire.width")
+        print(cursor.fetchall())
+
+        times.append(time.time() - time_start) # saturation time
+        time_start = time.time()
+
+        # extract memories
+        mems = rewriter.find_memory(self)
+        print("-" * 20)
+        for i, (regs, (readports, writeports)) in enumerate(mems.items()):
+            print(f"Memory {i}:")
+            print(f"- Registers: {regs}")
+            print(f"- Data Width: {len(readports[0][1])}")
+            print(f"- Number of Entries: {len(regs)}")
+            print(f"- Read Ports:")
+            for j, (_, y, a) in enumerate(readports):
+                print(f"-- Read port {j}:")
+                print(f"--- Read Data Wires: {y}")
+                print(f"--- Read Address wire: {a}")
+            print(f"- Write Ports:")
+            for i, (wds, wes) in enumerate(writeports):
+                print(f"-- Write port {i}:")
+                print(f"--- Write Data Wires: {wds}")
+                print(f"--- Write Raw Enable Wires: {wes}")
+                wen, waddr = rewriter.create_write_port_from_wes(self, wes)
+                print(f"--- Write Enable Wire: {wen}")
+                print(f"--- Write Address Wire: {waddr}")
+            print("-" * 20)
+
+        times.append(time.time() - time_start) # memory extraction time
+        print(f"Saturation time: {times[0]}")
+        print(f"Memory extraction time: {times[1]}")
+        print(f"Total time: {sum(times)}")
 
 
     def to_pyrtl(self) -> pyrtl.Block:
