@@ -289,14 +289,23 @@ class NetlistDatabase(sqlite3.Connection):
 
         # reduce muxes
         rewriter.rewrite_2_1_mux_to_binary_gate(self)
+        print("q_mux")
+        while rewriter.reduce_q_mux_once(self):
+            pass
+        print("DONE")
         while rewriter.reduce_mux_once(self):
             pass
 
-        cursor = self.cursor()
-        cursor.execute("SELECT wire.width, COUNT(*) FROM binary_gate JOIN wire ON binary_gate.b = wire.id WHERE type = '$_MUX_' GROUP BY wire.width")
-        res = cursor.fetchall()
+        cur = self.cursor()
+        cur.execute("SELECT wire.width, COUNT(*) FROM binary_gate JOIN wire ON binary_gate.b = wire.id WHERE type = '$_MUX_' GROUP BY wire.width")
+        res = cur.fetchall()
         for width, count in res:
             print(f"Number of {width}-1 Muxes: {count}")
+
+        cur.execute("SELECT wire.width, binary_gate.y FROM binary_gate JOIN wire ON binary_gate.b = wire.id WHERE type = '$_MUX_' AND wire.width > 4;")
+        print("Muxes with width > 4:")
+        for width, y in cur.fetchall():
+            print(f"Output: {y}, Width: {width}")
 
         times.append(time.time() - time_start) # saturation time
         time_start = time.time()

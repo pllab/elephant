@@ -72,4 +72,4 @@ def test_extract_mems(name: str, top: str):
 if __name__ == "__main__":
     # test_to_pyrtl()
     # test_extract_mems(*NETLIST_FILES[0])
-    test_extract_mems(*NETLIST_FILES[2])
+    test_extract_mems(*NETLIST_FILES[4])

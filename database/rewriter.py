@@ -447,9 +447,9 @@ def reduce_mux_once(netlist) -> bool:
     cur.execute(
         """
         SELECT mux1.a, mux1.b, mux2.b, mux3.a, mux3.y
-        FROM binary_gate AS mux1 JOIN binary_gate AS mux2 JOIN binary_gate AS mux3 JOIN concat AS c1 JOIN concat AS c2 JOIN wire AS w1 JOIN wire AS w3 JOIN wire AS w4
-        ON mux1.a = mux2.a AND mux1.y = w1.id AND mux3.b = w3.id AND mux1.y = c1.input AND mux2.y = c2.input AND mux3.a = w4.id
-        WHERE mux1.type = "$_MUX_" AND mux2.type = "$_MUX_" AND mux3.type = "$_MUX_" AND c1.output = mux3.b AND c1.left = 0 AND c2.output = mux3.b AND w3.width = 2 * w1.width AND w4.width = 1 AND mux1.b != mux2.b
+        FROM binary_gate AS mux1 JOIN binary_gate AS mux2 JOIN binary_gate AS mux3 JOIN concat AS c1 JOIN concat AS c2 JOIN wire AS w1 JOIN wire AS w3 JOIN wire AS w4 JOIN wire AS w5
+        ON mux1.a = mux2.a AND mux1.y = w1.id AND mux3.b = w3.id AND mux1.y = c1.input AND mux2.y = c2.input AND mux3.a = w4.id AND mux1.a = w5.id
+        WHERE mux1.type = "$_MUX_" AND mux2.type = "$_MUX_" AND mux3.type = "$_MUX_" AND c1.output = mux3.b AND c1.left = 0 AND c2.output = mux3.b AND w3.width = 2 * w1.width AND w4.width = 1 AND mux1.b != mux2.b AND w5.width > 1
         LIMIT 1;
         """
     )
@@ -894,6 +894,80 @@ def create_write_port_from_wes(netlist, wes: list[int]) -> tuple[int, int] | Non
     netlist.commit()
 
     return wen, waddr
+
+
+def reduce_q_mux_once(self) -> bool:
+    cur = self.cursor()
+    cur.execute(
+        """
+        SELECT mux1.a, mux1.b, mux2.b, mux3.a, mux3.y
+        FROM binary_gate AS mux1 JOIN binary_gate AS mux2 JOIN binary_gate AS mux3 JOIN concat AS c1 JOIN concat AS c2 JOIN wire AS w1 JOIN wire AS w3 JOIN wire AS w4 JOIN concat AS c3 JOIN dffe_xx AS dff
+        ON mux1.a = mux2.a AND mux1.y = w1.id AND mux3.b = w3.id AND mux1.y = c1.input AND mux2.y = c2.input AND mux3.a = w4.id AND mux1.b = c3.output AND c3.input = dff.q
+        WHERE mux1.type = "$_MUX_" AND mux2.type = "$_MUX_" AND mux3.type = "$_MUX_" AND c1.output = mux3.b AND c1.left = 0 AND c2.output = mux3.b AND w3.width = 2 * w1.width AND w4.width = 1 AND mux1.b != mux2.b
+        LIMIT 1;
+        """
+    )   # ensures mux1.b partially comes from a dffe
+    sabty = cur.fetchone()
+    if not sabty:
+        return False
+    s, a, b, t, y = sabty
+    print(f"Found {s} {a} {b} {t} {y}")
+    # check whether concat(a, b) exists
+    ab = find_concat(netlist, a, b)
+    if not ab:
+        ab = next(global_id)
+        cur.execute(
+            "SELECT width FROM wire WHERE id = ?;",
+            (a,)
+        )
+        wa = cur.fetchone()[0]
+        cur.execute(
+            "SELECT width FROM wire WHERE id = ?;",
+            (b,)
+        )
+        wb = cur.fetchone()[0]
+        cur.execute(
+            "INSERT INTO concat VALUES (?, ?, 0, ?);",
+            (a, ab, wa - 1)
+        )
+        cur.execute(
+            "INSERT INTO concat VALUES (?, ?, ?, ?);",
+            (b, ab, wa, wa + wb - 1)
+        )
+        cur.execute(
+            "INSERT INTO wire VALUES (?, ?);",
+            (ab, wa + wb)
+        )
+    st = find_concat(netlist, s, t)
+    if not st:
+        st = next(global_id)
+        cur.execute(
+            "SELECT width FROM wire WHERE id = ?;",
+            (s,)
+        )
+        ws = cur.fetchone()[0]
+        cur.execute(
+            "INSERT INTO concat VALUES (?, ?, 0, ?);",
+            (s, st, ws - 1)
+        )
+        cur.execute(
+            "INSERT INTO concat VALUES (?, ?, ?, ?);",
+            (t, st, ws, ws)
+        )
+        cur.execute(
+            "INSERT INTO wire VALUES (?, ?);",
+            (st, ws + 1)
+        )
+    cur.executemany(
+        "DELETE FROM binary_gate WHERE a = ? AND b = ? AND type = ?;",
+        [(s, a, "$_MUX_"), (s, b, "$_MUX_"), (t, ab, "$_MUX_")]
+    )
+    cur.execute(
+        "INSERT OR IGNORE INTO binary_gate VALUES (?, ?, ?, ?);",
+        (st, ab, y, "$_MUX_")
+    )
+    netlist.commit()
+    return cur.rowcount > 0
 
 
 if __name__ == "__main__":

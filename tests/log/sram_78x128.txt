@@ -6,7 +6,7 @@ Number of 32-1 Muxes: 156
 --------------------
 Memory 0:
 - Registers: (100209, 100215, 100219, 100217)
-- Data Width: 79
+- Data Width: 78
 - Number of Entries: 4
 - Read Ports:
 -- Read port 0:
