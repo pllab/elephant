@@ -83,7 +83,7 @@ def extract_mem(component, namespaces):
     p_name = name
     p_config = "1r1w" if typ == "Simple_Dual_Port_RAM" else "2r2w"
     p_rw_fwd = b_mode == "WRITE_FIRST"
-    p_latch_last_read = llr == "true"
+    p_latch_last_read = p_config == "1r1w"
     p_asynchronous = synchronous == "false"
 
     return AbstractMem.create_mem(
@@ -122,3 +122,7 @@ if __name__ == "__main__":
         print(mem.name)
         print(mem.width)
         print(mem.height)
+        print(len(mem.read_ports), len(mem.write_ports))
+        print('rw_fwd', mem.rw_fwd)
+        print('llr', mem.latch_last_read)
+        print('async', mem.asynchronous)
