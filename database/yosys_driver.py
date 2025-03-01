@@ -1,4 +1,5 @@
 import subprocess
+from argparse import ArgumentParser
 
 
 ONLY_AND_OR_MUX = "abc -g AND,OR,MUX"
@@ -20,8 +21,8 @@ def run_ys(script: str):
 
 
 def synth_verilog(input_file: str, output_file: str, cmds: list[str], top: str = "toplevel"):
-    script = f"read_verilog {input_file}\n"
-    script += f"synth -noabc -top {top}\n"
+    script = f"read_verilog -sv {input_file}\n"
+    script += f"synth -noabc -flatten -top {top}\n"
     for cmd in cmds:
         script += cmd + "\n"
     script += "proc\n"
@@ -30,6 +31,25 @@ def synth_verilog(input_file: str, output_file: str, cmds: list[str], top: str =
 
 
 if __name__ == "__main__":
-    input_file = "elephant/tests/verilog/nerv.v"
-    output_file = "elephant/tests/json/nerv.json"
-    synth_verilog(input_file, output_file, cmds=[ONLY_DFFE_NP, ONLY_AND_OR_MUX], top="nerv")
+    parser = ArgumentParser("Synthesize Verilog, output to JSON.")
+    parser.add_argument(
+        "--input", type=str, dest="input_file", help="name of input verilog file"
+    )
+    parser.add_argument(
+        "--top", type=str, dest="top", help="name of top module"
+    )
+    parser.add_argument(
+        "--output", type=str, dest="output_file", help="name of output json file"
+    )
+    parser.add_argument("--nodfflegalize", default=False, action="store_true")
+    args = parser.parse_args()
+
+    if args.nodfflegalize:
+        cmds = [ONLY_AND_OR_MUX]
+    else:
+        cmds = [ONLY_DFFE_NP, ONLY_AND_OR_MUX]
+    
+    input_file = args.input_file
+    top = args.top
+    output_file = args.output_file
+    synth_verilog(input_file, output_file, cmds=cmds, top=top)
