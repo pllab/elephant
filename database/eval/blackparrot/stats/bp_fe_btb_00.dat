@@ -1,0 +1,23 @@
+
+6. Printing statistics.
+
+=== bp_fe_btb_00 ===
+
+   Number of wires:              17553
+   Number of wire bits:          21029
+   Number of public wires:         269
+   Number of public wire bits:     269
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10421
+     $_AND_                       3607
+     $_DFFE_PP_                   3200
+     $_DFF_P_                       57
+     $_MUX_                         11
+     $_NOT_                        185
+     $_OR_                        3336
+     $_SDFFE_PP0N_                   1
+     $_SDFFE_PP0P_                  22
+     $_SDFF_PP0_                     2
+

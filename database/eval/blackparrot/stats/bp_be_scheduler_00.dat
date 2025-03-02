@@ -1,0 +1,22 @@
+
+6. Printing statistics.
+
+=== bp_be_scheduler_00 ===
+
+   Number of wires:              79098
+   Number of wire bits:          86193
+   Number of public wires:        2020
+   Number of public wire bits:    2020
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              41430
+     $_AND_                      16919
+     $_DFFE_PP_                   6018
+     $_DFF_P_                      180
+     $_MUX_                        911
+     $_NOT_                       1189
+     $_OR_                       16144
+     $_SDFFE_PP0P_                  39
+     $_SDFF_PP0_                    30
+

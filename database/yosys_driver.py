@@ -21,7 +21,10 @@ def run_ys(script: str):
 
 
 def synth_verilog(input_file: str, output_file: str, cmds: list[str], top: str = "toplevel"):
-    script = f"read_verilog -sv {input_file}\n"
+    if input_file[-5:] == ".blif":
+        script = f"read_blif {input_file}\n"
+    else: 
+        script = f"read_verilog -sv {input_file}\n"
     script += f"synth -noabc -flatten -top {top}\n"
     for cmd in cmds:
         script += cmd + "\n"

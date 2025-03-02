@@ -1,0 +1,42 @@
+
+6. Printing statistics.
+
+=== bp_be_regfile_00_66_2_1 ===
+
+   Number of wires:              19280
+   Number of wire bits:          21436
+   Number of public wires:         844
+   Number of public wire bits:     844
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              11617
+     $_AND_                       4702
+     $_DFFE_PP_                   2254
+     $_DFF_P_                       78
+     $_MUX_                        264
+     $_NOT_                         41
+     $_OR_                        4274
+     $_SDFF_PP0_                     4
+
+
+6. Printing statistics.
+
+=== bp_be_regfile_00_66_2_1 ===
+
+   Number of wires:              19280
+   Number of wire bits:          21436
+   Number of public wires:         844
+   Number of public wire bits:     844
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              11617
+     $_AND_                       4702
+     $_DFFE_PP_                   2254
+     $_DFF_P_                       78
+     $_MUX_                        264
+     $_NOT_                         41
+     $_OR_                        4274
+     $_SDFF_PP0_                     4
+

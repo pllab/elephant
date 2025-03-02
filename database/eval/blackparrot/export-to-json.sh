@@ -1,14 +1,7 @@
 #!/bin/sh
 
-EXPORT=../../yosys_driver.py
-SRC=verilog
-JSON=json
+NAME=$1
+TOP=$2
 
-# Input format = <FILENAME>;<TOP-MODULE>\n
-BENCHES="bp;top"
+yosys -p "read_blif $NAME ; synth -noabc -flatten -top $TOP ; abc -g AND,OR,MUX ; proc ; write_json json/$TOP.json; tee -a stats/$TOP.dat stat -width"
 
-for BENCH in $BENCHES; do
-	name=$(echo "${BENCH}" | cut -d ";" -f 1)
-	top=$(echo "${BENCH}" | cut -d ";" -f 2)
-	python3 $EXPORT --input $SRC/$name.v --output $JSON/$name.json --top $top
-done
