@@ -1,6 +1,7 @@
 from elephant import db, rewriter
 import pyrtl
 import json
+import time
 
 NETLIST_PATH = "elephant/tests/json/"
 
@@ -69,7 +70,35 @@ def test_extract_mems(name: str, top: str):
     netlist.extract_mems()
 
 
+def test_find_readport(netlist: db.NetlistDatabase, verbose: bool = False):
+    start = time.time()
+    rewriter.rewrite_dffe_pn_to_pp(netlist)
+    cnt = rewriter.rewrite_mux_to_qmux(netlist)
+    print(f"Rewrote {cnt} muxes to qmuxes")
+    while rewriter.reduce_qmux_once(netlist) > 0:
+        pass
+    print("Reduced all qmuxes")
+    rps = rewriter.find_readport(netlist)
+    time_elapsed = time.time() - start
+    print(f"Found {len(rps)} read port(s):")
+    for i, ((qss, ra), rd) in enumerate(rps.items()):
+        print(f"\tRead port {i}: width = {len(qss)}, height = 2^{len(ra)}")
+        if verbose:
+            print(f"\t\tRead address: {ra}")
+            print(f"\t\tRead data: {rd}")
+            print(f"\t\tRegisters: {qss}")
+        else:
+            print(f"\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
+            print(f"\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
+            truncated_qss = [qs[:5] for qs in qss[:5]]
+            print(f"\t\tRegisters: {truncated_qss}" + ("..." if len(qss) > 5 else ""))
+    print(f"Time elapsed: {time_elapsed:.2f}s")
+
+
 if __name__ == "__main__":
-    # test_to_pyrtl()
-    # test_extract_mems(*NETLIST_FILES[0])
-    test_extract_mems(*NETLIST_FILES[4])
+    name, top = NETLIST_FILES[3]
+
+    netlist = db.NetlistDatabase()
+    with open(NETLIST_PATH + name + ".json", "r") as f:
+        netlist.build_from_blif(json.load(f), top, True)
+    test_find_readport(netlist)

@@ -1,4 +1,10 @@
+from __future__ import annotations
 import sqlite3
+import json
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .db import NetlistDatabase
 
 
 MAGIC_NUMBER = 100000
@@ -447,9 +453,9 @@ def reduce_mux_once(netlist) -> bool:
     cur.execute(
         """
         SELECT mux1.a, mux1.b, mux2.b, mux3.a, mux3.y
-        FROM binary_gate AS mux1 JOIN binary_gate AS mux2 JOIN binary_gate AS mux3 JOIN concat AS c1 JOIN concat AS c2 JOIN wire AS w1 JOIN wire AS w3 JOIN wire AS w4 JOIN wire AS w5
-        ON mux1.a = mux2.a AND mux1.y = w1.id AND mux3.b = w3.id AND mux1.y = c1.input AND mux2.y = c2.input AND mux3.a = w4.id AND mux1.a = w5.id
-        WHERE mux1.type = "$_MUX_" AND mux2.type = "$_MUX_" AND mux3.type = "$_MUX_" AND c1.output = mux3.b AND c1.left = 0 AND c2.output = mux3.b AND w3.width = 2 * w1.width AND w4.width = 1 AND mux1.b != mux2.b AND w5.width > 1
+        FROM binary_gate AS mux1 JOIN binary_gate AS mux2 JOIN binary_gate AS mux3 JOIN concat AS c1 JOIN concat AS c2 JOIN wire AS w1 JOIN wire AS w3 JOIN wire AS w4
+        ON mux1.a = mux2.a AND mux1.y = w1.id AND mux3.b = w3.id AND mux1.y = c1.input AND mux2.y = c2.input AND mux3.a = w4.id
+        WHERE mux1.type = "$_MUX_" AND mux2.type = "$_MUX_" AND mux3.type = "$_MUX_" AND c1.output = mux3.b AND c1.left = 0 AND c2.output = mux3.b AND w3.width = 2 * w1.width AND w4.width = 1 AND mux1.b != mux2.b
         LIMIT 1;
         """
     )
@@ -896,78 +902,85 @@ def create_write_port_from_wes(netlist, wes: list[int]) -> tuple[int, int] | Non
     return wen, waddr
 
 
-def reduce_q_mux_once(self) -> bool:
-    cur = self.cursor()
+# We can only consider muxes that are connected (directly or indirectly) to dffes
+
+def rewrite_mux_to_qmux(netlist: NetlistDatabase) -> int:
+    # qmux is a mux with inputs connected (directly) to dffes
+    # we can safely remove the original mux
+    cur = netlist.cursor()
     cur.execute(
         """
-        SELECT mux1.a, mux1.b, mux2.b, mux3.a, mux3.y
-        FROM binary_gate AS mux1 JOIN binary_gate AS mux2 JOIN binary_gate AS mux3 JOIN concat AS c1 JOIN concat AS c2 JOIN wire AS w1 JOIN wire AS w3 JOIN wire AS w4 JOIN concat AS c3 JOIN dffe_xx AS dff
-        ON mux1.a = mux2.a AND mux1.y = w1.id AND mux3.b = w3.id AND mux1.y = c1.input AND mux2.y = c2.input AND mux3.a = w4.id AND mux1.b = c3.output AND c3.input = dff.q
-        WHERE mux1.type = "$_MUX_" AND mux2.type = "$_MUX_" AND mux3.type = "$_MUX_" AND c1.output = mux3.b AND c1.left = 0 AND c2.output = mux3.b AND w3.width = 2 * w1.width AND w4.width = 1 AND mux1.b != mux2.b
-        LIMIT 1;
+        SELECT mux.a, mux.b, mux.s, mux.y, d1.c, d1.type
+        FROM mux JOIN dffe_xx AS d1 JOIN dffe_xx AS d2
+        ON a = d1.q AND b = d2.q AND d1.c = d2.c AND d1.type = d2.type;
         """
-    )   # ensures mux1.b partially comes from a dffe
-    sabty = cur.fetchone()
-    if not sabty:
-        return False
-    s, a, b, t, y = sabty
-    print(f"Found {s} {a} {b} {t} {y}")
-    # check whether concat(a, b) exists
-    ab = find_concat(netlist, a, b)
-    if not ab:
-        ab = next(global_id)
-        cur.execute(
-            "SELECT width FROM wire WHERE id = ?;",
-            (a,)
-        )
-        wa = cur.fetchone()[0]
-        cur.execute(
-            "SELECT width FROM wire WHERE id = ?;",
-            (b,)
-        )
-        wb = cur.fetchone()[0]
-        cur.execute(
-            "INSERT INTO concat VALUES (?, ?, 0, ?);",
-            (a, ab, wa - 1)
-        )
-        cur.execute(
-            "INSERT INTO concat VALUES (?, ?, ?, ?);",
-            (b, ab, wa, wa + wb - 1)
-        )
-        cur.execute(
-            "INSERT INTO wire VALUES (?, ?);",
-            (ab, wa + wb)
-        )
-    st = find_concat(netlist, s, t)
-    if not st:
-        st = next(global_id)
-        cur.execute(
-            "SELECT width FROM wire WHERE id = ?;",
-            (s,)
-        )
-        ws = cur.fetchone()[0]
-        cur.execute(
-            "INSERT INTO concat VALUES (?, ?, 0, ?);",
-            (s, st, ws - 1)
-        )
-        cur.execute(
-            "INSERT INTO concat VALUES (?, ?, ?, ?);",
-            (t, st, ws, ws)
-        )
-        cur.execute(
-            "INSERT INTO wire VALUES (?, ?);",
-            (st, ws + 1)
-        )
-    cur.executemany(
-        "DELETE FROM binary_gate WHERE a = ? AND b = ? AND type = ?;",
-        [(s, a, "$_MUX_"), (s, b, "$_MUX_"), (t, ab, "$_MUX_")]
     )
-    cur.execute(
-        "INSERT OR IGNORE INTO binary_gate VALUES (?, ?, ?, ?);",
-        (st, ab, y, "$_MUX_")
+    patterns = cur.fetchall()
+    if not patterns:
+        return 0
+    qmuxes = [
+        (c, json.dumps([a, b]), json.dumps([s]), y, dffe_type)
+        for a, b, s, y, c, dffe_type in patterns
+    ]
+    cur.executemany("INSERT INTO qmux VALUES (?, ?, ?, ?, ?);", qmuxes)
+    cur.executemany(
+        "DELETE FROM mux WHERE a = ? AND b = ? AND s = ?;",
+        [(a, b, s) for a, b, s, _, _, _ in patterns]
     )
     netlist.commit()
-    return cur.rowcount > 0
+    # print(qmuxes)
+    return cur.rowcount
+
+
+def reduce_qmux_once(netlist: NetlistDatabase) -> int:
+    # this keeps the original qmuxes
+    cur = netlist.cursor()
+    cur.execute(
+        """
+        SELECT qm1.qs, qm2.qs, qm1.ss, mux.s, mux.y, qm1.c, qm1.dffe_type
+        FROM qmux AS qm1 JOIN qmux AS qm2 JOIN mux
+        ON qm1.c = qm2.c AND qm1.ss = qm2.ss AND qm1.y = mux.a AND qm2.y = mux.b AND qm1.dffe_type = qm2.dffe_type;
+        """
+    )
+    patterns = cur.fetchall()
+    if not patterns:
+        return 0
+    qmuxes = []
+    for qs1, qs2, ss, s, y, c, dffe_type in patterns:
+        qs1, qs2, ss = json.loads(qs1), json.loads(qs2), json.loads(ss)
+        qmuxes.append(
+            (c, json.dumps(qs1 + qs2), json.dumps(ss + [s]), y, dffe_type)
+        )
+    cur.executemany("INSERT OR IGNORE INTO qmux VALUES (?, ?, ?, ?, ?);", qmuxes)
+    netlist.commit()
+    return cur.rowcount
+
+
+def contains(a: tuple[int], b: tuple[int]) -> bool:
+    # if a contains b
+    return all(x in a for x in b)
+
+
+def find_readport(netlist: NetlistDatabase) -> dict:
+    # (((q)), ((ra))) -> ((rd))
+    # ((1, 2), (3, 4)) means q1, q2 -> rd1 & q3, q4 -> rd2
+    readports = {}
+    cur = netlist.cursor()
+    # width >= 8
+    # order by log(height) approximately
+    cur.execute("SELECT c, ss, dffe_type FROM qmux GROUP BY c, ss, dffe_type HAVING COUNT(*) >= 8 ORDER BY LENGTH(ss) DESC;")
+    groups = cur.fetchall()
+    for c, ss, dffe_type in groups:
+        # check whether ss is a subset of existing readports
+        ss_tuple = tuple(json.loads(ss))
+        if any(contains(ra, ss_tuple) for _, ra in readports.keys()):
+            continue
+        cur.execute("SELECT qs, y FROM qmux WHERE c = ? AND ss = ? AND dffe_type = ?;", (c, ss, dffe_type))
+        patterns = cur.fetchall()
+        qss = tuple(tuple(json.loads(qs)) for qs, _ in patterns)
+        rd = tuple(y for _, y in patterns)
+        readports[(qss, ss_tuple)] = rd
+    return readports
 
 
 if __name__ == "__main__":
