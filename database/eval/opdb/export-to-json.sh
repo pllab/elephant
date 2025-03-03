@@ -6,8 +6,6 @@
 # Input format = <FILENAME>,<TOP-MODULE>\n
 declare -a BENCHES=(
 "chip_bridge.pickle,chip_bridge"
-"chip_x1_y1,chip"
-"chip_x5_y5,chip"
 "dynamic_node_2dmesh.pickle,dynamic_node_top_wrap"
 "fpga_bridge_rcv_32.pickle,fpga_bridge_rcv_32"
 "fpu.pickle,fpu"
@@ -22,7 +20,6 @@ declare -a BENCHES=(
 "sparc_lsu.pickle,lsu"
 "sparc_mul.pickle,sparc_mul_top_nospu_wrap"
 "sparc_tlu.pickle,tlu_nospu_wrap"
-"tile.pickle,tile"
 "fft.pickle,fftmain"
 "gng.pickle,gng"
 )
