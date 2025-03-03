@@ -1,0 +1,19 @@
+
+7. Printing statistics.
+
+=== nerv ===
+
+   Number of wires:              10928
+   Number of wire bits:          19773
+   Number of public wires:          80
+   Number of public wire bits:    1794
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               9275
+     $_AND_                       2876
+     $_DFFE_PP_                   1101
+     $_MUX_                       2026
+     $_NOT_                        620
+     $_OR_                        2652
+

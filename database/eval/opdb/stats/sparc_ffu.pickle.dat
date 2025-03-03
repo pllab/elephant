@@ -1,0 +1,26 @@
+
+6. Printing statistics.
+
+=== sparc_ffu_nospu_wrap ===
+
+   Number of wires:              40352
+   Number of wire bits:          75740
+   Number of public wires:        1996
+   Number of public wire bits:   25112
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              36494
+     $_AND_                       8816
+     $_DFFE_PP_                  10317
+     $_DFF_PN0_                      1
+     $_DFF_P_                      753
+     $_MUX_                       7236
+     $_NOT_                       1007
+     $_OR_                        8182
+     $_SDFFE_PN0N_                   7
+     $_SDFFE_PN0P_                 155
+     $_SDFFE_PP0P_                   2
+     $_SDFFE_PP1P_                   1
+     $_SDFF_PN0_                    17
+

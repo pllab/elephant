@@ -1,0 +1,29 @@
+
+6. Printing statistics.
+
+=== l15_wrap ===
+
+   Number of wires:             351715
+   Number of wire bits:         623507
+   Number of public wires:        3528
+   Number of public wire bits:  133150
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             333278
+     $_AND_                      83183
+     $_DFFE_PP_                  99887
+     $_DFF_P_                     1221
+     $_MUX_                      59029
+     $_NOT_                       1677
+     $_OR_                       82838
+     $_SDFFCE_PN0P_               3261
+     $_SDFFCE_PN1P_                  2
+     $_SDFFCE_PP0P_                  4
+     $_SDFFE_PN0N_                 594
+     $_SDFFE_PN0P_                1359
+     $_SDFFE_PN1P_                   2
+     $_SDFFE_PP1P_                   1
+     $_SDFF_PN0_                   190
+     $_SDFF_PP0_                    30
+

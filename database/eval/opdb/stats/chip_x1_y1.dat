@@ -1,0 +1,46 @@
+
+6. Printing statistics.
+
+=== chip ===
+
+   Number of wires:             3651509
+   Number of wire bits:         6582988
+   Number of public wires:       99157
+   Number of public wire bits:  1667885
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             3459390
+     $_AND_                     794616
+     $_DFFE_NP_                  29507
+     $_DFFE_PN_                   1327
+     $_DFFE_PP_                 1080416
+     $_DFF_NN0_                      6
+     $_DFF_NN1_                      1
+     $_DFF_N_                      343
+     $_DFF_PN0_                     34
+     $_DFF_PN1_                      2
+     $_DFF_P_                    18067
+     $_DLATCH_N_                   100
+     $_DLATCH_P_                    66
+     $_MUX_                     723759
+     $_NOT_                      29906
+     $_OR_                      748526
+     $_SDFFCE_NN0P_                216
+     $_SDFFCE_PN0P_              18708
+     $_SDFFCE_PN1P_                  6
+     $_SDFFCE_PP0P_                 24
+     $_SDFFE_NP0P_                  32
+     $_SDFFE_PN0N_                2144
+     $_SDFFE_PN0P_                8734
+     $_SDFFE_PN1P_                  38
+     $_SDFFE_PP0N_                  63
+     $_SDFFE_PP0P_                 457
+     $_SDFFE_PP1P_                  17
+     $_SDFF_NP0_                     1
+     $_SDFF_NP1_                     1
+     $_SDFF_PN0_                  1309
+     $_SDFF_PN1_                   136
+     $_SDFF_PP0_                   542
+     $_SDFF_PP1_                   286
+

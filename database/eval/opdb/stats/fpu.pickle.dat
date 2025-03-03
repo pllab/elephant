@@ -1,0 +1,27 @@
+
+6. Printing statistics.
+
+=== fpu ===
+
+   Number of wires:              81913
+   Number of wire bits:         141068
+   Number of public wires:       25554
+   Number of public wire bits:   67446
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              48491
+     $_AND_                      16542
+     $_DFFE_PN_                   1310
+     $_DFFE_PP_                    648
+     $_DFF_PN0_                      1
+     $_DFF_P_                     1905
+     $_DLATCH_N_                     5
+     $_MUX_                       5126
+     $_NOT_                       5731
+     $_OR_                       14654
+     $_SDFFCE_PN0P_               2325
+     $_SDFFE_PN0N_                 114
+     $_SDFFE_PN0P_                  76
+     $_SDFF_PN0_                    54
+

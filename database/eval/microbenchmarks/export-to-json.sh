@@ -3,10 +3,10 @@
 # Run a single benchmark by passing in verilog filename as argument.
 # No arguments will run all benchmarks.
 
-# Optional
+# Options
 DFF="dfflegalize -cell \$_DFFE_PP_ 01 ;"
 
-# Input format = <FILENAME>,<TOP-MODULE>,[OPTIONAL]\n
+# Input format = <FILENAME>,<TOP-MODULE>,[OPTIONS]\n
 declare -a BENCHES=(
 "bsg_cache_ways_p_2_data_width_p_32,top,$DFF"
 "bsg_fifo_64_256,top,$DFF"
@@ -15,9 +15,6 @@ declare -a BENCHES=(
 "netlist_h128_w16_1r1w,toplevel,$DFF"
 "netlist_h128_w16_1rw,toplevel,$DFF"
 "netlist_h128_w16_2rw,toplevel,$DFF"
-"pico.pickle,picorv32,$DFF"
-"sparc_ffu.pickle,sparc_ffu_nospu_wrap"
-"sparc_tlu.pickle,tlu_nospu_wrap"
 )
 
 for BENCH in "${BENCHES[@]}" ; do

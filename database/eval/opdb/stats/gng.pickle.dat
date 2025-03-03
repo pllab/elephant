@@ -1,0 +1,23 @@
+
+6. Printing statistics.
+
+=== gng ===
+
+   Number of wires:              14228
+   Number of wire bits:          43323
+   Number of public wires:         146
+   Number of public wire bits:    1906
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              13179
+     $_AND_                       4636
+     $_DFF_P_                      374
+     $_MUX_                         23
+     $_NOT_                       1513
+     $_OR_                        6328
+     $_SDFFE_PN0P_                  78
+     $_SDFFE_PN1P_                  98
+     $_SDFF_PN0_                   114
+     $_SDFF_PN1_                    15
+

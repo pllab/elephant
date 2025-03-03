@@ -1,0 +1,23 @@
+
+6. Printing statistics.
+
+=== dynamic_node_top_wrap ===
+
+   Number of wires:              14600
+   Number of wire bits:          33508
+   Number of public wires:        1461
+   Number of public wire bits:   15613
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10327
+     $_AND_                       3176
+     $_DFFE_PP_                   2048
+     $_DFF_P_                       26
+     $_MUX_                       1611
+     $_NOT_                        494
+     $_OR_                        2784
+     $_SDFFE_PP0N_                  41
+     $_SDFF_PP0_                   127
+     $_SDFF_PP1_                    20
+

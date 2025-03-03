@@ -1,0 +1,23 @@
+
+6. Printing statistics.
+
+=== sparc_ifu_esl ===
+
+   Number of wires:               4954
+   Number of wire bits:           7081
+   Number of public wires:         293
+   Number of public wire bits:    1168
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               3188
+     $_AND_                       1171
+     $_DLATCH_N_                     4
+     $_MUX_                         38
+     $_NOT_                        596
+     $_OR_                        1274
+     $_SDFFE_PN0P_                  18
+     $_SDFFE_PP0N_                   3
+     $_SDFFE_PP0P_                  81
+     $_SDFF_PN0_                     3
+

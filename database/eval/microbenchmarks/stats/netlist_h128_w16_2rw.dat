@@ -1,0 +1,19 @@
+
+7. Printing statistics.
+
+=== toplevel ===
+
+   Number of wires:              11836
+   Number of wire bits:          17653
+   Number of public wires:         144
+   Number of public wire bits:    2181
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              11103
+     $_AND_                       3716
+     $_DFFE_PP_                   2076
+     $_MUX_                       1697
+     $_NOT_                         21
+     $_OR_                        3593
+
