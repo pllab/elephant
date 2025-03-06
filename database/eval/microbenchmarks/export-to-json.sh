@@ -24,6 +24,9 @@ for BENCH in "${BENCHES[@]}" ; do
 	
 	# if (argument is null) or (argument is not null and equal to verilog/$name.v)
 	if [ -z $1 ] || ([ ! -z $1 ] && [ $1 = "verilog/$name.v" ]) ; then
-		yosys -p "read_verilog -sv verilog/$name.v ; synth -noabc -flatten -top $top ; $opt abc -g AND,OR,MUX ; proc ; write_json json/$name.json; tee -a stats/$name.dat stat -width"
+		yosys -p "read_verilog -sv verilog/$name.v ; hierarchy -check -top $top ; proc ; memory_dff ; memory_map ; simplemap ; $DFF flatten ; write_json json/$name.json; tee -a stats/$name.dat stat -width"
+		#yosys -p "read_verilog -sv verilog/$name.v ; hierarchy -check -top $top ; proc ; memory ; techmap ; $DFF flatten ; write_json json/$name.json; tee -a stats/$name.dat stat -width"
+		#yosys -p "read_verilog -sv verilog/$name.v ; synth -flatten -top $top ; $opt proc ; write_json json/$name.json; tee -a stats/$name.dat stat -width"
+		#yosys -p "read_verilog -sv verilog/$name.v ; synth -noabc -flatten -top $top ; $opt abc -g AND,OR,MUX ; proc ; write_json json/$name.json; tee -a stats/$name.dat stat -width"
 	fi
 done
