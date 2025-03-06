@@ -1,32 +1,39 @@
 
-6. Printing statistics.
+5. Printing statistics.
 
 === tlu_nospu_wrap ===
 
-   Number of wires:              58295
-   Number of wire bits:         137729
-   Number of public wires:        7041
-   Number of public wire bits:   56799
+   Number of wires:              39892
+   Number of wire bits:          83437
+   Number of public wires:        6028
+   Number of public wire bits:   49570
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:              46883
-     $_AND_                      12803
+   Number of cells:              47824
+     $_ANDNOT_                    5507
+     $_AND_                        701
      $_DFFE_PN_                     16
      $_DFFE_PP_                    974
      $_DFF_PN0_                      1
-     $_DFF_P_                     2792
+     $_DFF_P_                     2791
      $_DLATCH_N_                    40
-     $_MUX_                      10316
-     $_NOT_                       1508
-     $_OR_                       10473
+     $_MUX_                      15018
+     $_NAND_                       310
+     $_NOR_                        414
+     $_NOT_                       9234
+     $_ORNOT_                      811
+     $_OR_                        3461
      $_SDFFCE_PN0P_               7428
      $_SDFFCE_PP0P_                 12
      $_SDFFE_PN0P_                  58
      $_SDFFE_PN1P_                  20
-     $_SDFFE_PP0P_                 113
-     $_SDFF_PN0_                   240
-     $_SDFF_PN1_                     1
-     $_SDFF_PP0_                    73
-     $_SDFF_PP1_                    15
+     $_SDFFE_PP0N_                  27
+     $_SDFFE_PP0P_                  86
+     $_SDFF_PN0_                   251
+     $_SDFF_PN1_                     2
+     $_SDFF_PP0_                    62
+     $_SDFF_PP1_                    14
+     $_XNOR_                        60
+     $_XOR_                        526
 

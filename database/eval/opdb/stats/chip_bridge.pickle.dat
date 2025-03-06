@@ -1,25 +1,32 @@
 
-6. Printing statistics.
+5. Printing statistics.
 
 === chip_bridge ===
 
-   Number of wires:              36534
-   Number of wire bits:          66716
-   Number of public wires:         569
-   Number of public wire bits:   13603
+   Number of wires:              16578
+   Number of wire bits:          27862
+   Number of public wires:         410
+   Number of public wire bits:   11546
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:              34317
-     $_AND_                       7564
+   Number of cells:              26300
+     $_ANDNOT_                     701
+     $_AND_                         56
      $_DFFE_PP_                   9314
      $_DFF_P_                      178
-     $_MUX_                       9292
-     $_NOT_                        504
-     $_OR_                        7174
-     $_SDFFE_PN0P_                 251
-     $_SDFFE_PP0P_                   3
+     $_MUX_                      13922
+     $_NAND_                        45
+     $_NOR_                         72
+     $_NOT_                       1165
+     $_ORNOT_                       83
+     $_OR_                         179
+     $_SDFFE_PN0N_                  32
+     $_SDFFE_PN0P_                 219
+     $_SDFFE_PP0N_                   3
      $_SDFF_PN0_                    32
      $_SDFF_PN1_                     1
      $_SDFF_PP0_                     4
+     $_XNOR_                        56
+     $_XOR_                        238
 

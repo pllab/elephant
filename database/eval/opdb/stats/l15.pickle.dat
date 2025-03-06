@@ -1,29 +1,70 @@
 
-6. Printing statistics.
+5. Printing statistics.
 
 === l15_wrap ===
 
-   Number of wires:             351715
-   Number of wire bits:         623507
-   Number of public wires:        3528
-   Number of public wire bits:  133150
+   Number of wires:             136676
+   Number of wire bits:         262805
+   Number of public wires:        2880
+   Number of public wire bits:  128617
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:             333278
-     $_AND_                      83183
+   Number of cells:             242489
+     $_ANDNOT_                   12024
+     $_AND_                       1158
      $_DFFE_PP_                  99887
      $_DFF_P_                     1221
-     $_MUX_                      59029
-     $_NOT_                       1677
-     $_OR_                       82838
-     $_SDFFCE_PN0P_               3261
-     $_SDFFCE_PN1P_                  2
-     $_SDFFCE_PP0P_                  4
-     $_SDFFE_PN0N_                 594
-     $_SDFFE_PN0P_                1359
+     $_MUX_                     110472
+     $_NAND_                       613
+     $_NOR_                        709
+     $_NOT_                       1679
+     $_ORNOT_                     1088
+     $_OR_                        7533
+     $_SDFFCE_PN0P_               3238
+     $_SDFFCE_PP0P_                 27
+     $_SDFFCE_PP1P_                  2
+     $_SDFFE_PN0N_                 601
+     $_SDFFE_PN0P_                1352
      $_SDFFE_PN1P_                   2
      $_SDFFE_PP1P_                   1
-     $_SDFF_PN0_                   190
-     $_SDFF_PP0_                    30
+     $_SDFF_PN0_                   189
+     $_SDFF_PP0_                    31
+     $_XNOR_                        30
+     $_XOR_                        632
+
+
+5. Printing statistics.
+
+=== l15_wrap ===
+
+   Number of wires:             136676
+   Number of wire bits:         262805
+   Number of public wires:        2880
+   Number of public wire bits:  128617
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             242489
+     $_ANDNOT_                   12024
+     $_AND_                       1158
+     $_DFFE_PP_                  99887
+     $_DFF_P_                     1221
+     $_MUX_                     110472
+     $_NAND_                       613
+     $_NOR_                        709
+     $_NOT_                       1679
+     $_ORNOT_                     1088
+     $_OR_                        7533
+     $_SDFFCE_PN0P_               3238
+     $_SDFFCE_PP0P_                 27
+     $_SDFFCE_PP1P_                  2
+     $_SDFFE_PN0N_                 601
+     $_SDFFE_PN0P_                1352
+     $_SDFFE_PN1P_                   2
+     $_SDFFE_PP1P_                   1
+     $_SDFF_PN0_                   189
+     $_SDFF_PP0_                    31
+     $_XNOR_                        30
+     $_XOR_                        632
 

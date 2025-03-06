@@ -1,36 +1,42 @@
 
-6. Printing statistics.
+5. Printing statistics.
 
 === lsu ===
 
-   Number of wires:             381825
-   Number of wire bits:         662449
-   Number of public wires:       10353
-   Number of public wire bits:  165840
+   Number of wires:             138238
+   Number of wire bits:         286719
+   Number of public wires:        8923
+   Number of public wire bits:  157389
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:             361889
-     $_AND_                     125903
+   Number of cells:             239164
+     $_ANDNOT_                    6301
+     $_AND_                       1881
      $_DFFE_NP_                   4757
-     $_DFFE_PN_                    117
-     $_DFFE_PP_                  94906
+     $_DFFE_PN_                    136
+     $_DFFE_PP_                  94887
      $_DFF_N_                      166
      $_DFF_PN0_                      2
-     $_DFF_P_                     4470
+     $_DFF_P_                     4469
      $_DLATCH_N_                    47
-     $_MUX_                      14803
-     $_NOT_                       4570
-     $_OR_                      110135
+     $_MUX_                     111012
+     $_NAND_                       624
+     $_NOR_                       1057
+     $_NOT_                        883
+     $_ORNOT_                      912
+     $_OR_                        7000
      $_SDFFCE_PN0P_               1728
      $_SDFFCE_PN1N_                  4
      $_SDFFE_NP0P_                  16
-     $_SDFFE_PN0N_                  11
-     $_SDFFE_PN0P_                  58
-     $_SDFFE_PP0P_                 125
+     $_SDFFE_PN0N_                  17
+     $_SDFFE_PN0P_                  54
+     $_SDFFE_PP0P_                 123
      $_SDFFE_PP1P_                   5
-     $_SDFF_PN0_                     6
+     $_SDFF_PN0_                     8
      $_SDFF_PN1_                    36
-     $_SDFF_PP0_                    23
+     $_SDFF_PP0_                    21
      $_SDFF_PP1_                     1
+     $_XNOR_                       301
+     $_XOR_                       2716
 
