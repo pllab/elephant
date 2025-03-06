@@ -117,10 +117,31 @@ def test_extract_memory(netlist: db.NetlistDatabase, verbose: bool = False):
 
 
 if __name__ == "__main__":
-    name, top = NETLIST_FILES[0]
+    from argparse import ArgumentParser
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--input", type=str, dest="name", help="name of input JSON netlist"
+    )
+    parser.add_argument(
+        "--top", type=str, dest="top", help="name of top module"
+    )
+    args = parser.parse_args()
+
+    if args.name is None and args.top is None:
+        name, top = NETLIST_FILES[0]
+        name = NETLIST_PATH + name + ".json"
+    elif args.name is None:
+        print("Provide JSON filename with --input")
+        exit(1)
+    elif args.top:
+        name = args.name
+        top = args.top
+    else:
+        name = args.name
+        top = "top"
 
     netlist = db.NetlistDatabase()
-    with open(NETLIST_PATH + name + ".json", "r") as f:
+    with open(name, "r") as f:
         netlist.build_from_blif(json.load(f), top, True)
 
     test_extract_memory(netlist)
