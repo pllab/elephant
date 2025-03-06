@@ -11,7 +11,12 @@ NETLIST_FILES = [
     ("pico", "picorv32"),
     ("sparc_ffu", "sparc_ffu"),
     ("sram_1rw_128x78", "sram_1rw_128x78"),
-    ("bsg_fifo_1r1w_64_256", "top")
+    ("bsg_fifo_1r1w_64_256", "top"),
+    ("netlist_h128_w16_1r1w", "toplevel"),
+    ("bsg_cache", "top"),
+    ("bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1",
+     "bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1"),
+    ("mem", "bsg_mem_1rw_sync_synth")
 ]
 
 # pyrtl.set_debug_mode(True)
@@ -70,7 +75,7 @@ def test_extract_mems(name: str, top: str):
     netlist.extract_mems()
 
 
-def test_find_readport(netlist: db.NetlistDatabase, verbose: bool = False):
+def test_extract_memory(netlist: db.NetlistDatabase, verbose: bool = False):
     start = time.time()
     rewriter.rewrite_dffe_pn_to_pp(netlist)
     cnt = rewriter.rewrite_mux_to_qmux(netlist)
@@ -79,47 +84,43 @@ def test_find_readport(netlist: db.NetlistDatabase, verbose: bool = False):
         pass
     print("Reduced all qmuxes")
     rps = rewriter.find_readport(netlist)
+    mems = rewriter.find_memory(rps)
+    wps = rewriter.create_writeport(netlist, mems)
     time_elapsed = time.time() - start
-    print(f"Found {len(rps)} read port(s):")
-    for i, ((qss, ra), rd) in enumerate(rps.items()):
-        print(f"\tRead port {i}: width = {len(qss)}, height = 2^{len(ra)}")
+    print(f"Found {len(mems)} memory(ies):")
+    for i, (qss, rps) in enumerate(mems.items()):
+        print(f"\tMemory {i}: width = {len(qss)}, height = {len(qss[0])}")
         if verbose:
-            print(f"\t\tRead address: {ra}")
-            print(f"\t\tRead data: {rd}")
-            print(f"\t\tRegisters: {qss}")
+            for j, (qs, ra, rd) in enumerate(rps):
+                print(f"\t\tRead port {j}:")
+                print(f"\t\t\tRead address: {ra}")
+                print(f"\t\t\tRead data: {rd}")
+                print(f"\t\t\tRegisters: {qs}")
+            print(f"\t\tWrite port:")
+            wen, wa, wd = wps[qss]
+            print(f"\t\t\tWrite enable: {wen}")
+            print(f"\t\t\tWrite address: {wa}")
+            print(f"\t\t\tWrite data: {wd}")
         else:
-            print(f"\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
-            print(f"\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
-            truncated_qss = [qs[:5] for qs in qss[:5]]
-            print(f"\t\tRegisters: {truncated_qss}" + ("..." if len(qss) > 5 else ""))
+            for j, (qs, ra, rd) in enumerate(rps):
+                print(f"\t\tRead port {j}:")
+                print(f"\t\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
+                print(f"\t\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
+                truncated_qs = [qs[:5] for qs in qs[:5]]
+                print(f"\t\t\tRegisters: {truncated_qs}" + ("..." if len(qs) > 5 else ""))
+            wen, wa, wd = wps[qss]
+            print(f"\t\tWrite port:")
+            print(f"\t\t\tWrite enable: {wen}")
+            print(f"\t\t\tWrite address: {wa[:5]}" + ("..." if len(wa) > 5 else ""))
+            print(f"\t\t\tWrite data: {wd[:5]}" + ("..." if len(wd) > 5 else ""))
     print(f"Time elapsed: {time_elapsed:.2f}s")
 
 
 if __name__ == "__main__":
-    from argparse import ArgumentParser
-    parser = ArgumentParser()
-    parser.add_argument(
-        "--input", type=str, dest="name", help="name of input JSON netlist"
-    )
-    parser.add_argument(
-        "--top", type=str, dest="top", help="name of top module"
-    )
-    args = parser.parse_args()
-
-    if args.name is None and args.top is None:
-        name, top = NETLIST_FILES[3]
-        name = NETLIST_PATH + name + ".json"
-    elif args.name is None:
-        print("Provide JSON filename with --input")
-        exit(1)
-    elif args.top:
-        name = args.name
-        top = args.top
-    else:
-        name = args.name
-        top = "top"
+    name, top = NETLIST_FILES[0]
 
     netlist = db.NetlistDatabase()
-    with open(name, "r") as f:
+    with open(NETLIST_PATH + name + ".json", "r") as f:
         netlist.build_from_blif(json.load(f), top, True)
-    test_find_readport(netlist)
+
+    test_extract_memory(netlist)

@@ -824,13 +824,13 @@ def find_or_create_unary_gate(netlist, a: int, type: str) -> int:
     return y
 
 
-def create_write_port_from_wes(netlist, wes: list[int]) -> tuple[int, int] | None:
+def create_write_port_from_wes(netlist, wes: list[int]) -> tuple[int, list[int]] | None:
     """
     It creates a write port and repairs the connections: use a reversed write port
     """
     wen, waddr, wes_bundle = next(global_id), next(global_id), next(global_id)
     n = len(wes)
-    log_map = {2: 1, 4: 2, 8: 3, 16: 4, 32: 5, 64: 6, 128: 7}
+    log_map = {2: 1, 4: 2, 8: 3, 16: 4, 32: 5, 64: 6, 128: 7, 256: 8}
     if n not in log_map:
         return False
     logn = log_map[n]
@@ -893,13 +893,13 @@ def create_write_port_from_wes(netlist, wes: list[int]) -> tuple[int, int] | Non
         waddrs.append(ands[0])
 
     # step 3: bundle waddrs
-    cur.executemany(
-        "INSERT INTO concat VALUES (?, ?, ?, ?);",
-        [(waddrs[i], waddr, i, i) for i in range(logn)]
-    )
-    netlist.commit()
+    # cur.executemany(
+    #     "INSERT INTO concat VALUES (?, ?, ?, ?);",
+    #     [(waddrs[i], waddr, i, i) for i in range(logn)]
+    # )
+    # netlist.commit()
 
-    return wen, waddr
+    return wen, waddrs
 
 
 # We can only consider muxes that are connected (directly or indirectly) to dffes
@@ -956,13 +956,13 @@ def reduce_qmux_once(netlist: NetlistDatabase) -> int:
     return cur.rowcount
 
 
-def contains(a: tuple[int], b: tuple[int]) -> bool:
+def contains(a: tuple, b: tuple) -> bool:
     # if a contains b
     return all(x in a for x in b)
 
 
-def find_readport(netlist: NetlistDatabase) -> dict:
-    # (((q)), ((ra))) -> ((rd))
+def find_readport(netlist: NetlistDatabase) -> dict[tuple[tuple[tuple[int]], tuple[int]], tuple[int]]:
+    # (((q)), (ra)) -> (rd)
     # ((1, 2), (3, 4)) means q1, q2 -> rd1 & q3, q4 -> rd2
     readports = {}
     cur = netlist.cursor()
@@ -981,6 +981,45 @@ def find_readport(netlist: NetlistDatabase) -> dict:
         rd = tuple(y for _, y in patterns)
         readports[(qss, ss_tuple)] = rd
     return readports
+
+
+def find_memory(readports: dict[tuple[tuple[tuple[int]], tuple[int]], tuple[int]]) -> dict[tuple[tuple[int]], list[tuple[tuple[tuple[int]], tuple[int], tuple[int]]]]:
+    memories = {}
+    for (qs, ra), rd in readports.items():
+        found = False
+        for mqs in memories.keys():
+            if contains(mqs, qs):
+                memories[mqs].append((qs, rd, ra))
+                found = True
+                break
+        if not found:
+            memories[qs] = [(qs, rd, ra)]
+    return memories
+
+
+def find_d_e_from_q(netlist: NetlistDatabase, q: int) -> tuple[int, int] | None:
+    cur = netlist.cursor()
+    cur.execute("SELECT d, e FROM dffe_xx WHERE q = ? LIMIT 1;", (q,))
+    res = cur.fetchone()
+    return res if res else None
+
+
+def create_writeport(netlist: NetlistDatabase, memories: dict[tuple[tuple[int]], list[tuple[tuple[int], tuple[int]]]]) -> dict[tuple[tuple[int]], tuple[int, tuple[int], tuple[int]]]:
+    writeports = {}
+    for qss in memories.keys():
+        # find the write enable signals (wes)
+        wes = [
+            find_d_e_from_q(netlist, q)[1]
+            for q in qss[0]
+        ]
+        wds = tuple(
+            find_d_e_from_q(netlist, qs[0])[0]
+            for qs in qss
+        )
+        # create a write port
+        wen, waddrs = create_write_port_from_wes(netlist, wes)
+        writeports[qss] = (wen, tuple(waddrs), wds)
+    return writeports
 
 
 if __name__ == "__main__":

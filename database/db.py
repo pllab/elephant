@@ -137,7 +137,7 @@ class NetlistDatabase(sqlite3.Connection):
     def build_from_blif(self, blif: dict, target_module: str, ignore_errors: bool = False):
         self.target_blif = blif["modules"][target_module]
         netlist = formatter.blif_to_db(blif, target_module, ignore_errors)
-        wire_data = [(w["id"], w["width"]) for w in netlist["wires"]]
+        wire_data = [(w["id"], w["width"]) for w in netlist["wires"] if type(w["id"]) == int]
         binary_gate_data = [(g["a"], g["b"], g["y"], g["type"]) for g in netlist["binary_gates"]]
         dffe_xx_data = [(d["d"], d["c"], d["e"], d["q"], d["type"]) for d in netlist["dffe_xxs"]]
         unary_gate_data = [(u["a"], u["y"], u["type"]) for u in netlist["unary_gates"]]
