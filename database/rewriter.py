@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from .db import NetlistDatabase
 
 
-MAGIC_NUMBER = 100000
+MAGIC_NUMBER = 10000000
 def id_generator():
     i = MAGIC_NUMBER
     while True:
@@ -830,7 +830,7 @@ def create_write_port_from_wes(netlist, wes: list[int]) -> tuple[int, list[int]]
     """
     wen, waddr, wes_bundle = next(global_id), next(global_id), next(global_id)
     n = len(wes)
-    log_map = {2: 1, 4: 2, 8: 3, 16: 4, 32: 5, 64: 6, 128: 7, 256: 8}
+    log_map = {2: 1, 4: 2, 8: 3, 16: 4, 32: 5, 64: 6, 128: 7, 256: 8, 512: 9, 1024: 10}
     if n not in log_map:
         return False
     logn = log_map[n]
