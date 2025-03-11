@@ -1022,6 +1022,91 @@ def create_writeport(netlist: NetlistDatabase, memories: dict[tuple[tuple[int]],
     return writeports
 
 
+# to support unbalanced muxes
+
+def rewrite_mux_to_quasi_qmux(netlist: NetlistDatabase) -> int:
+    # quasi_qmux is a mux with inputs connected to dffes or quasi_qmuxes or 0
+    # we can safely remove the original mux
+    cur = netlist.cursor()
+    # add a const 0 dffe
+    cur.execute(
+        "INSERT OR IGNORE INTO dffe_xx VALUES (?, ?, ?, ?, ?);",
+        (0, 2, 0, 0, "$_DFFE_PP_")
+    )
+    cur.execute(
+        """
+        SELECT mux.a, mux.b, mux.s, mux.y, d1.c, d1.type
+        FROM mux JOIN dffe_xx AS d1 JOIN dffe_xx AS d2
+        ON a = d1.q AND b = d2.q AND d1.c = d2.c AND d1.type = d2.type;
+        """
+    )
+    patterns = cur.fetchall()
+    if not patterns:
+        return 0
+    quasi_qmuxes = [
+        (c, json.dumps([a, b]), json.dumps([s, None, None]), y, dffe_type)
+        for a, b, s, y, c, dffe_type in patterns
+    ]
+    cur.executemany("INSERT INTO quasi_qmux VALUES (?, ?, ?, ?, ?);", quasi_qmuxes)
+    cur.executemany(
+        "DELETE FROM mux WHERE a = ? AND b = ? AND s = ?;",
+        [(a, b, s) for a, b, s, _, _, _ in patterns]
+    )
+    netlist.commit()
+    # print(quasi_qmuxes)
+    return cur.rowcount
+
+
+def reduce_quasi_qmux_once(netlist: NetlistDatabase) -> int:
+    # this keeps the original quasi_qmuxes
+    cur = netlist.cursor()
+    cur.execute(
+        """
+        SELECT dff.q, dff.c, dff.type, qm.qs, qm.ss, m.s, m.y
+        FROM dffe_xx AS dff JOIN quasi_qmux AS qm JOIN mux AS m
+        ON dff.q = m.b AND dff.c = qm.c AND qm.y = m.a AND dff.type = qm.dffe_type;
+        """
+    )
+    patterns = cur.fetchall()
+    if not patterns:
+        return 0
+    quasi_qmuxes = []
+    for q, c, dffe_type, qs, ss, s, y in patterns:
+        qs = json.loads(qs)
+        ss = json.loads(ss)
+        new_qs = qs + [q]
+        new_ss = [s] + ss + [None]
+        # new_qs = [qs, q]    # left: qs, right: q
+        # new_ss = [s, ss, None]  # left: s, right: ss
+        quasi_qmuxes.append((c, json.dumps(new_qs), json.dumps(new_ss), y, dffe_type))
+    cur.executemany("INSERT OR IGNORE INTO quasi_qmux VALUES (?, ?, ?, ?, ?);", quasi_qmuxes)
+    # delete the original quasi_qmuxes
+    cur.executemany(
+        "DELETE FROM quasi_qmux WHERE c = ? AND ss = ? AND dffe_type = ?;",
+        [(c, ss, dffe_type) for _, c, dffe_type, _, ss, _, _ in patterns]
+    )
+    netlist.commit()
+    return cur.rowcount
+
+
+def find_quasi_memory(netlist: NetlistDatabase) -> list:
+    cur = netlist.cursor()
+    memories = []
+    cur.execute("SELECT c, ss, dffe_type FROM quasi_qmux GROUP BY c, ss, dffe_type HAVING COUNT(*) >= 8 ORDER BY LENGTH(ss) DESC;")
+    groups = cur.fetchall()
+    for c, ss, dffe_type in groups:
+        if len(json.loads(ss)) < 10:
+            continue
+        cur.execute("SELECT qs, y FROM quasi_qmux WHERE c = ? AND ss = ? AND dffe_type = ?;", (c, ss, dffe_type))
+        patterns = cur.fetchall()
+        qss = [json.loads(qs) for qs, _ in patterns]
+        rd = [y for _, y in patterns]
+        ss = json.loads(ss)
+        if len(ss) >= 256:
+            memories.append((qss, ss, rd))
+    return memories
+
+
 if __name__ == "__main__":
 
     NETLIST_FILE = "elephant/tests/json/pico.json"

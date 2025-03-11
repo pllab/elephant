@@ -103,6 +103,18 @@ def create_tables(conn: sqlite3.Connection):
         );
         """
     )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS quasi_qmux (
+            c INTEGER,
+            qs JSON,
+            ss JSON,
+            y INTEGER,
+            dffe_type VARCHAR(255),
+            PRIMARY KEY (qs, ss, dffe_type)
+        );
+        """
+    )
     conn.commit()
 
 

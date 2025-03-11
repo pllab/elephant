@@ -16,7 +16,7 @@ NETLIST_FILES = [
     ("bsg_cache", "top"),
     ("bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1",
      "bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1"),
-    ("mem", "bsg_mem_1rw_sync_synth")
+    ("bsg_cache_ways_p_2_data_width_p_32", "top")
 ]
 
 # pyrtl.set_debug_mode(True)
@@ -116,6 +116,37 @@ def test_extract_memory(netlist: db.NetlistDatabase, verbose: bool = False):
     print(f"Time elapsed: {time_elapsed:.2f}s")
 
 
+def test_extract_quasi_memory(netlist: db.NetlistDatabase, verbose: bool = False):
+    # def flatten(l: list[int | list | None]) -> list:
+    #     result = []
+    #     for item in l:
+    #         if isinstance(item, list):
+    #             result.extend(flatten(item))
+    #         elif item is not None:
+    #             result.append(item)
+    #     return result
+    start = time.time()
+    rewriter.rewrite_dffe_pn_to_pp(netlist)
+    cnt = rewriter.rewrite_mux_to_quasi_qmux(netlist)
+    print(f"Rewrote {cnt} muxes to quasi qmuxes")
+    while rewriter.reduce_quasi_qmux_once(netlist) > 0:
+        pass
+    print("Reduced all quasi qmuxes")
+    mems = rewriter.find_quasi_memory(netlist)
+    time_elapsed = time.time() - start
+    print(f"Found {len(mems)} quasi memory(ies):")
+    for qss, ra, rd in mems:
+        print(f"\tMemory: width = {len(qss)}, height = {len(qss[0]) - 1}")  # exclude the last const 0 dff
+        ra = [e for e in ra if e is not None]
+        if verbose:
+            print(f"\t\tRead address: {ra}")
+            print(f"\t\tRead data: {rd}")
+        else:
+            print(f"\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
+            print(f"\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
+    print(f"Time elapsed: {time_elapsed:.2f}s")
+
+
 if __name__ == "__main__":
     from argparse import ArgumentParser
     parser = ArgumentParser()
@@ -125,10 +156,16 @@ if __name__ == "__main__":
     parser.add_argument(
         "--top", type=str, dest="top", help="name of top module"
     )
+    parser.add_argument(
+        "--verbose", action="store_true", help="print detailed information of memory ports"
+    )
+    parser.add_argument(
+        "--quasi", action="store_true", help="extract quasi memories"
+    )
     args = parser.parse_args()
 
     if args.name is None and args.top is None:
-        name, top = NETLIST_FILES[0]
+        name, top = NETLIST_FILES[-1]
         name = NETLIST_PATH + name + ".json"
     elif args.name is None:
         print("Provide JSON filename with --input")
@@ -144,4 +181,7 @@ if __name__ == "__main__":
     with open(name, "r") as f:
         netlist.build_from_blif(json.load(f), top, True)
 
-    test_extract_memory(netlist)
+    if args.quasi:
+        test_extract_quasi_memory(netlist, args.verbose)
+    else:
+        test_extract_memory(netlist, args.verbose)
