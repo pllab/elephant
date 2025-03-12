@@ -1,0 +1,28 @@
+
+7. Printing statistics.
+
+=== bp_be_dcache ===
+
+   Number of wires:               8074
+   Number of wire bits:          22170
+   Number of public wires:        2010
+   Number of public wire bits:   16106
+   Number of ports:                 46
+   Number of port bits:           1138
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               8462
+     $_ANDNOT_                    1815
+     $_AND_                        201
+     $_DFFE_PP_                   1199
+     $_MUX_                       2994
+     $_NAND_                        81
+     $_NOR_                        134
+     $_NOT_                        225
+     $_ORNOT_                      244
+     $_OR_                        1188
+     $_XNOR_                        57
+     $_XOR_                        248
+     $scopeinfo                     76
+

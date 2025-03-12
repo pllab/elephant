@@ -1,0 +1,28 @@
+
+7. Printing statistics.
+
+=== bp_fe_top ===
+
+   Number of wires:              12169
+   Number of wire bits:          32403
+   Number of public wires:        3791
+   Number of public wire bits:   24025
+   Number of ports:                 32
+   Number of port bits:           1230
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10551
+     $_ANDNOT_                    2364
+     $_AND_                        173
+     $_DFFE_PP_                   1285
+     $_MUX_                       2562
+     $_NAND_                       182
+     $_NOR_                        481
+     $_NOT_                        566
+     $_ORNOT_                      301
+     $_OR_                        1548
+     $_XNOR_                       149
+     $_XOR_                        761
+     $scopeinfo                    179
+

@@ -1,0 +1,23 @@
+
+7. Printing statistics.
+
+=== bp_be_fp_regfile ===
+
+   Number of wires:                675
+   Number of wire bits:           2741
+   Number of public wires:         406
+   Number of public wire bits:    2472
+   Number of ports:                  8
+   Number of port bits:            290
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                973
+     $_ANDNOT_                       7
+     $_AND_                        196
+     $_DFFE_PP_                    292
+     $_MUX_                        408
+     $_OR_                          27
+     $_XOR_                         30
+     $scopeinfo                     13
+
