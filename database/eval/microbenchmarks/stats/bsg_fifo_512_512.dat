@@ -1,19 +1,25 @@
 
-7. Printing statistics.
+6. Printing statistics.
 
 === top ===
 
-   Number of wires:             830257
-   Number of wire bits:         1361273
-   Number of public wires:         611
-   Number of public wire bits:  270464
+   Number of wires:             264592
+   Number of wire bits:         530863
+   Number of public wires:         593
+   Number of public wire bits:  266864
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:             827839
-     $_AND_                     224171
+   Number of cells:             526840
+     $_ANDNOT_                     910
+     $_AND_                          5
      $_DFFE_PP_                 262688
-     $_MUX_                     111537
-     $_NOT_                        116
-     $_OR_                      229327
+     $_MUX_                     262313
+     $_NAND_                         9
+     $_NOR_                          1
+     $_NOT_                         21
+     $_ORNOT_                       14
+     $_OR_                         843
+     $_XNOR_                         9
+     $_XOR_                         27
 

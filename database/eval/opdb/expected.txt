@@ -1,0 +1,25 @@
+==l15==
+
+sram_l15_data: 128 x 512
+
+sram_l15_hmt: 32 x 512
+
+sram_l15_tag: 132 x 128 (actually 116 x 128)
+
+rf_l15_lrsc_flag: 4 x 128
+
+rf_l15_lruarray: 6 x 128
+
+rf_l15_mesi: 8 x 128
+
+rf_l15_wmt: 12 x 128
+
+==l2==
+
+sram_l2_data: 144 x 4096
+
+sram_l2_dir: 64 x 1024
+
+sram_l2_state: 66 x 256
+
+sram_l2_tag: 104 x 256
