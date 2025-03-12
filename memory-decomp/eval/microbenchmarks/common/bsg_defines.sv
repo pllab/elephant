@@ -38,7 +38,7 @@
                // = "inv" causes type inference mismatch as of 20.09.012
 `define BSG_INV_PARAM(param) param = -1
 `elsif YOSYS // Bare default parameters are incompatible as of 0.9
-`define BSG_INV_PARAM(param) param = "inv"
+`define BSG_INV_PARAM(param) param = 2
 `else // VIVADO, DC, VERILATOR, GENUS, SURELOG
 `define BSG_INV_PARAM(param) param
 `endif
