@@ -1,0 +1,55 @@
+;; Test for Sync, WriteReadForward & LatchLastRead option
+(include "./elephant.egg")
+
+;; ----------------------------SYNC----------------------------
+(let en0 (Wire "en_0" 1))
+(let addr0 (Wire "addr_0" 1))
+(let data0 (Wire "data_0" 8))
+(let r0 (ReadPort en0 addr0 data0))
+(let w (WritePort (Wire "en_w" 1) (Wire "addr_w" 2) (Wire "data_w" 8)))
+(let memory_sync (Memory (vec-of r0) (vec-of w) (set-of (Sync)) 1 8))
+
+; memory should be equivalent to this after applying the rules
+(let memory_reduced_once_sync (Memory (vec-empty) (vec-of w) (set-of (Sync)) 1 8))
+(let guard (Guard en0 (Update data0 (MemAccess addr0 memory_reduced_once_sync))))
+(let rp_rule_applied_once_sync (Bundle (set-of memory_reduced_once_sync guard)))
+;; Now the option rule for the Sync option is applied
+(let a_sync (Reg "a_sync" 1))
+(let sync_mem (
+    ConcatVec (vec-of (Guard en0 (Update a_sync addr0))
+                   (Update data0 (MemAccess a_sync memory_reduced_once_sync)))
+))
+(let final (Bundle (set-of memory_reduced_once_sync sync_mem)))
+
+;; run rules
+(run-schedule (repeat 5 (saturate typing) (saturate readport) (saturate options) (saturate decomp)))
+(check (= memory_sync rp_rule_applied_once_sync))
+(check (= guard sync_mem))
+(check (= memory_sync final))
+(query-extract rp_rule_applied_once_sync)
+
+;; ----------------------------WriteReadForward---------------------------- ; todo i dont get when this is appliedbecause
+
+;; ----------------------------LatchLastRead----------------------------
+(let memory_llr (Memory (vec-of r0) (vec-of w) (set-of (LatchLastRead)) 1 8))
+
+; memory should be equivalent to this after applying the rules
+(let memory_reduced_once_llr (Memory (vec-empty) (vec-of w) (set-of (LatchLastRead)) 1 8))
+(let update (Update data0 (MemAccess addr0 memory_reduced_once_llr)))
+(let rp_rule_applied_once_llr (Bundle (set-of memory_reduced_once_llr (Guard en0 update))))
+;; Now the option rule for the LatchLastRead option is applied
+(let e_llr (Reg "e_llr" 1))
+(let d_llr (Reg "d_llr" 8))
+(let llr_update (
+    ConcatVec (vec-of (Update e_llr en0)
+                      (Update d_llr (Mux e_llr (Bundle (set-of (MemAccess addr0 memory_reduced_once_llr) d_llr))))
+                      (Update data0 d_llr))
+))
+(let final_llr (Bundle (set-of memory_reduced_once_llr (Guard en0 llr_update))))
+
+;; run rules
+(run-schedule (repeat 5 (saturate typing) (saturate readport) (saturate options) (saturate decomp)))
+(check (= memory_llr rp_rule_applied_once_llr))
+(check (= update llr_update))
+(check (= memory_llr final_llr))
+(query-extract rp_rule_applied_once_llr)

@@ -1,9 +1,26 @@
-# Elephant Elaborator with Egglog
+# Elephant implementation in Egglog
 
-* `elephant.egg` is the source file which defines the Elephant language and its elaboration rules.
-* `test.egg` contains a small documented example using the Elephant rewrite rules.
+## Tests
 
-## Egglog resources
+`tests/` contains tests for every functionality. The script `./rull_all_tests` runs all tests in that folder and generates the graphs as png files. `./rull_all_tests-no-images` does what the name says and `./svg_conversion.sh <png | jpg>` deletes all svg files in the tests folder and generates png or jpg (depending on what was specified) in the `output-egraphs/` directory. 
 
-* [Egglog](https://github.com/egraphs-good/egglog) is the language we use for defining the language and its rewrite rules.
-* The [egglog web demo](https://egraphs-good.github.io/egglog/) is a handy resource for checking how to use different features of the egglog language.
+## Rulesets
+
+(saturate typing) (saturate writeport) (saturate writeaddress) (saturate decomp))
+There are the following rulesets so far:
+
+- typing
+- readport
+- readaddress
+- writeport
+- writeaddress
+- writemask
+- decomp
+  
+All rules can be applied with:
+
+```sh
+(run-schedule (saturate typing) (saturate readport) (saturate readaddress) (saturate typing) (saturate writeport) (saturate writeaddress) (saturate writemask) (saturate decomp))
+```
+
+---

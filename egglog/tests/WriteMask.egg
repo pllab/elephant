@@ -1,0 +1,69 @@
+(include "./elephant.egg")
+
+;; ---------------------------FULL TEST--------------------------------
+;; ===SIMPLE TEST===
+(let w (WritePortMask (Wire "en_w" 1) (Wire "addr_w" 1) (Wire "data_w" 4) (Wire "mask_w" 4))) ; WritePort with wire for mask
+(let x (Reg "x'" 4))
+
+(let mem (Memory (vec-empty) (vec-of w) (set-of (Sync)) 2 4))
+(let guarded (Guard (Wire "en_w" 1) (MemWriteMask mem (Wire "addr_w" 1) (Wire "data_w" 4) (Wire "mask_w" 4))))
+(run-schedule (repeat 5 (saturate typing) (saturate writeport) (saturate writemask) (saturate decomp)))
+
+; Extracted writeports should be equivalent to this after applying the rules
+(let m0 (Mux (Select 0 (Wire "mask_w" 4)) (Bundle (set-of (MemAccess (Select 0 (Wire "addr_w" 1)) mem) (Select 0 (Wire "data_w" 4)))))) ; mux
+(let m1 (Mux (Select 1 (Wire "mask_w" 4)) (Bundle (set-of (MemAccess (Select 1 (Wire "addr_w" 1)) mem) (Select 1 (Wire "data_w" 4)))))) ; mux
+(let w0muxed (Guard (Wire "en_w" 1) (MemWrite mem (Wire "addr_w" 1) (Bundle (set-of m0 m1)))))
+;; Run rules
+(run-schedule (repeat 5 (saturate typing) (saturate writeport) (saturate writemask) (saturate decomp)))
+(query-extract guarded) ; expected: (Bundle (set-of (Guard (Select 1 (Demux (Wire "en_w" 1) (Wire "addr_w" 1))) (Bundle (set-of (Update (Select 3 (Reg "x1" 4)) (Select 3 (Wire "data_w" 4))) (Update (Select 2 (Reg "x1" 4)) (Select 2 (Wire "data_w" 4))) (Update (Select 1 (Reg "x1" 4)) (Select 1 (Wire "data_w" 4))) (Update (Select 0 (Reg "x1" 4)) (Select 0 (Wire "data_w" 4)))))) (Guard (Select 0 (Demux (Wire "en_w" 1) (Wire "addr_w" 1))) (Bundle (set-of (Update (Select 3 (Reg "x0" 4)) (Select 3 (Wire "data_w" 4))) (Update (Select 2 (Reg "x0" 4)) (Select 2 (Wire "data_w" 4))) (Update (Select 1 (Reg "x0" 4)) (Select 1 (Wire "data_w" 4))) (Update (Select 0 (Reg "x0" 4)) (Select 0 (Wire "data_w" 4))))))))
+(query-extract w0muxed) ; expected: (Bundle (set-of (Guard (Select 0 (Demux (Wire "en_w" 1) (Wire "addr_w" 1))) (Update (Wire "x0" 4) (Wire "data_w" 4))) (Guard (Select 1 (Demux (Wire "en_w" 1) (Wire "addr_w" 1))) (Update (Wire "x1" 4) (Wire "data_w" 4)))))
+(check (= guarded w0muxed))
+
+;; ===COMPLEX TEST===
+;; Test with realistic memory
+;; Read ports and memory
+(let r0 (ReadPort (Wire "en_0" 1) (Wire "addr_0" 2) (Wire "data_0" 4)))
+(let r1 (ReadPort (Wire "en_1" 1) (Wire "addr_1" 2) (Wire "data_1" 4)))
+(let w0 (WritePortMask (Wire "en_w0" 1) (Wire "addr_w0" 2) (Wire "data_w0" 4) (Wire "mask_w0" 4)))
+(let w1 (WritePortMask (Wire "en_w1" 1) (Wire "addr_w1" 2) (Wire "data_w1" 4) (Wire "mask_w1" 4)))
+; The 2^|addr| = 2^2 = 4 registers
+(let x0 (Reg "x0" 4))
+(let x1 (Reg "x1" 4))
+(let x2 (Reg "x2" 4))
+(let x3 (Reg "x3" 4))
+
+(let memory (Memory (vec-of r0 r1) (vec-of w0 w1) (set-of (Sync)) 2 4))
+;; This is the extracted writeport w1 (from WritePort rule) and the memory, also from the same rule
+(let memory_reduced_once (Memory (vec-of r0 r1) (vec-of w0) (set-of (Sync)) 2 4))
+(let memory_reduced_twice (Memory (vec-of r0 r1) (vec-empty) (set-of (Sync)) 2 4))
+(let memory_lowered (Bundle (set-of (Bundle (set-of memory_reduced_twice (Guard (Wire "en_w0" 1) (MemWriteMask memory_reduced_twice (Wire "addr_w0" 2) (Wire "data_w0" 4) (Wire "mask_w0" 4))))) (Guard (Wire "en_w1" 1) (MemWriteMask memory_reduced_once (Wire "addr_w1" 2) (Wire "data_w1" 4) (Wire "mask_w1" 4))))))
+
+(let guarded_w0 (Guard (Wire "en_w0" 1) (MemWriteMask memory_reduced_twice (Wire "addr_w0" 2) (Wire "data_w0" 4) (Wire "mask_w0" 4))))
+(let guarded_w1 (Guard (Wire "en_w1" 1) (MemWriteMask memory_reduced_once (Wire "addr_w1" 2) (Wire "data_w1" 4) (Wire "mask_w1" 4))))
+
+;; Extracted writeports should be equivalent to this after applying the rules
+(let m1_0 (Mux (Select 0 (Wire "mask_w1" 4)) (Bundle (set-of (MemAccess (Select 0 (Wire "addr_w1" 2)) memory_reduced_once) (Select 0 (Wire "data_w1" 4))))))
+(let m1_1 (Mux (Select 1 (Wire "mask_w1" 4)) (Bundle (set-of (MemAccess (Select 1 (Wire "addr_w1" 2)) memory_reduced_once) (Select 1 (Wire "data_w1" 4))))))
+(let m1_2 (Mux (Select 2 (Wire "mask_w1" 4)) (Bundle (set-of (MemAccess (Select 2 (Wire "addr_w1" 2)) memory_reduced_once) (Select 2 (Wire "data_w1" 4))))))
+(let m1_3 (Mux (Select 3 (Wire "mask_w1" 4)) (Bundle (set-of (MemAccess (Select 3 (Wire "addr_w1" 2)) memory_reduced_once) (Select 3 (Wire "data_w1" 4))))))
+(let w1_applied (Guard (Wire "en_w1" 1) (MemWrite memory_reduced_once (Wire "addr_w1" 2) (Bundle (set-of m1_0 m1_1 m1_2 m1_3)))))
+
+(let m0_0 (Mux (Select 0 (Wire "mask_w0" 4)) (Bundle (set-of (MemAccess (Select 0 (Wire "addr_w0" 2)) memory_reduced_twice) (Select 0 (Wire "data_w0" 4))))))
+(let m0_1 (Mux (Select 1 (Wire "mask_w0" 4)) (Bundle (set-of (MemAccess (Select 1 (Wire "addr_w0" 2)) memory_reduced_twice) (Select 1 (Wire "data_w0" 4))))))
+(let m0_2 (Mux (Select 2 (Wire "mask_w0" 4)) (Bundle (set-of (MemAccess (Select 2 (Wire "addr_w0" 2)) memory_reduced_twice) (Select 2 (Wire "data_w0" 4))))))
+(let m0_3 (Mux (Select 3 (Wire "mask_w0" 4)) (Bundle (set-of (MemAccess (Select 3 (Wire "addr_w0" 2)) memory_reduced_twice) (Select 3 (Wire "data_w0" 4))))))
+(let w0_applied (Guard (Wire "en_w0" 1) (MemWrite memory_reduced_twice (Wire "addr_w0" 2) (Bundle (set-of m0_0 m0_1 m0_2 m0_3)))))
+
+;; And this should be the final result after WriteAddress was applied
+(let writemask_applied (Bundle (set-of (Bundle (set-of memory_reduced_twice w0_applied)) w1_applied)))
+
+;; Run rules
+(run-schedule (saturate typing) (saturate writeport) (saturate writemask) (saturate decomp))
+(query-extract memory)
+(query-extract writemask_applied)
+(check (= memory writemask_applied))
+
+(query-extract w0_applied)
+(query-extract guarded_w0)
+(check (= w0_applied guarded_w0))
+(check (= w1_applied guarded_w1))

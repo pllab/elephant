@@ -1,161 +1,546 @@
-(sort Expr)
-(sort ExprVec (Vec Expr))
 (sort IVec (Vec i64))
 
-(function Wire (String i64) Expr)
-(function Reg (String i64) Expr)
-(function Mux (Expr Expr) Expr)
-(function Demux (Expr Expr) Expr)
-(function And (Expr Expr) Expr)
-(function Or (Expr Expr) Expr)
-(function Not (Expr) Expr)
-(function Select (i64 Expr) Expr :cost 1000)
-(function MapSelect (i64 ExprVec) Expr)
-(function SelectFromVec (IVec Expr) Expr)
-(function Concat (Expr Expr) Expr)
-(function Read (Expr ExprVec) Expr)
-
-(datatype Port
-  (ReadPort Expr ExprVec ExprVec)
-  (WritePort Expr Expr Expr)
-  (WritePortMask Expr Expr Expr Expr))
-(sort ReadPorts (Vec Port))
-(sort WritePorts (Vec Port))
-
-(datatype Opt
-  (LatchLastRead)
-  (WriteReadForward)
-  (Sync))
-(sort Opts (Vec Opt))
-
-(datatype Memory (Mem ReadPorts WritePorts Opts))
+(datatype*
+    (Expr
+        (Wire String i64)
+        (Mux Expr Expr)
+        (Reg String i64)
+        (Demux Expr Expr)
+        (And Expr Expr)
+        (Or Expr Expr)
+        (Not Expr)
+        (Select i64 Expr)
+        (MapSelect i64 ExprVec)
+        (SelectFromVec IVec Expr)
+        (Concat Expr Expr)
+        (ConcatVec ExprVec)
+        (Read Expr ExprVec)
+        (MemAccess Expr Expr) ; (MemAccess addr mem) => mem[addr]
+        (MemWrite Expr Expr Expr) ; (MemWrite mem addr data) => mem[addr] := data
+        (MemWriteMask Expr Expr Expr Expr) ; (MemWrite mem addr data mask)
+        (Update Expr Expr)
+        (Guard Expr Expr)
+        (Memory ReadPorts WritePorts Opts i64 i64)
+        (Bundle ExprSet)
+        (MuxHelper i64 i64 ExprVec :cost 1000)
+        (Registers :cost 100000000)
+    )
+    (sort ExprSet (Set Expr))
+    (sort ExprVec (Vec Expr))
+    (Port
+         ; high cost for ReadPort to enforce extraction of Readports
+        (ReadPort Expr Expr Expr :cost 10000000) ; en(1), addr(m), data(n)
+        (WritePort Expr Expr Expr :cost 10000000)
+        (WritePortMask Expr Expr Expr Expr :cost 10000000))
+    (sort ReadPorts (Vec Port))
+    (sort WritePorts (Vec Port))
+    (Opt
+        (LatchLastRead)
+        (WriteReadForward)
+        (Sync))
+    (sort Opts (Set Opt))
+)
 
 (datatype Type
-  (Bitvector i64))
+    (Bitvector i64))
 
 (relation HasType (Expr Type))
 
 (ruleset typing)
 
 (rule
-  ((Wire name n))
-  ((HasType (Wire name n) (Bitvector n)))
-  :ruleset typing)
+    ((Wire name n))
+    ((HasType (Wire name n) (Bitvector n)))
+    :ruleset typing)
 
 (rule
-  ((Reg name n))
-  ((HasType (Reg name n) (Bitvector n)))
-  :ruleset typing)
+    ((Reg name n))
+    ((HasType (Reg name n) (Bitvector n)))
+    :ruleset typing)
+
+; if child a is a bitvector, then parent (Not a) is a bitvector
+(rule
+    ((Not a)
+        (HasType a (Bitvector 1)))
+    ((HasType (Not a) (Bitvector 1)))
+    :ruleset typing)
+
+; if a and b are bitvectors, then (And a b) is a bitvector
+(rule
+    ((And a b)
+        (HasType a (Bitvector 1))
+        (HasType b (Bitvector 1)))
+    ((HasType (And a b) (Bitvector 1)))
+    :ruleset typing)
+
+; if a and b are bitvectors, then (Or a b) is a bitvector
+(rule
+    ((Or a b)
+        (HasType a (Bitvector 1))
+        (HasType b (Bitvector 1)))
+    ((HasType (Or a b) (Bitvector 1)))
+    :ruleset typing)
 
 (rule
-  ((Not a)
-   (HasType a (Bitvector 1)))
-  ((HasType (Not a) (Bitvector 1)))
-  :ruleset typing)
+    ((Select i a)
+        (HasType a (Bitvector bw))
+        (>= i 0)
+        (< i bw))
+    ((HasType (Select i a) (Bitvector 1)))
+    :ruleset typing)
 
 (rule
-  ((And a b)
-   (HasType a (Bitvector 1))
-   (HasType b (Bitvector 1)))
-  ((HasType (And a b) (Bitvector 1)))
-  :ruleset typing)
+    ((Concat a b)
+        (HasType a (Bitvector n))
+        (HasType b (Bitvector m)))
+    ((HasType (Concat a b) (Bitvector (+ n m))))
+    :ruleset typing)
 
 (rule
-  ((Or a b)
-   (HasType a (Bitvector 1))
-   (HasType b (Bitvector 1)))
-  ((HasType (Or a b) (Bitvector 1)))
-  :ruleset typing)
+    ((MapSelect i wv))
+    ((HasType (MapSelect i wv) (Bitvector (max 1 (vec-length wv))))) ; todo max maybe not ideal
+    :ruleset typing)
 
 (rule
-  ((Select i a)
-   (HasType a (Bitvector bw))
-   (>= i 0)
-   (< i bw))
-  ((HasType (Select i a) (Bitvector 1)))
-  :ruleset typing)
+    ((SelectFromVec iv w))
+    ((HasType (SelectFromVec iv w) (Bitvector (vec-length iv))))
+    :ruleset typing)
 
 (rule
- ((Concat a b)
-  (HasType a (Bitvector n))
-  (HasType b (Bitvector m)))
- ((HasType (Concat a b) (Bitvector (+ n m))))
- :ruleset typing)
+    ((Mux s i)
+        (HasType s (Bitvector m))
+        (HasType i (Bitvector n))
+        (= m (log2 n)))
+    ((HasType (Mux s i) (Bitvector 1)))
+    :ruleset typing)
 
 (rule
- ((MapSelect i wv))
- ((HasType (MapSelect i wv) (Bitvector (vec-length wv))))
- :ruleset typing)
+    ((Demux s i)
+        (HasType s (Bitvector 1))
+        (HasType i (Bitvector n))
+        (= m (log2 n)))
+    ((HasType (Demux s i) (Bitvector m)))
+    :ruleset typing)
+
+
+;; ------------------------------
+;; start of new rules
+;;
+
+;; Double negation (~~a is equivalent to a)
+(rule
+    (
+    (= not0 (Not not1))
+    (= not1 (Not a))
+    )
+    ((union not0 a))
+    :ruleset typing
+)
+
+;; Demorgan's law - OR to negated AND (a | b) == ~(~a & ~b)
+(rule
+    ((= or (Or e0 e1)))
+    ((union or (Not (And (Not e0) (Not e1)))))
+    :ruleset typing
+)
+
+;; Demorgan's law - AND to negated OR (a & b) == ~(~a | ~b)
+(rule
+    ((= and (And e0 e1)))
+    ((union and (Not (Or (Not e0) (Not e1)))))
+    :ruleset typing
+)
+
+;; Loweres a mux to gates i.e. to (a & ~s) | (b & s) (top-to-bottom) ;; TODO works but maybe needs more checking for a and b (?)
+(rule
+    ((= mux (Mux s (Concat a b))))
+    ((union mux (Or (And a (Not s)) (And b s)))
+    (subsume (Mux s (Concat a b))))
+    :ruleset typing)
+
+;; Lowered a demux to gates i.e. to ()
+(rule
+    ((= demux (Demux s i))
+        (HasType s (Bitvector 1))
+        (HasType i (Bitvector n))
+        (= m (log2 n)))
+    ((union demux (Bundle (set-of (And (Not s) i) (And s i)))))
+    :ruleset typing)
+
+;; Read Logic Rules
+; ReadPort rule to lower Memory with n readports to n-1 ReadPort and extracts n-th readport
+(ruleset readport)
+(rule
+    (
+        (= mem (Memory rports wports opts a d))
+        (= last_rport (vec-get rports (- (vec-length rports) 1))) ; last element of rports
+        (= last_rport (ReadPort en addr data))
+    )
+    (
+        (union mem (Bundle (set-of (Memory (vec-pop rports) wports opts a d) (Guard en (Update data (MemAccess addr (Memory (vec-pop rports) wports opts a d)))))))
+        ; (subsume (Memory rports wports opts a d))
+    )
+    :ruleset readport
+) ; ReadPort
+
+
+;; Define number 2
+(let two (bigrat (bigint 2) (bigint 1)))
+;; ReadAddress for data size > 1
+;  This builds the memory with multiplexers "recursively" in the form of nested sets:
+; Psuedocode:
+;  Assuming we have   MemAccess(addr, mem) and mem := (Memory(…), n) with n being the data size > 1
+;  Then the rule produces:   Set{Mux(addr, n-1), MemAccess(addr, (Memory(…), n-1))}
+;  Which then is recursively equivalent to:   Set{Mux(addr, n-1), Set{Mux(addr, n-2), Set{Mux(addr, n-3), …}}}
+;  Until it reaches the basecase below with n = 1.
+;  These nested sets are flattened
+(ruleset readaddress)
+;; buildMuxes builds the dynamic amount of muxes
+(function buildMuxes (Expr) ExprSet :merge (set-union old new))
+(rule ((= access (MemAccess addr mem))) ((set (buildMuxes access) (set-empty))) :ruleset readaddress) ; initialize buildMuxes functino
 
 (rule
- ((SelectFromVec iv w))
- ((HasType (SelectFromVec iv w) (Bitvector (vec-length iv))))
- :ruleset typing)
+    (
+        (= access (MemAccess addr mem))
+        (= mem (Memory rports wports opts a d))
+        (= s (buildMuxes access))
+        (= l (- d (set-length s)))
+        (> l 1)
+        (HasType addr (Bitvector n))  ; n is register width of the 2^n registers
+        (= n_bigrat (bigrat (bigint n) (bigint 1))) ; define n as decimal number (big rational)
+        (= regs_n (pow two n_bigrat))
+    )
+    (
+        ; (union access (Bundle (set-of (Mux addr (MapSelect l (vec-of (Registers)))) (MemAccess addr (Memory rports wports opts a d)))))
+     (set (buildMuxes access) (set-of (Mux addr (MapSelect (- l 1) (vec-of (Registers))))))
+    ;  (subsume (MemAccess addr mem))
+    )
+    :ruleset readaddress
+) ; ReadAddress with n > 1 (recursion)
+
+;; ReadAddress for data size == 1 (basecase)
+(rule
+    (
+        (= access (MemAccess addr mem))
+        (= mem (Memory rports wports opts a d))
+        (= s (buildMuxes access))
+        (= l (- d (set-length s)))
+        (= l 1)
+        (HasType addr (Bitvector n))  ; n is register width of the 2^n registers
+        (= n_bigrat (bigrat (bigint n) (bigint 1))) ; define n as decimal number (big rational)
+        (= regs_n (to-i64 (to-f64 (pow two n_bigrat))))
+    )
+    ((union access (Bundle (set-union s (set-of (Mux addr (MuxHelper (- regs_n 1) d (vec-empty)))))))
+     (set (buildMuxes access) (set-empty))
+     (subsume (MemAccess addr mem))
+    )
+    :ruleset readaddress
+) ; ReadAddress with n = 1 (basecase)
 
 (rule
-  ((Mux s i)
-   (HasType s (Bitvector m))
-   (HasType i (Bitvector n))
-   (= m (log2 n)))
-  ((HasType (Mux s i) (Bitvector 1)))
-  :ruleset typing)
+    ((= help (MuxHelper n d regs))
+     (> n 0))
+    ((union help (MuxHelper (- n 1) d (vec-append (vec-of (Reg (+ "x" (to-string n)) d)) regs)))
+     (subsume (MuxHelper n d regs)))
+    :ruleset readaddress
+) ; MuxHelper rule for n > 0
 
 (rule
-  ((Demux s i)
-   (HasType s (Bitvector 1))
-   (HasType i (Bitvector n))
-   (= n (log2 m)))
-  ((HasType (Demux s i) (Bitvector m)))
-  :ruleset typing)
+    ((= help (MuxHelper n d regs))
+     (= n 0))
+    ((union help (MapSelect 0 (vec-append (vec-of (Reg (+ "x" (to-string n)) d)) regs)))
+     (subsume (MuxHelper n d regs)))
+    :ruleset readaddress
+) ; MuxHelper rule for n = 0 (basecase)
 
+;; Create registers
+(rule
+    ((Bundle b)
+    (= b1 (Mux addr (MapSelect x regs)))
+    (= b2 (Mux addr2 (MapSelect z empty_regs)))
+    (!= regs (vec-of (Registers)))
+    (= empty_regs (vec-of (Registers)))
+    (set-contains b b1)
+    (set-contains b b2)
+    )
+    ((union (Bundle b) (Bundle (set-insert (set-remove b (Mux addr (MapSelect z empty_regs))) (Mux addr (MapSelect z regs))))))
+    :ruleset readaddress
+) ; create registers, apply when bundle is already flattened
+
+
+;; Flattening rule for ReadAddress
+(rule
+    ((Bundle b)
+    (set-contains b (Bundle c))
+    (> (set-length c) 0)
+    (= e (set-get c 0)))
+    ((union (Bundle b) (Bundle (set-union (set-remove b (Bundle c)) c))))
+    ; :ruleset readaddress
+) ; Flattening rule (ReadAddress) - if there is a nested Bundle that is not empty
+(rule
+    ((Bundle b)
+    (set-contains b (Bundle c))
+    (= (set-length c) 0))
+    ((union b (set-remove b (Bundle c))))
+    ; :ruleset readaddress
+) ; Flattening rule (ReadAddress) - base case: there is a nested Bundle that IS empty (remove it)
+
+;; Flatten nested sets such as Set{Mux(n), Set{…}} (produces by the ReadAddress rules) to {Mux(n), Mux(n-1), …}
+(rule
+    ((Bundle b)
+    (set-contains b (Bundle c))
+    (> (set-length c) 0)
+    (= e (set-get c 0)))
+    ((union (Bundle b) (Bundle (set-union (set-remove b (Bundle c)) c))))
+    :ruleset typing
+) ; Flattening rule if there is a nested Bundle that is not empty
+
+(rule
+    ((Bundle b)
+    (set-contains b (Bundle c))
+    (= (set-length c) 0))
+    ((union b (set-remove b (Bundle c))))
+    :ruleset typing
+) ; Flattening rule - base case: there is a nested Bundle that IS empty (remove it)
+
+;; ===Write Rules===
+(ruleset writeport)
+(rule
+    (
+        (= mem (Memory rports wports opts a d))
+        (= last_wport (vec-get wports (- (vec-length wports) 1))) ; last element of rports
+        (= last_wport (WritePort en addr data))
+    )
+    (
+        (union mem (Bundle (set-of (Memory rports (vec-pop wports) opts a d) (Guard en (MemWrite (Memory rports (vec-pop wports) opts a d) addr data)))))
+    )
+    :ruleset writeport
+) ; WritePort
+
+(rule
+    (
+        (= mem (Memory rports wports opts a d))
+        (= last_wport (vec-get wports (- (vec-length wports) 1))) ; last element of rports
+        (= last_wport (WritePortMask en addr data mask))
+    )
+    (
+        (union mem (Bundle (set-of (Memory rports (vec-pop wports) opts a d) (Guard en (MemWriteMask (Memory rports (vec-pop wports) opts a d) addr data mask)))))
+    )
+    :ruleset writeport
+) ; WritePortMask
+
+(ruleset writeaddress)
+
+; Each extracted WritePort with n registers is equal to n Demuxes. We count how many are left to be created.
+(function countDemux (Expr) ExprVec :merge (vec-append old new))
+; We set the initial value to n
+(rule (
+    (= g (Guard en (MemWrite mem addr data)))
+) ((set (countDemux g) (vec-empty)))
+    :ruleset writeaddress
+)
+
+;; Base Case - if register amount minus number of demuxes already created is 0
+(rule
+    (
+        (= guard (Guard en (MemWrite mem addr data)))
+        (HasType addr (Bitvector addr_width)) ; there are 2^{addr_width} registers
+        (= n_bigrat (bigrat (bigint addr_width) (bigint 1))) ; define n as decimal number (big rational)
+        (= n (to-i64 (to-f64 (pow two n_bigrat)))) ; n is amount of registers (2^{addr_width})
+        (= s (countDemux guard))
+        (= idx (- n (vec-length s)))
+        (= idx 0)
+    )
+    ((union guard (ConcatVec s))
+    (subsume (Guard en (MemWrite mem addr data)))
+    (set (countDemux guard) (vec-empty))
+    )
+    :ruleset writeaddress
+) ; WriteAddress
+
+;; Recursive Case - register amount minus number of demuxes already created is greater than 0
+(rule
+    (
+        (= guard (Guard en (MemWrite mem addr data)))
+        (HasType data (Bitvector data_width))
+        (HasType addr (Bitvector addr_width)) ; there are 2^{addr_width} registers
+        (= n_bigrat (bigrat (bigint addr_width) (bigint 1))) ; define n as decimal number (big rational)
+        (= n (to-i64 (to-f64 (pow two n_bigrat)))) ; n is amount of registers (2^{addr_width})
+        (= s (countDemux guard))
+        (= idx (- n (vec-length s)))
+        (> idx 0)
+    )
+    ((set (countDemux guard) (vec-of (Guard (Select (- idx 1) (Demux en addr)) (Update (Reg (+ "x" (to-string (- idx 1))) data_width) data))))
+    )
+    :ruleset writeaddress
+) ; WriteAddress
+
+
+;; reg_update is used to build the equivalent Bundle of (Update (Reg name m) data)
+(function reg_update (Expr) ExprSet :merge (set-union old new))
+
+;; Initialize reg_update with empty set for each created Register
+(rule ((= update (Update (Reg name m) expr))) ((set (reg_update update) (set-empty))) :ruleset writeaddress)
+
+;; ===Create equivalent Bundle for (Update (Reg name m) data)===
+;; Base case: Register width minus length of set already built equals 0
+;  Then create equivalence relation between update expression and set stored in reg_update function
+(rule 
+    (
+        (= update (Update (Reg name m) expr))
+        (HasType (Reg name m) (Bitvector n0))
+        (HasType expr (Bitvector n1))
+        (= n0 n1) ; ensure that register and data has same width
+        (= v (reg_update update))
+        (= idx (- m (set-length v)))
+        (= idx 0)
+    )
+    (
+        (union update (Bundle v))
+        (subsume (Update (Reg name m) expr))
+        (set (reg_update update) (set-empty))
+    )
+    :ruleset writeaddress
+)
+
+;; Recursive case: Register width minus length of set already built is larger than 0
+;  Then union (Update (Select i-1 Reg) (Select i-1 data)) with set that is stored in reg_update function
+(rule 
+    (
+        (= update (Update (Reg name m) expr))
+        (= v (reg_update update))
+        (= idx (- m (set-length v)))
+        (> idx 0)
+    )
+    (
+        (set (reg_update update) (set-of (Update (Select (- idx 1) (Reg name m)) (Select (- idx 1) expr)))) ; (set-union v (set-of (Select (- idx 1) (Reg name m))))) ;
+    )
+    :ruleset writeaddress
+)
+
+
+;; ===WriteMask rules===
+(ruleset writemask)
+
+; Each extracted WriteMaskPort with n registers is equal to n Muxes. We count how many are left to be created.
+(function countMux (Expr) ExprSet :merge (set-union old new))
+; We set the initial value to n
+(rule (
+    (= g (Guard en (MemWriteMask mem addr data mask)))
+) ((set (countMux g) (set-empty)))
+    :ruleset writemask
+)
+
+;; Base Case - if register amount minus number of muxes already created is 0
+(rule
+    (
+        (= guard (Guard en (MemWriteMask mem addr data mask)))
+        (HasType addr (Bitvector addr_width)) ; there are 2^{addr_width} registers
+        (= n_bigrat (bigrat (bigint addr_width) (bigint 1))) ; define n as decimal number (big rational)
+        (= n (to-i64 (to-f64 (pow two n_bigrat)))) ; n is amount of registers (2^{addr_width})
+        (= s (countMux guard))
+        (= idx (- n (set-length s)))
+        (= idx 0)
+    )
+    ((union guard (Guard en (MemWrite mem addr (Bundle s))))
+    (subsume (Guard en (MemWriteMask mem addr data mask)))
+    (set (countMux guard) (set-empty))
+    )
+    :ruleset writemask
+) ; WriteMaskAddress - basecase
+
+;; Recursive Case - register amount minus number of muxes already created is greater than 0
+(rule
+    (
+        (= guard (Guard en (MemWriteMask mem addr data mask)))
+        (HasType data (Bitvector data_width))
+        (HasType addr (Bitvector addr_width)) ; there are 2^{addr_width} registers
+        (= n_bigrat (bigrat (bigint addr_width) (bigint 1))) ; define n as decimal number (big rational)
+        (= n (to-i64 (to-f64 (pow two n_bigrat)))) ; n is amount of registers (2^{addr_width})
+        (= s (countMux guard))
+        (= idx (- n (set-length s)))
+        (> idx 0)
+    )
+    (
+        (set (countMux guard) (set-of (Mux (Select (- idx 1) mask) (Bundle (set-of (MemAccess (Select (- idx 1) addr) mem) (Select (- idx 1) data))))))
+    )
+    :ruleset writemask
+) ; WriteMaskAddress - recursive
+
+;; ==========OPTIONS RULES==========
+(ruleset options)
+(rule
+    ((= guard (Guard en (Update data (MemAccess addr mem))))
+     (= mem (Memory rports wports opts a d))
+     (set-contains opts (Sync)))
+    ((union guard (ConcatVec (vec-of (Guard en (Update (Reg "a_sync" a) addr)) (Update data (MemAccess (Reg "a_sync" a) mem))))))
+    :ruleset options
+) ; Sync Option
+
+(rule
+    ((= guard (Guard en update))
+     (= update (Update data (MemAccess addr mem)))
+     (= mem (Memory rports wports opts a d))
+     (set-contains opts (LatchLastRead)))
+    ((union update (ConcatVec (vec-of (Update (Reg "e_llr" 1) en) (Update (Reg "d_llr" d) (Mux (Reg "e_llr" 1) (Bundle (set-of (MemAccess addr mem) (Reg "d_llr" d))))) (Update data (Reg "d_llr" d))))))
+    :ruleset options
+) ; LatchLastRead Option
+
+
+
+;; end of new rules
+;; ------------------------------
+
+
+;; ------------------------------
+;; start of decompilation rules (bottom-to-top)
 (ruleset decomp)
 ;; 2-to-1 mux
 ;; s a b <--> (a & ~s) | (b & s)
 (rule
- ((= mux (Or e0 e1))
-  (= e0 (And a (Not s)))
-  (= e1 (And b s)))
- ((union mux (Mux s (Concat a b))))
- :ruleset decomp)
+    ((= mux (Or e0 e1))
+        (= e0 (And a (Not s)))
+        (= e1 (And b s)))
+    ((union mux (Mux s (Concat a b))))
+    :ruleset decomp)
 
 (rewrite
- (Or a b)
- (Or b a)
- :ruleset decomp)
+    (Or a b)
+    (Or b a)
+    :ruleset decomp)
 (rewrite
- (And a b)
- (And b a)
- :ruleset decomp)
+    (And a b)
+    (And b a)
+    :ruleset decomp)
 
 (rule
- ((= m_a (Mux s a))
-  (HasType s (Bitvector n_s))
-  (HasType a (Bitvector n_a))
-  (= m_b (Mux s b))
-  (HasType b (Bitvector n_b))
-  (= n_a n_b)
-  (= m_c (Mux s0 (Concat m_a m_b))))
- ((union m_c
-   (Mux (Concat s s0) (Concat a b))))
- :ruleset decomp)
+    ((= m_a (Mux s a))
+        (HasType s (Bitvector n_s))
+        (HasType a (Bitvector n_a))
+        (= m_b (Mux s b))
+        (HasType b (Bitvector n_b))
+        (= n_a n_b)
+        (= m_c (Mux s0 (Concat m_a m_b))))
+    ((union m_c
+            (Mux (Concat s s0) (Concat a b))))
+    :ruleset decomp)
 
 (rewrite
- (Concat (Select i a) (Select i b))
- (MapSelect i (vec-of a b))
- :ruleset decomp)
+    (Concat (Select i a) (Select i b))
+    (MapSelect i (vec-of a b))
+    :ruleset decomp)
 
 (rewrite
- (Concat (MapSelect i a) (MapSelect i b))
- (MapSelect i (vec-append a b))
- :ruleset decomp)
+    (Concat (MapSelect i a) (MapSelect i b))
+    (MapSelect i (vec-append a b))
+    :ruleset decomp)
 
 (rewrite
- (Select i a)
- (SelectFromVec (vec-of i) a)
- :ruleset decomp)
+    (Select i a)
+    (SelectFromVec (vec-of i) a)
+    :ruleset decomp)
 
 (rewrite
- (Concat (SelectFromVec i a) (SelectFromVec j a))
- (SelectFromVec (vec-append i j) a)
- :ruleset decomp)
-
+    (Concat (SelectFromVec i a) (SelectFromVec j a))
+    (SelectFromVec (vec-append i j) a)
+    :ruleset decomp)

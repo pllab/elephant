@@ -1,0 +1,44 @@
+(include "./elephant.egg")
+
+;; ----------------------------FIRST TEST--------------------------------
+;; Simplest form of memory
+(let expr (Wire "expr" 1))
+(let mem (Memory (vec-of (ReadPort expr expr expr) (ReadPort expr expr expr)) (vec-of (WritePort expr expr expr) (WritePort expr expr expr)) (set-of (Sync)) 1 1))
+(let mem_prime (Memory (vec-of (ReadPort expr expr expr) (ReadPort expr expr expr)) (vec-of (WritePort expr expr expr)) (set-of (Sync)) 1 1))
+
+(let mem2 (Memory (vec-of (ReadPort expr expr expr) (ReadPort expr expr expr)) (vec-of (WritePort expr expr expr)) (set-of (Sync)) 1 1))
+(let mem_prime2 (Memory (vec-of (ReadPort expr expr expr) (ReadPort expr expr expr)) (vec-empty) (set-of (Sync)) 1 1))
+
+; apply rules
+(run-schedule (repeat 50 (saturate typing) (saturate writeport) (saturate decomp)))
+;; Initial condition: mem is the original memory with two WritePorts.
+;  mem with WritePort rule applied once
+(check (= mem (Bundle (set-of mem_prime (Guard expr (MemWrite mem_prime expr expr))))))
+;  WritePort rule applied on resulting memory (mem2) from the first applied WritePort rule
+(check (= mem2 (Bundle (set-of mem_prime2 (Guard expr (MemWrite mem_prime2 expr expr))))))
+(let access (Bundle (set-of mem2 (Guard expr (MemWrite mem2 expr expr)))))
+;  The original memory mem should also be equivalent to the memory that the WritePort rule was applied on twice
+(check (= mem access))
+(query-extract mem)
+
+;; ---------------------------SECOND TEST--------------------------------
+;; Test with realistic memory
+;; Read ports and memory
+(let r0 (ReadPort (Wire "en_0" 1) (Wire "addr_0" 2) (Wire "data_0" 8)))
+(let r1 (ReadPort (Wire "en_1" 1) (Wire "addr_1" 2) (Wire "data_1" 8)))
+(let w0 (WritePort (Wire "en_w0" 1) (Wire "addr_w0" 2) (Wire "data_w0" 8)))
+(let w1 (WritePort (Wire "en_w1" 1) (Wire "addr_w1" 2) (Wire "data_w1" 8)))
+(let memory (Memory (vec-of r0 r1) (vec-of w0 w1) (set-of (Sync)) 2 8))
+
+; memory should be equivalent to this after applying the rules
+(let memory_reduced_once (Memory (vec-of r0 r1) (vec-of w0) (set-of (Sync)) 2 8))
+(let memory_reduced_twice (Memory (vec-of r0 r1) (vec-empty) (set-of (Sync)) 2 8))
+(let rp_rule_applied_once (Bundle (set-of memory_reduced_once (Guard (Wire "en_w1" 1) (MemWrite memory_reduced_once (Wire "addr_w1" 2) (Wire "data_w1" 8))))))
+(let rp_rule_applied_twice (Bundle (set-of (Bundle (set-of memory_reduced_twice (Guard (Wire "en_w0" 1) (MemWrite memory_reduced_twice (Wire "addr_w0" 2) (Wire "data_w0" 8))))) (Guard (Wire "en_w1" 1) (MemWrite memory_reduced_once (Wire "addr_w1" 2) (Wire "data_w1" 8))))))
+
+;; run rules
+(run-schedule (repeat 50 (saturate typing) (saturate writeport) (saturate decomp)))
+(check (= memory rp_rule_applied_once))
+(check (= rp_rule_applied_once rp_rule_applied_twice))
+(check (= memory rp_rule_applied_twice))
+(query-extract rp_rule_applied_twice) ; expected output: (Memory (vec-of (ReadPort (Wire "en_0" 1) (Wire "addr_0" 2) (Wire "data_0" 8)) (ReadPort (Wire "en_1" 1) (Wire "addr_1" 2) (Wire "data_1" 8))) (vec-of (WritePort (Wire "en_w" 1) (Wire "addr_w" 2) (Wire "data_w" 8))) (set-of (Sync)))

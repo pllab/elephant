@@ -1,0 +1,34 @@
+;; This file tests demorgan's law. A Mux can occur in different forms that are equivalent to (a & ~s) | (b & s).
+
+(include "./elephant.egg")
+
+(let a (Wire "a" 1))
+(let b (Wire "b" 1))
+(let s (Wire "s" 1))
+
+;; circuit1 := (~a | ~b)
+;; This should be equivalent to ~(a & b)
+(let circuit1 (Or (Not a) (Not b)))
+;; This however should stay the same
+(let circuit2 (Not (And a b)))
+
+;; circuit3 := ~((~a | s) & (~b | ~s)). One translation is: ~(~a | s) | ~(~b | ~s) which translates to (a & ~s) | (b & s)
+;; Therefore, the equivalence should be (Mux (Wire "s" 1) (Concat (Wire "a" 1) (Wire "b" 1)))
+(let circuit3 (Not (And (Or (Not a) s) (Or (Not b) (Not s)))))
+
+;; circuit4 := ~(~(a & ~s) & ~(b & s))
+;; This is a mux, therefore it is equivalent to (Mux (a b) s) because ~(~(a & ~s) & ~(b & s)) == ((a & ~s) | (b & s))
+(let circuit4 (Not (And (Not (And a (Not s))) (Not (And b s)))))
+
+(run-schedule (repeat 5 (saturate typing) (saturate decomp)))
+(query-extract circuit1) ; this should be (Not (And (Wire "a" 1) (Wire "b" 1))) with cost 8
+(query-extract circuit2) ; this should be (Not (And (Wire "a" 1) (Wire "b" 1))) with cost 8
+(query-extract circuit3) ; this should be (Mux (Wire "s" 1) (Concat (Wire "a" 1) (Wire "b" 1))) with cost 11
+(query-extract circuit4) ; this should be (Mux (Wire "s" 1) (Concat (Wire "a" 1) (Wire "b" 1))) with cost 11
+
+;; Output:
+;  (Not (And (Wire "a" 1) (Wire "b" 1)))
+;  (Not (And (Wire "a" 1) (Wire "b" 1)))
+;  (Mux (Wire "s" 1) (Concat (Wire "a" 1) (Wire "b" 1)))
+;  (Mux (Wire "s" 1) (Concat (Wire "a" 1) (Wire "b" 1)))
+

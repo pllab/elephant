@@ -1,0 +1,37 @@
+;; This is a full example for the Read Logic (ReadPort and ReadAddress rule) of Elephant.
+(include "./elephant.egg")
+
+;; Create memory
+(let memory (Memory (vec-of (ReadPort (Wire "en0" 1) (Wire "addr0" 2) (Wire "data0" 8)) (ReadPort (Wire "en1" 1) (Wire "addr1" 2) (Wire "data1" 8))) (vec-of (WritePort (Wire "en_w" 1) (Wire "addr_w" 2) (Wire "data_w" 8))) (set-of (Sync)) 2 8)) ; memory
+
+;; for r0: Mux(r0.addr, {x0[i],x1[i],x2[i],x3[i],x4[i]})
+(let r0_mux0 (Mux (Wire "addr0" 2) (MapSelect 0 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r0_mux1 (Mux (Wire "addr0" 2) (MapSelect 1 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r0_mux2 (Mux (Wire "addr0" 2) (MapSelect 2 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r0_mux3 (Mux (Wire "addr0" 2) (MapSelect 3 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r0_mux4 (Mux (Wire "addr0" 2) (MapSelect 4 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r0_mux5 (Mux (Wire "addr0" 2) (MapSelect 5 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r0_mux6 (Mux (Wire "addr0" 2) (MapSelect 6 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r0_mux7 (Mux (Wire "addr0" 2) (MapSelect 7 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+;; for r1: Mux(r1.addr, {x0[i],x1[i],x2[i],x3[i],x4[i]})
+(let r1_mux0 (Mux (Wire "addr1" 2) (MapSelect 0 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r1_mux1 (Mux (Wire "addr1" 2) (MapSelect 1 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r1_mux2 (Mux (Wire "addr1" 2) (MapSelect 2 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r1_mux3 (Mux (Wire "addr1" 2) (MapSelect 3 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r1_mux4 (Mux (Wire "addr1" 2) (MapSelect 4 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r1_mux5 (Mux (Wire "addr1" 2) (MapSelect 5 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r1_mux6 (Mux (Wire "addr1" 2) (MapSelect 6 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+(let r1_mux7 (Mux (Wire "addr1" 2) (MapSelect 7 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))
+
+(let r0_muxes (Bundle (set-of r0_mux0 r0_mux1 r0_mux2 r0_mux3 r0_mux4 r0_mux5 r0_mux6 r0_mux7)))
+(let r1_muxes (Bundle (set-of r1_mux0 r1_mux1 r1_mux2 r1_mux3 r1_mux4 r1_mux5 r1_mux6 r1_mux7)))
+
+(let synthesis (Bundle (set-of
+                    (Guard (Wire "en1" 1) (Update (Wire "data1" 8) r1_muxes))
+                    (Memory (vec-empty) (vec-of (WritePort (Wire "en_w" 1) (Wire "addr_w" 2) (Wire "data_w" 8))) (set-of (Sync)) 2 8)
+                    (Guard (Wire "en0" 1) (Update (Wire "data0" 8) r0_muxes)))))
+
+(run-schedule (saturate typing) (saturate readport) (saturate readaddress) (saturate typing))
+(query-extract synthesis) ; expected (Bundle (set-of (Memory (vec-empty) (vec-of (WritePort (Wire "en_w" 1) (Wire "addr_w" 2) (Wire "data_w" 8))) (set-of (Sync)) 2 8) (Guard (Wire "en1" 1) (Update (Wire "data1" 8) (Bundle (set-of (Mux (Wire "addr1" 2) (MapSelect 1 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr1" 2) (MapSelect 2 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr1" 2) (MapSelect 3 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr1" 2) (MapSelect 4 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr1" 2) (MapSelect 5 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr1" 2) (MapSelect 6 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr1" 2) (MapSelect 7 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr1" 2) (MapSelect 0 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))))))) (Guard (Wire "en0" 1) (Update (Wire "data0" 8) (Bundle (set-of (Mux (Wire "addr0" 2) (MapSelect 1 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr0" 2) (MapSelect 2 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr0" 2) (MapSelect 3 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr0" 2) (MapSelect 4 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr0" 2) (MapSelect 5 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr0" 2) (MapSelect 6 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr0" 2) (MapSelect 7 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8)))) (Mux (Wire "addr0" 2) (MapSelect 0 (vec-of (Reg "x0" 8) (Reg "x1" 8) (Reg "x2" 8) (Reg "x3" 8))))))))))
+(query-extract memory) ; expected the same as synthesis
+(check (= memory synthesis))

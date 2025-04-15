@@ -1,4 +1,4 @@
-(include "./elephant.egg")
+(include "elephant.egg")
 
 ;; Here are some small examples to demonstrate how we apply rewrites to netlists
 ;; to decompile higher-level abstractions.

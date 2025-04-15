@@ -1,0 +1,80 @@
+(include "./elephant.egg")
+
+;; Define wires for read ports
+; for r0 (ReadPort)
+(let en0 (Wire "en0" 1))
+(let addr0 (Wire "addr0" 2))
+(let data0 (Wire "data0" 8))
+; for r1 (ReadPort)
+(let en1 (Wire "en1" 1))
+(let addr1 (Wire "addr1" 2))
+(let data1 (Wire "data1" 8))
+; for w (WritePort)
+(let en_w (Wire "en_w" 1))
+(let addr_w (Wire "addr_w" 2))
+(let data_w (Wire "data_w" 8))
+
+;; Registers for memory (2^m registers of 8 bits each with m being the addr size)
+;  In this m=2, therefore four registers are defined:
+(let x0 (Reg "x0" 8))
+(let x1 (Reg "x1" 8))
+(let x2 (Reg "x2" 8))
+(let x3 (Reg "x3" 8))
+
+;; Read ports and memory
+(let r0 (ReadPort en0 addr0 data0)) ; first read port
+(let r1 (ReadPort en1 addr1 data1)) ; second read port
+(let w (WritePort en_w addr_w data_w)) ; write port
+(let memory (Memory (vec-of r0 r1) (vec-of w) (set-of (Sync)) 2 8)) ; memory
+
+(let rule_applied (Bundle (set-of (Bundle (set-of (Memory (vec-empty) (vec-of w) (set-of (Sync)) 2 8) (Guard en0 (Update data0 (MemAccess addr0 (Memory (vec-empty) (vec-of w) (set-of (Sync)) 2 8)))))) (Guard en1 (Update data1 (MemAccess addr1 (Memory (vec-of r0) (vec-of w) (set-of (Sync)) 2 8)))))))
+(run-schedule (repeat 5 (saturate typing) (saturate readport) (saturate decomp)))
+(check (= memory rule_applied))
+
+; (let memory_reduced (Mem (vec-of r0) (vec-of w) (set-of (Sync))))  ; new memory only consists of r0 because r1 was extracted
+; (let read (MemAccess addr1 (FromMem memory_reduced)))
+; (let rp_rule_applied (MemSequence memory_reduced (Guard en1 read)))
+
+
+;; Test read logic lowering
+;  ReadPort rule extracts last element as long as there is no readport left (Memory([r0,r1],...) ~> r0.data := Memory[r0.addr];...)
+;  ReadAddress rule - addressing into mux. The following is the equivalence of memory[r0.addr] and memory[r1.addr], respectively.
+;; for r0: Mux(r0.addr, {x0[i],x1[i],x2[i],x3[i],x4[i]})
+(let r0_mux0 (Mux addr0 (MapSelect 0 (vec-of x0 x1 x2 x3))))
+(let r0_mux1 (Mux addr0 (MapSelect 1 (vec-of x0 x1 x2 x3))))
+(let r0_mux2 (Mux addr0 (MapSelect 2 (vec-of x0 x1 x2 x3))))
+(let r0_mux3 (Mux addr0 (MapSelect 3 (vec-of x0 x1 x2 x3))))
+(let r0_mux4 (Mux addr0 (MapSelect 4 (vec-of x0 x1 x2 x3))))
+(let r0_mux5 (Mux addr0 (MapSelect 5 (vec-of x0 x1 x2 x3))))
+(let r0_mux6 (Mux addr0 (MapSelect 6 (vec-of x0 x1 x2 x3))))
+(let r0_mux7 (Mux addr0 (MapSelect 7 (vec-of x0 x1 x2 x3))))
+;; for r1: Mux(r1.addr, {x0[i],x1[i],x2[i],x3[i],x4[i]})
+(let r1_mux0 (Mux addr1 (MapSelect 0 (vec-of x0 x1 x2 x3))))
+(let r1_mux1 (Mux addr1 (MapSelect 1 (vec-of x0 x1 x2 x3))))
+(let r1_mux2 (Mux addr1 (MapSelect 2 (vec-of x0 x1 x2 x3))))
+(let r1_mux3 (Mux addr1 (MapSelect 3 (vec-of x0 x1 x2 x3))))
+(let r1_mux4 (Mux addr1 (MapSelect 4 (vec-of x0 x1 x2 x3))))
+(let r1_mux5 (Mux addr1 (MapSelect 5 (vec-of x0 x1 x2 x3))))
+(let r1_mux6 (Mux addr1 (MapSelect 6 (vec-of x0 x1 x2 x3))))
+(let r1_mux7 (Mux addr1 (MapSelect 7 (vec-of x0 x1 x2 x3))))
+;; this should be equivalent to (en1 ? r1.data)
+; (check (= read mem_access1))
+;; (en0 ? r0.data) = memory[addr0]
+(let r0_muxes (Bundle (set-of r0_mux0 r0_mux1 r0_mux2 r0_mux3 r0_mux4 r0_mux5 r0_mux6 r0_mux7)))
+(let r1_muxes_unflattened
+    (Bundle (set-of r1_mux0
+            (Bundle (set-of r1_mux1
+                    (Bundle (set-of r1_mux2
+                            (Bundle (set-of r1_mux3
+                                    (Bundle (set-of r1_mux4
+                                            (Bundle (set-of r1_mux5
+                                                    (Bundle (set-of r1_mux6 r1_mux7)))))))))))))))
+(let r1_muxes (Bundle (set-of r1_mux0 r1_mux1 r1_mux2 r1_mux3 r1_mux4 r1_mux5 r1_mux6 r1_mux7)))
+(let mem_access1 (MemAccess addr1 (Memory (vec-of r0) (vec-of w) (set-of (Sync)) 2 8)))
+
+(run-schedule (repeat 5 (saturate typing) (saturate readport) (saturate readaddress) (saturate decomp)))
+(query-extract mem_access1)
+(query-extract r1_muxes)
+(query-extract r1_muxes_unflattened)
+(check (= mem_access1 r1_muxes))
+(check (= r1_muxes r1_muxes_unflattened))
