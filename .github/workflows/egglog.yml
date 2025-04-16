@@ -1,0 +1,42 @@
+name: Run egglog tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  # Run at 4am PT each day.
+  schedule:
+    - cron: "0 11 * * *"
+
+  # Allow manual trigger.
+  workflow_dispatch:
+
+concurrency:
+  # Cancel in-progress runs for branches other than main.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  egglog-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout elephant
+        uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Install egglog
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: egglog
+      - name: Run tests
+        run: ./egglog/run_all_tests.sh
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: egglog-svgs
+          path: egglog/svg/
