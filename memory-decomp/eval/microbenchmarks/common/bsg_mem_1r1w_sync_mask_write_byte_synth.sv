@@ -47,11 +47,10 @@ module bsg_mem_1r1w_sync_mask_write_byte_synth #(parameter `BSG_INV_PARAM(width_
 
   for(genvar i=0; i<write_mask_width_lp; i=i+1)
   begin: bk
-    bsg_mem_1r1w_sync #( .width_p      (8)
+    bsg_mem_1r1w_sync_synth #( .width_p      (8)
                         ,.els_p        (els_p)
                         ,.addr_width_lp(addr_width_lp)
                         ,.latch_last_read_p(latch_last_read_p)
-			,.verbose_if_synth_p(0) // don't print out details of ram if breaks into synth srams
                       ) mem_1r1w_sync
                       ( .clk_i  (clk_i)
                        ,.reset_i(reset_i)
