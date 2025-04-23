@@ -33,6 +33,8 @@ jobs:
         with:
           command: install
           args: egglog
+      - name: Install graphviz
+        run: sudo apt-get install -y graphviz
       - name: Run tests
         run: ./egglog/run_all_tests.sh
       - name: Upload test results
