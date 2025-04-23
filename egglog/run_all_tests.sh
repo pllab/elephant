@@ -22,16 +22,6 @@ cleanup_and_exit() {
     # Cleanup files.
     rm -f $stdout_file $stderr_file
 
-    # If there was an error or if the previous command failed, print the error message.
-
-    if [ "$ERROR" = true ] || [ $prev_return_code != 0 ]; then
-        >&2 echo ""
-        >&2 echo "Tests did not run successfully!"
-    else
-        >&2 echo ""
-        >&2 echo "All tests ran successfully!"
-    fi
-
     cd $OLD_PWD
 
     code=${1:-$prev_return_code}
@@ -101,3 +91,11 @@ for file in "$TESTS_DIR"/*; do
         fi
     fi
 done
+
+if [ "$ERROR" = true ]; then
+    >&2 echo "Some tests failed. Check the output above for details."
+    cleanup_and_exit 1
+else
+    >&2 echo "All tests passed successfully."
+    cleanup_and_exit 0
+fi
