@@ -33,10 +33,13 @@ jobs:
         with:
           command: install
           args: egglog
+      - name: Install graphviz
+        run: sudo apt-get install -y graphviz
       - name: Run tests
         run: ./egglog/run_all_tests.sh
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
+          if-no-files-found: error
           name: egglog-svgs
           path: egglog/svg/

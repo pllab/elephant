@@ -22,16 +22,6 @@ cleanup_and_exit() {
     # Cleanup files.
     rm -f $stdout_file $stderr_file
 
-    # If there was an error or if the previous command failed, print the error message.
-
-    if [ "$ERROR" = true ] || [ $prev_return_code != 0 ]; then
-        >&2 echo ""
-        >&2 echo "Tests did not run successfully!"
-    else
-        >&2 echo ""
-        >&2 echo "All tests ran successfully!"
-    fi
-
     cd $OLD_PWD
 
     code=${1:-$prev_return_code}
@@ -63,7 +53,7 @@ fi
 # the egglog command by setting the EGGLOG environment variable.
 if ! command -v $EGGLOG 2>&1 >/dev/null
 then
-    >&2 echo "$EGGLOG could not be found. Please install egglog with `cargo install egglog`, or set the EGGLOG environment variable to the path of the egglog binary."
+    >&2 echo "$EGGLOG could not be found. Please install egglog with 'cargo install egglog', or set the EGGLOG environment variable to the path of the egglog binary."
     cleanup_and_exit 1
 fi
 >&2 echo "egglog command: $EGGLOG"
@@ -77,7 +67,7 @@ for file in "$TESTS_DIR"/*; do
         # Run the egglog command with the file and convert to svg. Note: Deleted
         # the old svg_conversion.sh script that converted the SVG to PNG;
         # if needed, can be rewritten.
-        if egglog "$file" --to-svg > $stdout_file 2> $stderr_file; then
+        if "$EGGLOG" "$file" --to-svg > $stdout_file 2> $stderr_file; then
             # Move the SVG file to the SVG directory.
             svg_file=${file%.egg}.svg
             if [ -f "$svg_file" ]; then
@@ -101,3 +91,11 @@ for file in "$TESTS_DIR"/*; do
         fi
     fi
 done
+
+if [ "$ERROR" = true ]; then
+    >&2 echo "Some tests failed. Check the output above for details."
+    cleanup_and_exit 1
+else
+    >&2 echo "All tests passed successfully."
+    cleanup_and_exit 0
+fi
