@@ -67,7 +67,7 @@ for file in "$TESTS_DIR"/*; do
         # Run the egglog command with the file and convert to svg. Note: Deleted
         # the old svg_conversion.sh script that converted the SVG to PNG;
         # if needed, can be rewritten.
-        if egglog "$file" --to-svg > $stdout_file 2> $stderr_file; then
+        if "$EGGLOG" "$file" --to-svg > $stdout_file 2> $stderr_file; then
             # Move the SVG file to the SVG directory.
             svg_file=${file%.egg}.svg
             if [ -f "$svg_file" ]; then
