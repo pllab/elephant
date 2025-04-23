@@ -53,7 +53,7 @@ fi
 # the egglog command by setting the EGGLOG environment variable.
 if ! command -v $EGGLOG 2>&1 >/dev/null
 then
-    >&2 echo "$EGGLOG could not be found. Please install egglog with `cargo install egglog`, or set the EGGLOG environment variable to the path of the egglog binary."
+    >&2 echo "$EGGLOG could not be found. Please install egglog with 'cargo install egglog', or set the EGGLOG environment variable to the path of the egglog binary."
     cleanup_and_exit 1
 fi
 >&2 echo "egglog command: $EGGLOG"
