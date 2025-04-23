@@ -1,0 +1,18 @@
+;; Test for double negation
+
+(include "./elephant.egg")
+
+;; Test case: ~~a is equivalent to a
+(let circuit1 (
+    Not (Not (Wire "a" 1))
+))
+
+;; Test case: (~~~a | b) & ~~~~b is equivalent to (~a | b) & b
+(let circuit2 (
+    And (Or (Not (Not (Not (Wire "a" 1)))) (Wire "b" 1)) (Wire "b" 1)
+))
+
+
+(run-schedule (repeat 5) (saturate typing) (saturate decomp))
+(query-extract circuit1) ;; should be '(Wire "a" 1)'
+(query-extract circuit2) ;; should be '(And (Or (Not (Wire "a" 1)) (Wire "b" 1)) (Wire "b" 1))'

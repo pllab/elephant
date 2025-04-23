@@ -1,0 +1,22 @@
+;; Tests for Mux to gates (top-to-bottom) conversion.
+
+(include "./elephant.egg")
+
+(let a (Wire "a" 1))
+(let b (Wire "b" 1))
+(let s (Wire "s" 1))
+
+;; circuit1 := Mux(s, (a,b))
+;; this should be equivalent to ((a & ~s) | (b & s)))
+(let circuit1 (Mux s (Concat a b)))
+
+;; circuit1 should be equivalent to this gate-level implementation
+(let circuit2 
+  (Or 
+    (And a (Not s))
+    (And b s)))
+
+;; check equivalence. check without decomp rule because decomp rules would convert circuit2 to circuit1 which we don't want
+(run-schedule (repeat 5 (saturate typing)))
+(check (= circuit1 circuit2))
+; this should be (Or (And (Wire "a" 1) (Not (Wire "s" 1))) (And (Wire "b" 1) (Wire "s" 1)))

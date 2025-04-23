@@ -1,0 +1,64 @@
+(include "./elephant.egg")
+
+;; Define wires for read ports
+; for r0 (ReadPort)
+(let en0 (Wire "en0" 1))
+(let addr0 (Wire "addr0" 1))
+(let data0 (Wire "data0" 2))
+
+(let en1 (Wire "en1" 1))
+(let addr1 (Wire "addr1" 1))
+(let data1 (Wire "data1" 2))
+; --------Simple Test----------
+(let mux0 (Mux addr0 data0))
+(let mux1 (Mux addr1 data1))
+
+(let example (Bundle (set-of mux0 (Bundle (set-of en1 mux1)))))
+(run-schedule (repeat 3) (saturate typing))
+(query-extract example) ; expected output:  extracted with cost 18: (Bundle (set-of (Wire "en1" 1) (Mux (Wire "addr0" 1) (Wire "data0" 2)) (Mux (Wire "addr1" 1) (Wire "data1" 2))))
+(check (= example (Bundle (set-of mux0 en1 mux1))))
+; -------Complex Test----------
+
+;; Registers for memory (2^m registers of 8 bits each with m being the addr size)
+;  In this m=2, therefore four registers are defined:
+; for w (WritePort)
+(let en_w (Wire "en_w" 1))
+(let addr_w (Wire "addr_w" 2))
+(let data_w (Wire "data_w" 8))
+
+;; Read ports and memory
+(let r0 (ReadPort en0 addr0 data0)) ; first read port
+(let w (WritePort en_w addr_w data_w)) ; write port
+(let memory (Memory (vec-of r0) (vec-of w) (set-of (Sync)) 1 2)) ; memory
+(let mem_prime (Memory (vec-empty) (vec-of w) (set-of (Sync)) 1 2))
+; memory should look like this:
+(let mem_access (MemAccess addr0 mem_prime))
+(let rule_applied 
+    (Bundle (set-of mem_prime (Guard en0 (Update data0 mem_access)))))
+(run-schedule (repeat 3) (saturate typing) (saturate readport) (saturate decomp))
+(check (= memory rule_applied))
+
+(let x0 (Reg "x0" 2))
+(let x1 (Reg "x1" 2))
+(let r1_mux0 (Mux addr1 (MapSelect 0 (vec-of x0 x1))))
+(let r1_mux1 (Mux addr1 (MapSelect 1 (vec-of x0 x1))))
+(let r1_mux2 (Mux addr1 (MapSelect 2 (vec-of x0 x1))))
+(let r1_mux3 (Mux addr1 (MapSelect 3 (vec-of x0 x1))))
+(let r1_mux4 (Mux addr1 (MapSelect 4 (vec-of x0 x1))))
+(let r1_mux5 (Mux addr1 (MapSelect 5 (vec-of x0 x1))))
+(let r1_mux6 (Mux addr1 (MapSelect 6 (vec-of x0 x1))))
+(let r1_mux7 (Mux addr1 (MapSelect 7 (vec-of x0 x1))))
+
+(let r1_muxes_unflattened
+    (Bundle (set-of r1_mux0
+            (Bundle (set-of r1_mux1
+                    (Bundle (set-of r1_mux2
+                            (Bundle (set-of r1_mux3
+                                    (Bundle (set-of r1_mux4
+                                            (Bundle (set-of r1_mux5
+                                                    (Bundle (set-of r1_mux6 r1_mux7)))))))))))))))
+(let r1_muxes (Bundle (set-of r1_mux0 r1_mux1 r1_mux2 r1_mux3 r1_mux4 r1_mux5 r1_mux6 r1_mux7)))
+
+(run-schedule (repeat 5 (saturate typing) (saturate decomp)))
+(check (= r1_muxes_unflattened r1_muxes))
+(query-extract r1_muxes_unflattened)    ; expected: (Bundle (set-of (Mux (Wire "addr1" 1) (MapSelect 0 (vec-of (Reg "x0" 2) (Reg "x1" 2)))) (Mux (Wire "addr1" 1) (MapSelect 1 (vec-of (Reg "x0" 2) (Reg "x1" 2)))) (Mux (Wire "addr1" 1) (MapSelect 2 (vec-of (Reg "x0" 2) (Reg "x1" 2)))) (Mux (Wire "addr1" 1) (MapSelect 3 (vec-of (Reg "x0" 2) (Reg "x1" 2)))) (Mux (Wire "addr1" 1) (MapSelect 4 (vec-of (Reg "x0" 2) (Reg "x1" 2)))) (Mux (Wire "addr1" 1) (MapSelect 5 (vec-of (Reg "x0" 2) (Reg "x1" 2)))) (Mux (Wire "addr1" 1) (MapSelect 6 (vec-of (Reg "x0" 2) (Reg "x1" 2)))) (Mux (Wire "addr1" 1) (MapSelect 7 (vec-of (Reg "x0" 2) (Reg "x1" 2))))))

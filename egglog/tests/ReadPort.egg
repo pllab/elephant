@@ -1,0 +1,45 @@
+(include "./elephant.egg")
+
+;; ----------------------------FIRST TEST--------------------------------
+;; Simplest form of memory
+(let expr (Wire "expr" 1))
+(let mem (Memory (vec-of (ReadPort expr expr expr) (ReadPort expr expr expr)) (vec-of (WritePort expr expr expr)) (set-of (Sync)) 1 1))
+(let mem_prime (Memory (vec-of (ReadPort expr expr expr)) (vec-of (WritePort expr expr expr)) (set-of (Sync)) 1 1))
+
+(let mem2 (Memory (vec-of (ReadPort expr expr expr)) (vec-of (WritePort expr expr expr)) (set-of (Sync)) 1 1))
+(let mem_prime2 (Memory (vec-empty) (vec-of (WritePort expr expr expr)) (set-of (Sync)) 1 1))
+; apply rules
+(run-schedule (repeat 50 (saturate typing) (saturate readport) (saturate decomp)))
+;; Initial condition: mem is the original memory with two ReadPorts.
+;  mem with ReadPort rule applied once
+(check (= mem (Bundle (set-of mem_prime (Guard expr (Update expr (MemAccess expr mem_prime)))))))
+;  ReadPort rule applied on resulting memory (mem2) from the first applied ReadPort rule
+(check (= mem2 (Bundle (set-of mem_prime2 (Guard expr (Update expr (MemAccess expr mem_prime2)))))))
+
+(let access (Bundle (set-of mem2 (Guard expr (Update expr (MemAccess expr mem2))))))
+(query-extract access) ;; expected output: (Bundle (set-of (Bundle (set-of (Memory (vec-empty) (vec-of (WritePort (Wire "expr" 1) (Wire "expr" 1) (Wire "expr" 1))) (set-of (Sync))) (Guard (Wire "expr" 1) (Wire "expr" 1)))) (Guard (Wire "expr" 1) (Wire "expr" 1))))
+;  The original memory mem should also be equivalent to the memory that the ReadPort rule was applied on twice
+(check (= mem access))
+; mem is (Bundle (set-of (Memory (vec-empty) (vec-of (WritePort (Wire "expr" 1) (Wire "expr" 1) (Wire "expr" 1))) (set-of (Sync)) 1 1) (Guard (Wire "expr" 1) (Update (Wire "expr" 1) (MemAccess (Wire "expr" 1) (Memory (vec-empty) (vec-of (WritePort (Wire "expr" 1) (Wire "expr" 1) (Wire "expr" 1))) (set-of (Sync)) 1 1))))))
+(query-extract mem) ;; exptected output same as above
+
+;; ---------------------------SECOND TEST--------------------------------
+;; Test with realistic memory
+;; Read ports and memory
+(let r0 (ReadPort (Wire "en_0" 1) (Wire "addr_0" 2) (Wire "data_0" 8)))
+(let r1 (ReadPort (Wire "en_1" 1) (Wire "addr_1" 2) (Wire "data_1" 8)))
+(let w (WritePort (Wire "en_w" 1) (Wire "addr_w" 2) (Wire "data_w" 8)))
+(let memory (Memory (vec-of r0 r1) (vec-of w) (set-of (Sync)) 2 8))
+
+; memory should be equivalent to this after applying the rules
+(let memory_reduced_once (Memory (vec-of r0) (vec-of w) (set-of (Sync)) 2 8))
+(let memory_reduced_twice (Memory (vec-empty) (vec-of w) (set-of (Sync)) 2 8))
+(let rp_rule_applied_once (Bundle (set-of memory_reduced_once (Guard (Wire "en_1" 1) (Update (Wire "data_1" 8) (MemAccess (Wire "addr_1" 2) memory_reduced_once))))))
+(let rp_rule_applied_twice (Bundle (set-of (Bundle (set-of memory_reduced_twice (Guard (Wire "en_0" 1) (Update (Wire "data_0" 8) (MemAccess (Wire "addr_0" 2) memory_reduced_twice))))) (Guard (Wire "en_1" 1) (Update (Wire "data_1" 8) (MemAccess (Wire "addr_1" 2) memory_reduced_once))))))
+
+;; run rules
+(run-schedule (repeat 5 (saturate typing) (saturate readport) (saturate decomp)))
+(check (= memory rp_rule_applied_once))
+(check (= rp_rule_applied_once rp_rule_applied_twice))
+(check (= memory rp_rule_applied_twice))
+(query-extract rp_rule_applied_twice) ; expected output: (Memory (vec-of (ReadPort (Wire "en_0" 1) (Wire "addr_0" 2) (Wire "data_0" 8)) (ReadPort (Wire "en_1" 1) (Wire "addr_1" 2) (Wire "data_1" 8))) (vec-of (WritePort (Wire "en_w" 1) (Wire "addr_w" 2) (Wire "data_w" 8))) (set-of (Sync)))
