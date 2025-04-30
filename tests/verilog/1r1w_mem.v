@@ -1,0 +1,26 @@
+module simple_dual_port_mem #(
+    parameter ADDR_WIDTH = 6,
+    parameter DATA_WIDTH = 4
+) (
+    input wire clk,
+    input wire we,  // write enable
+    input wire[ADDR_WIDTH-1:0] wa,  // write address
+    input wire[ADDR_WIDTH-1:0] wd,  // write data
+    input wire[ADDR_WIDTH-1:0] ra,  // read address
+    output reg[DATA_WIDTH-1:0] rd  // read data
+);
+    // memory array
+    reg[DATA_WIDTH-1:0] mem[0:(1 << ADDR_WIDTH)-1];
+
+    // write operation
+    always @(posedge clk) begin
+        if(we) begin
+            mem[wa] <= wd;
+        end
+    end
+
+    // read operation
+    always @(posedge clk) begin
+        rd <= mem[ra];
+    end
+endmodule
