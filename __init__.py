@@ -1,1 +1,1 @@
-from .database import AbstractMem, db, formatter, rewriter, yosys_driver
+from .database import db, formatter, rewriter, yosys_driver

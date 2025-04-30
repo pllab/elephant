@@ -1,5 +1,4 @@
 from elephant import db, rewriter
-import pyrtl
 import json
 import time
 
@@ -16,68 +15,22 @@ NETLIST_FILES = [
     ("bsg_cache", "top"),
     ("bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1",
      "bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1"),
-    ("bsg_cache_ways_p_2_data_width_p_32", "top")
+    ("bsg_cache_ways_p_2_data_width_p_32", "top"),
+    ("1r1w_w4h16", "simple_dual_port_mem"),
+    ("1r1w_w4h64", "simple_dual_port_mem"),
+    ("1rw_w4h64", "simple_rw_port_mem"),
+    ("sparc_ffu_no_async", "sparc_ffu")
 ]
-
-# pyrtl.set_debug_mode(True)
-
-
-def test_to_pyrtl():
-    netlist = db.NetlistDatabase()
-    with open(NETLIST_FILE, "r") as f:
-        netlist.build_from_blif(json.load(f), "toplevel", True)
-
-    # saturate
-    rewriter.rewrite_dffe_pn_to_pp(netlist)
-    rewriter.group_dffe_pp(netlist)
-    # updated = True
-    # while updated:
-    #     updated = False
-    #     updated = True if rewriter.saturate_comm(netlist, "$_AND_") > 0 else updated
-    #     updated = True if rewriter.saturate_comm(netlist, "$_OR_") > 0 else updated
-    #     updated = True if rewriter.saturate_demorgan(netlist, "$_AND_", "$_OR_") else updated
-    #     updated = True if rewriter.saturate_demorgan(netlist, "$_OR_", "$_AND_") else updated
-    #     updated = True if rewriter.saturate_idemp(netlist, "$_NOT_") else updated
-
-    # reduce muxes
-    rewriter.rewrite_2_1_mux_to_binary_gate(netlist)
-    while rewriter.reduce_mux_once(netlist):
-        pass
-
-    # cur = netlist.cursor()
-    # with open("binary_gate.json", "w") as f:
-    #     cur.execute("SELECT * FROM binary_gate;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("concat.json", "w") as f:
-    #     cur.execute("SELECT * FROM concat;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("mux.json", "w") as f:
-    #     cur.execute("SELECT * FROM mux;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("dffe_xx.json", "w") as f:
-    #     cur.execute("SELECT * FROM dffe_xx;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("selector.json", "w") as f:
-    #     cur.execute("SELECT * FROM selector;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("unary_gate.json", "w") as f:
-    #     cur.execute("SELECT * FROM unary_gate;")
-    #     json.dump(cur.fetchall(), f)
-    block: pyrtl.Block = netlist.to_pyrtl()
-    with open("pyrtl.text", "w") as f:
-        f.write(str(block))
-
-
-def test_extract_mems(name: str, top: str):
-    netlist = db.NetlistDatabase()
-    with open(NETLIST_PATH + name + ".json", "r") as f:
-        netlist.build_from_blif(json.load(f), top, True)
-    netlist.extract_mems()
 
 
 def test_extract_memory(netlist: db.NetlistDatabase, verbose: bool = False):
+    # step 1: rewrite and eqsat (optional)
+    # step 2: reduce qmux
+    # step 3: find read port
+    # step 4: find memory
+    # step 5: find write port
     start = time.time()
-    rewriter.rewrite_dffe_pn_to_pp(netlist)
+    rewriter.rewrite_dffe_xx_to_pp(netlist)
     cnt = rewriter.rewrite_mux_to_qmux(netlist)
     print(f"Rewrote {cnt} muxes to qmuxes")
     while rewriter.reduce_qmux_once(netlist) > 0:
@@ -85,67 +38,68 @@ def test_extract_memory(netlist: db.NetlistDatabase, verbose: bool = False):
     print("Reduced all qmuxes")
     rps = rewriter.find_readport(netlist)
     mems = rewriter.find_memory(rps)
-    wps = rewriter.create_writeport(netlist, mems)
-    time_elapsed = time.time() - start
     print(f"Found {len(mems)} memory(ies):")
-    for i, (qss, rps) in enumerate(mems.items()):
-        print(f"\tMemory {i}: width = {len(qss)}, height = {len(qss[0])}")
+    for qs, rps in mems.items():
+        print(f"\tMemory: width = {len(qs)}, height = {len(qs[0])}")
         if verbose:
-            for j, (qs, ra, rd) in enumerate(rps):
-                print(f"\t\tRead port {j}:")
+            print(f"\t\tRegisters: {qs[0]}")
+        else:
+            print(f"\t\tRegisters: {qs[0][:5]}" + ("..." if len(qs) > 5 else ""))
+        for i, (_, rd, ra) in enumerate(rps):
+            print(f"\t\tRead port {i}:")
+            if verbose:
                 print(f"\t\t\tRead address: {ra}")
                 print(f"\t\t\tRead data: {rd}")
-                print(f"\t\t\tRegisters: {qs}")
-            print(f"\t\tWrite port:")
-            wen, wa, wd = wps[qss]
-            print(f"\t\t\tWrite enable: {wen}")
-            print(f"\t\t\tWrite address: {wa}")
-            print(f"\t\t\tWrite data: {wd}")
-        else:
-            for j, (qs, ra, rd) in enumerate(rps):
-                print(f"\t\tRead port {j}:")
+            else:
                 print(f"\t\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
                 print(f"\t\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
-                truncated_qs = [qs[:5] for qs in qs[:5]]
-                print(f"\t\t\tRegisters: {truncated_qs}" + ("..." if len(qs) > 5 else ""))
-            wen, wa, wd = wps[qss]
+        try:
+            we, wa, wd = rewriter.find_writeport(netlist, qs)
             print(f"\t\tWrite port:")
-            print(f"\t\t\tWrite enable: {wen}")
-            print(f"\t\t\tWrite address: {wa[:5]}" + ("..." if len(wa) > 5 else ""))
-            print(f"\t\t\tWrite data: {wd[:5]}" + ("..." if len(wd) > 5 else ""))
-    print(f"Time elapsed: {time_elapsed:.2f}s")
+            print(f"\t\t\tWrite enable: {we}")
+            if verbose:
+                print(f"\t\t\tWrite address: {wa}")
+                print(f"\t\t\tWrite data: {wd}")
+            else:
+                print(f"\t\t\tWrite address: {wa[:5]}" + ("..." if len(wa) > 5 else ""))
+                print(f"\t\t\tWrite data: {wd[:5]}" + ("..." if len(wd) > 5 else ""))
 
+            # try read write port
+            rwa = rewriter.find_readwriteport(netlist, ra, wa)
+            if rwa:
+                if verbose:
+                    print(f"\t\t\tPossible read-write address: {rwa}")
+                else:
+                    print(f"\t\t\tPossible read-write address: {rwa[:5]}" + ("..." if len(rwa) > 5 else ""))
+            else:
+                print("\t\t\tPossible read-write address: None")
+        except:
+            print("\t\tWrite port: None")
+    time_elapsed = time.time() - start
+    print(f"Time elapsed: {time_elapsed:.2f}s")
 
 def test_extract_quasi_memory(netlist: db.NetlistDatabase, verbose: bool = False):
-    # def flatten(l: list[int | list | None]) -> list:
-    #     result = []
-    #     for item in l:
-    #         if isinstance(item, list):
-    #             result.extend(flatten(item))
-    #         elif item is not None:
-    #             result.append(item)
-    #     return result
-    start = time.time()
-    rewriter.rewrite_dffe_pn_to_pp(netlist)
-    cnt = rewriter.rewrite_mux_to_quasi_qmux(netlist)
-    print(f"Rewrote {cnt} muxes to quasi qmuxes")
-    while rewriter.reduce_quasi_qmux_once(netlist) > 0:
-        pass
-    print("Reduced all quasi qmuxes")
-    mems = rewriter.find_quasi_memory(netlist)
-    time_elapsed = time.time() - start
-    print(f"Found {len(mems)} quasi memory(ies):")
-    for qss, ra, rd in mems:
-        print(f"\tMemory: width = {len(qss)}, height = {len(qss[0]) - 1}")  # exclude the last const 0 dff
-        ra = [e for e in ra if e is not None]
-        if verbose:
-            print(f"\t\tRead address: {ra}")
-            print(f"\t\tRead data: {rd}")
-        else:
-            print(f"\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
-            print(f"\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
-    print(f"Time elapsed: {time_elapsed:.2f}s")
-
+    # start = time.time()
+    # rewriter.rewrite_dffe_pn_to_pp(netlist)
+    # cnt = rewriter.rewrite_mux_to_quasi_qmux(netlist)
+    # print(f"Rewrote {cnt} muxes to quasi qmuxes")
+    # while rewriter.reduce_quasi_qmux_once(netlist) > 0:
+    #     pass
+    # print("Reduced all quasi qmuxes")
+    # mems = rewriter.find_quasi_memory(netlist)
+    # time_elapsed = time.time() - start
+    # print(f"Found {len(mems)} quasi memory(ies):")
+    # for qss, ra, rd in mems:
+    #     print(f"\tMemory: width = {len(qss)}, height = {len(qss[0]) - 1}")  # exclude the last const 0 dff
+    #     ra = [e for e in ra if e is not None]
+    #     if verbose:
+    #         print(f"\t\tRead address: {ra}")
+    #         print(f"\t\tRead data: {rd}")
+    #     else:
+    #         print(f"\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
+    #         print(f"\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
+    # print(f"Time elapsed: {time_elapsed:.2f}s")
+    raise NotImplementedError()
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
@@ -179,7 +133,7 @@ if __name__ == "__main__":
 
     netlist = db.NetlistDatabase()
     with open(name, "r") as f:
-        netlist.build_from_blif(json.load(f), top, True)
+        netlist.build_from_json(json.load(f), top, ignore_errors=True)
 
     if args.quasi:
         test_extract_quasi_memory(netlist, args.verbose)
