@@ -16,7 +16,7 @@ def id_generator():
 global_id = id_generator()
 
 
-def rewrite_dffe_pn_to_pp(netlist) -> bool:
+def rewrite_dffe_xx_to_pp(netlist):
     cur = netlist.cursor()
     cur.execute(
         """
@@ -26,9 +26,6 @@ def rewrite_dffe_pn_to_pp(netlist) -> bool:
         """
     )
     dceqs = cur.fetchall()
-    if not dceqs:
-        return False
-
     for d, c, e, q in dceqs:
         # check whether !e exists
         cur.execute(
@@ -57,8 +54,44 @@ def rewrite_dffe_pn_to_pp(netlist) -> bool:
             """,
             (ne, d, c, e, q)
         )
+
+    cur.execute(
+        """
+        SELECT d, c, e, q
+        FROM dffe_xx
+        WHERE type = "$_DFFE_NP_";
+        """
+    )
+    dceqs = cur.fetchall()
+    for d, c, e, q in dceqs:
+        # check whether !c exists
+        cur.execute(
+            "SELECT y FROM unary_gate WHERE a = ? AND type = \"$_NOT_\";",
+            (c,)
+        )
+        yt = cur.fetchone()
+        if yt:
+            nc = yt[0]
+        else:
+            nc = next(global_id)
+            cur.execute(
+                "INSERT INTO unary_gate VALUES (?, ?, ?);",
+                (c, nc, "$_NOT_")
+            )
+            cur.execute(
+                "INSERT INTO wire VALUES (?, 1);",
+                (nc,)
+            )
+        # update the dffe_pn to dffe_pp
+        cur.execute(
+            """
+            UPDATE dffe_xx
+            SET type = "$_DFFE_PP_", c = ?
+            WHERE type = "$_DFFE_NP_" AND d = ? AND c = ? AND e = ? AND q = ?;
+            """,
+            (nc, d, c, e, q)
+        )
     netlist.commit()
-    return True
 
 
 def group_dffe_pp(netlist) -> bool:

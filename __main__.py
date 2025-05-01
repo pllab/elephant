@@ -77,7 +77,7 @@ def test_extract_mems(name: str, top: str):
 
 def test_extract_memory(netlist: db.NetlistDatabase, verbose: bool = False):
     start = time.time()
-    rewriter.rewrite_dffe_pn_to_pp(netlist)
+    rewriter.rewrite_dffe_xx_to_pp(netlist)
     cnt = rewriter.rewrite_mux_to_qmux(netlist)
     print(f"Rewrote {cnt} muxes to qmuxes")
     while rewriter.reduce_qmux_once(netlist) > 0:
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.name is None and args.top is None:
-        name, top = NETLIST_FILES[-1]
+        name, top = NETLIST_FILES[1]
         name = NETLIST_PATH + name + ".json"
     elif args.name is None:
         print("Provide JSON filename with --input")
