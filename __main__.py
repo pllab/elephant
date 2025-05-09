@@ -16,7 +16,8 @@ NETLIST_FILES = [
     ("bsg_cache", "top"),
     ("bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1",
      "bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1"),
-    ("bsg_cache_ways_p_2_data_width_p_32", "top")
+    ("bsg_cache_ways_p_2_data_width_p_32", "top"),
+    ("bp_fe_pc_gen", "bp_fe_pc_gen")
 ]
 
 # pyrtl.set_debug_mode(True)
@@ -80,6 +81,8 @@ def test_extract_memory(netlist: db.NetlistDatabase, verbose: bool = False):
     rewriter.rewrite_dffe_xx_to_pp(netlist)
     cnt = rewriter.rewrite_mux_to_qmux(netlist)
     print(f"Rewrote {cnt} muxes to qmuxes")
+    cnt = rewriter.rewrite_inverted_mux_to_qmux(netlist)
+    print(f"Rewrote {cnt} inverted muxes to qmuxes")
     while rewriter.reduce_qmux_once(netlist) > 0:
         pass
     print("Reduced all qmuxes")
@@ -126,7 +129,7 @@ def test_extract_quasi_memory(netlist: db.NetlistDatabase, verbose: bool = False
     #             result.append(item)
     #     return result
     start = time.time()
-    rewriter.rewrite_dffe_pn_to_pp(netlist)
+    rewriter.rewrite_dffe_xx_to_pp(netlist)
     cnt = rewriter.rewrite_mux_to_quasi_qmux(netlist)
     print(f"Rewrote {cnt} muxes to quasi qmuxes")
     while rewriter.reduce_quasi_qmux_once(netlist) > 0:
@@ -165,7 +168,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.name is None and args.top is None:
-        name, top = NETLIST_FILES[1]
+        name, top = NETLIST_FILES[-1]
         name = NETLIST_PATH + name + ".json"
     elif args.name is None:
         print("Provide JSON filename with --input")
