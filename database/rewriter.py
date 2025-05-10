@@ -964,6 +964,27 @@ def rewrite_mux_to_qmux(netlist: NetlistDatabase) -> int:
     # print(qmuxes)
     return cur.rowcount
 
+def rewrite_inverted_mux_to_qmux(netlist: NetlistDatabase) -> int:
+    cur = netlist.cursor()
+    cur.execute(
+        """
+        SELECT d1.q, d2.q, mux.s, mux.y, d1.c, d1.type
+        FROM mux JOIN dffe_xx AS d1 JOIN dffe_xx AS d2 JOIN unary_gate AS ug1 JOIN unary_gate AS ug2
+        ON mux.a = ug1.y AND mux.b = ug2.y AND d1.c = d2.c AND d1.type = d2.type AND ug1.a = d1.q AND ug2.a = d2.q
+        """
+    )
+    patterns = cur.fetchall()
+    if not patterns:
+        return 0
+    qmuxes = [
+        (c, json.dumps([a, b]), json.dumps([s]), y, dffe_type)
+        for a, b, s, y, c, dffe_type in patterns
+    ]
+    cur.executemany("INSERT INTO qmux VALUES (?, ?, ?, ?, ?);", qmuxes)
+    netlist.commit()
+    # print(qmuxes)
+    return cur.rowcount
+
 
 def reduce_qmux_once(netlist: NetlistDatabase) -> int:
     # this keeps the original qmuxes
