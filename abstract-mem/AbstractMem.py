@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import pyrtl
-from collections import namedtuple
 from math import log2
 from dataclasses import dataclass
 from typing import Any
@@ -9,24 +10,24 @@ class AbstractMem:
 
     @dataclass
     class Mask:
-        mask: pyrtl.WireVector = None
+        mask: pyrtl.WireVector | None = None
         granularity: int = 1
         offset: bool = False
         sign: Any = None
 
     @dataclass
     class ReadPort:
-        addr: pyrtl.WireVector = None
-        data: pyrtl.WireVector = None
+        addr: pyrtl.WireVector | None = None
+        data: pyrtl.WireVector | None = None
         en: Any = None
-        mask: 'Mask' = None
+        mask: AbstractMem.Mask | None = None
 
     @dataclass
     class WritePort:
-        addr: pyrtl.WireVector = None
-        data: pyrtl.WireVector = None
+        addr: pyrtl.WireVector | None = None
+        data: pyrtl.WireVector | None = None
         en: Any = None
-        mask: 'Mask' = None
+        mask: AbstractMem.Mask | None = None
 
     def __init__(self, 
                  width,
