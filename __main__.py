@@ -76,13 +76,14 @@ def test_extract_mems(name: str, top: str):
     netlist.extract_mems()
 
 
-def test_extract_memory(netlist: db.NetlistDatabase, verbose: bool = False):
+def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False, verbose: bool = False):
     start = time.time()
     rewriter.rewrite_dffe_xx_to_pp(netlist)
     cnt = rewriter.rewrite_mux_to_qmux(netlist)
     print(f"Rewrote {cnt} muxes to qmuxes")
-    cnt = rewriter.rewrite_inverted_mux_to_qmux(netlist)
-    print(f"Rewrote {cnt} inverted muxes to qmuxes")
+    if inverted_mux:
+        cnt = rewriter.rewrite_inverted_mux_to_qmux(netlist)
+        print(f"Rewrote {cnt} inverted muxes to qmuxes")
     while rewriter.reduce_qmux_once(netlist) > 0:
         pass
     print("Reduced all qmuxes")
@@ -165,6 +166,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--quasi", action="store_true", help="extract quasi memories"
     )
+    parser.add_argument(
+        "--inverted-mux", dest="inverted_mux", action="store_true", help="rewrite inverted muxes"
+    )
     args = parser.parse_args()
 
     if args.name is None and args.top is None:
@@ -187,4 +191,4 @@ if __name__ == "__main__":
     if args.quasi:
         test_extract_quasi_memory(netlist, args.verbose)
     else:
-        test_extract_memory(netlist, args.verbose)
+        test_extract_memory(netlist, args.inverted_mux, args.verbose)
