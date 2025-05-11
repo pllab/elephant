@@ -19,7 +19,7 @@ class AbstractMem:
         addr: pyrtl.WireVector | None = None
         data: pyrtl.WireVector | None = None
         en: Any = None
-        mask: AbstractMem.Mask | None = None
+        # mask: AbstractMem.Mask | None = None
 
     @dataclass
     class WritePort:
