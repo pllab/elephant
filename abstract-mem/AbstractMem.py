@@ -33,7 +33,7 @@ class AbstractMem:
         addr: pyrtl.WireVector | None = None
         data_in: pyrtl.WireVector | None = None
         data_out: pyrtl.WireVector | None = None
-        en: Any = None
+        en: Any = None  # write enable
         mask: AbstractMem.Mask | None = None
 
     width: int
@@ -45,6 +45,12 @@ class AbstractMem:
     forward: bool
     latch_last_read: bool
     asynchronous: bool
+
+    def __repr__(self):
+        return f"AbstractMem(width={self.width}, height={self.height}, name={self.name}, " \
+               f"read_ports={self.read_ports}, write_ports={self.write_ports}, " \
+               f"read_write_ports={self.read_write_ports}, forward={self.forward}, " \
+               f"latch_last_read={self.latch_last_read}, asynchronous={self.asynchronous})"
 
     def __init__(
         self, 

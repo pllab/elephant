@@ -20,7 +20,7 @@ def mem_mapping(
     # choose the smallest cost per bit memory
     # maintain both the costs and choices
     nr, nw, nrw = len(mem.read_ports), len(mem.write_ports), len(mem.read_write_ports)
-    np = nr + nw + nrw
+    np = nr + nw + 2 * nrw
     dp: list[list[list[tuple[int | float, Any]]]] = [[[(float("inf"), None) for _ in range(np+ 1)] for _ in range(np + 1)] for _ in range(np + 1)]
 
     # initialize with tech
@@ -51,19 +51,80 @@ def mem_mapping(
                         dp[i][j][k] = update(dp[i][j][k], (dp[i][j - 1][k + 1][0], "cast_w"))
 
     # try casting a read-write port to a read port and a write port
-    for k in range(nrw):
-        dp[nr][nw][nrw] = update(dp[nr][nw][nrw], (dp[nr + k][nw + k][k][0], f"cast_rw {k}"))
+    for k in range(1, nrw + 1):
+        dp[nr][nw][nrw] = update(dp[nr][nw][nrw], (dp[nr + k][nw + k][nrw - k][0], f"cast_rw {k}"))
 
     # reconstruct the choices
-    target = dp[nr][nw][nrw]
-    if target[0] == float("inf"):
-        raise ValueError("No valid memory found")
     physical_mems: list[AbstractMem] = []
 
-    def reconstruct_recursive(physical_mems: list[AbstractMem], i: int, j: int, k: int):
-        
+    def reconstruct_recursive(
+        physical_mems: list[AbstractMem],
+        dp: list[list[list[tuple[int | float, Any]]]],
+        rps: list[AbstractMem.ReadPort],
+        wps: list[AbstractMem.WritePort],
+        rwps: list[AbstractMem.ReadWritePort],
+        i: int, j: int, k: int
+    ):
+        c, choice = dp[i][j][k]
+        # print(f"dp[{i}][{j}][{k}] = {c}, {choice}")
+        if c == float("inf") or choice is None:
+            raise ValueError("No valid memory found")
+        if isinstance(choice, int): # physical memory
+            mem_tech_name = tech[choice]["name"]
+            physical_mem = AbstractMem(
+                width=mem.width,
+                height=mem.height,
+                name=f"{mem.name}@{mem_tech_name}",
+                read_ports=rps,
+                write_ports=wps,
+                read_write_ports=rwps,
+            )
+            physical_mems.append(physical_mem)
+        elif not isinstance(choice, str):
+            raise ValueError("Invalid choice")
+        elif choice.startswith("split_r"):
+            m = int(choice.split(" ")[1])
+            reconstruct_recursive(physical_mems, dp, rps[:m+1], wps, rwps, m, j, k)
+            reconstruct_recursive(physical_mems, dp, rps[m+1:], wps, rwps, i - m, j, k)
+        elif choice == "cast_r":
+            new_rwp = AbstractMem.ReadWritePort(
+                addr=rps[-1].addr,
+                data_in=None,
+                data_out=rps[-1].data,
+                en=rps[-1].en,
+                mask=None
+            )
+            reconstruct_recursive(physical_mems, dp, rps[:-1], wps, rwps + [new_rwp], i - 1, j, k + 1)
+        elif choice == "cast_w":
+            new_rwp = AbstractMem.ReadWritePort(
+                addr=wps[-1].addr,
+                data_in=wps[-1].data,
+                data_out=None,
+                en=wps[-1].en,
+                mask=wps[-1].mask
+            )
+            reconstruct_recursive(physical_mems, dp, rps, wps[:-1], rwps + [new_rwp], i, j - 1, k + 1)
+        elif choice.startswith("cast_rw"):
+            m = int(choice.split(" ")[1])
+            # print(f"cast_rw {m}")
+            new_rps, new_wps = [], []
+            for l in range(m):
+                new_rps.append(AbstractMem.ReadPort(
+                    addr=rwps[l].addr,
+                    data=rwps[l].data_out,
+                    en=~rwps[l].en if isinstance(rwps[l].en, pyrtl.WireVector) else None
+                ))
+                new_wps.append(AbstractMem.WritePort(
+                    addr=rwps[l].addr,
+                    data=rwps[l].data_in,
+                    en=rwps[l].en,
+                    mask=rwps[l].mask
+                ))
+            reconstruct_recursive(physical_mems, dp, rps + new_rps, wps + new_wps, rwps[m:], i + m, j + m, k - m)
+        else:
+            raise ValueError("Invalid choice")
 
-    # TODO: reconstruct the choices and figure out representation
+    reconstruct_recursive(physical_mems, dp, mem.read_ports, mem.write_ports, mem.read_write_ports, nr, nw, nrw)
     return physical_mems
 
 
@@ -85,7 +146,33 @@ def test_1r1w(tech: list[dict[str, Any]]):
         read_ports=[r],
         write_ports=[w],
     )
-    mem_mapping(mem, tech)
+    try:
+        physical_mems = mem_mapping(mem, tech)
+        for physical_mem in physical_mems:
+            print(physical_mem)
+    except ValueError as e:
+        print(e)
+
+
+def test_1rw(tech: list[dict[str, Any]]):
+    rw = AbstractMem.ReadWritePort(
+        addr=pyrtl.WireVector(10, name="addr_rw"),
+        data_in=pyrtl.WireVector(32, name="data_in_rw"),
+        data_out=pyrtl.WireVector(32, name="data_out_rw"),
+        en=pyrtl.WireVector(1, name="en_rw"),
+    )
+    mem = AbstractMem(
+        width=32,
+        height=1024,
+        name="test_1rw",
+        read_write_ports=[rw],
+    )
+    try:
+        physical_mems = mem_mapping(mem, tech)
+        for physical_mem in physical_mems:
+            print(physical_mem)
+    except ValueError as e:
+        print(e)
 
 
 if __name__ == "__main__":
@@ -93,5 +180,8 @@ if __name__ == "__main__":
     with open("mem_tech.json", "r") as f:
         tech = json.load(f)
 
-    test_1r1w(tech["xilinx"])
-    test_1r1w(tech["pyrtl"])
+    # test_1r1w(tech["xilinx"])
+    # test_1r1w(tech["pyrtl"])
+
+    # test_1rw(tech["xilinx"])
+    test_1rw(tech["pyrtl"])
