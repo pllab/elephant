@@ -24,5 +24,19 @@
                 "forward"
             ]
         }
+    ],
+    "pyrtl": [
+        {
+            "description": "PyRTL Register File",
+            "cost_per_bit": 1,
+            "width": 1,
+            "height": 1,
+            "read_ports": 2,
+            "write_ports": 2,
+            "read_write_ports": 0,
+            "features": [
+                "forward"
+            ]
+        }
     ]
 }
