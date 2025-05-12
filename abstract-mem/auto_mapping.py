@@ -54,6 +54,11 @@ def mem_mapping(
     for k in range(1, nrw + 1):
         dp[nr][nw][nrw] = update(dp[nr][nw][nrw], (dp[nr + k][nw + k][nrw - k][0], f"cast_rw {k}"))
 
+    # for i in range(np + 1):
+    #     for j in range(np + 1):
+    #         for k in range(np + 1):
+    #             print(f"dp[{i}][{j}][{k}] = {dp[i][j][k]}")
+
     # reconstruct the choices
     physical_mems: list[AbstractMem] = []
 
@@ -84,8 +89,8 @@ def mem_mapping(
             raise ValueError("Invalid choice")
         elif choice.startswith("split_r"):
             m = int(choice.split(" ")[1])
-            reconstruct_recursive(physical_mems, dp, rps[:m+1], wps, rwps, m, j, k)
-            reconstruct_recursive(physical_mems, dp, rps[m+1:], wps, rwps, i - m, j, k)
+            reconstruct_recursive(physical_mems, dp, rps[:m], wps, rwps, m, j, k)
+            reconstruct_recursive(physical_mems, dp, rps[m:], wps, rwps, i - m, j, k)
         elif choice == "cast_r":
             new_rwp = AbstractMem.ReadWritePort(
                 addr=rps[-1].addr,
@@ -128,7 +133,10 @@ def mem_mapping(
     return physical_mems
 
 
-def test_1r1w(tech: list[dict[str, Any]]):
+def test_1r1w(tech: list[dict[str, Any]], verbose: bool = False):
+    print("---- test_1r1w ----")
+    print(f"tech available: {[mem['name'] for mem in tech]}")
+
     r = AbstractMem.ReadPort(
         addr=pyrtl.WireVector(10, name="addr_r"),
         data=pyrtl.WireVector(32, name="data_r"),
@@ -149,12 +157,18 @@ def test_1r1w(tech: list[dict[str, Any]]):
     try:
         physical_mems = mem_mapping(mem, tech)
         for physical_mem in physical_mems:
-            print(physical_mem)
+            if verbose:
+                print(physical_mem)
+            else:
+                print(f"{physical_mem.name}")
     except ValueError as e:
         print(e)
 
 
-def test_1rw(tech: list[dict[str, Any]]):
+def test_1rw(tech: list[dict[str, Any]], verbose: bool = False):
+    print("---- test_1rw ----")
+    print(f"tech available: {[mem['name'] for mem in tech]}")
+
     rw = AbstractMem.ReadWritePort(
         addr=pyrtl.WireVector(10, name="addr_rw"),
         data_in=pyrtl.WireVector(32, name="data_in_rw"),
@@ -170,7 +184,146 @@ def test_1rw(tech: list[dict[str, Any]]):
     try:
         physical_mems = mem_mapping(mem, tech)
         for physical_mem in physical_mems:
-            print(physical_mem)
+            if verbose:
+                print(physical_mem)
+            else:
+                print(f"{physical_mem.name}")
+    except ValueError as e:
+        print(e)
+
+
+def test_2r1w(tech: list[dict[str, Any]], verbose: bool = False):
+    print("---- test_2r1w ----")
+    print(f"tech available: {[mem['name'] for mem in tech]}")
+
+    r1 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r1"),
+        data=pyrtl.WireVector(32, name="data_r1"),
+        en=1
+    )
+    r2 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r2"),
+        data=pyrtl.WireVector(32, name="data_r2"),
+        en=1
+    )
+    w = AbstractMem.WritePort(
+        addr=pyrtl.WireVector(10, name="addr_w"),
+        data=pyrtl.WireVector(32, name="data_w"),
+        en=1,
+    )
+    mem = AbstractMem(
+        width=32,
+        height=1024,
+        name="test_2r1w",
+        read_ports=[r1, r2],
+        write_ports=[w],
+    )
+    try:
+        physical_mems = mem_mapping(mem, tech)
+        for physical_mem in physical_mems:
+            if verbose:
+                print(physical_mem)
+            else:
+                print(f"{physical_mem.name}")
+    except ValueError as e:
+        print(e)
+
+
+def test_4r1w(tech: list[dict[str, Any]], verbose: bool = False):
+    print("---- test_4r1w ----")
+    print(f"tech available: {[mem['name'] for mem in tech]}")
+
+    r1 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r1"),
+        data=pyrtl.WireVector(32, name="data_r1"),
+        en=1
+    )
+    r2 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r2"),
+        data=pyrtl.WireVector(32, name="data_r2"),
+        en=1
+    )
+    r3 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r3"),
+        data=pyrtl.WireVector(32, name="data_r3"),
+        en=1
+    )
+    r4 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r4"),
+        data=pyrtl.WireVector(32, name="data_r4"),
+        en=1
+    )
+    w = AbstractMem.WritePort(
+        addr=pyrtl.WireVector(10, name="addr_w"),
+        data=pyrtl.WireVector(32, name="data_w"),
+        en=1,
+    )
+    mem = AbstractMem(
+        width=32,
+        height=1024,
+        name="test_4r1w",
+        read_ports=[r1, r2, r3, r4],
+        write_ports=[w],
+    )
+    try:
+        physical_mems = mem_mapping(mem, tech)
+        for physical_mem in physical_mems:
+            if verbose:
+                print(physical_mem)
+            else:
+                print(f"{physical_mem.name}")
+    except ValueError as e:
+        print(e)
+
+
+def test_4r2w(tech: list[dict[str, Any]], verbose: bool = False):
+    print("---- test_4r2w ----")
+    print(f"tech available: {[mem['name'] for mem in tech]}")
+
+    r1 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r1"),
+        data=pyrtl.WireVector(32, name="data_r1"),
+        en=1
+    )
+    r2 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r2"),
+        data=pyrtl.WireVector(32, name="data_r2"),
+        en=1
+    )
+    r3 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r3"),
+        data=pyrtl.WireVector(32, name="data_r3"),
+        en=1
+    )
+    r4 = AbstractMem.ReadPort(
+        addr=pyrtl.WireVector(10, name="addr_r4"),
+        data=pyrtl.WireVector(32, name="data_r4"),
+        en=1
+    )
+    w1 = AbstractMem.WritePort(
+        addr=pyrtl.WireVector(10, name="addr_w1"),
+        data=pyrtl.WireVector(32, name="data_w1"),
+        en=1,
+    )
+    w2 = AbstractMem.WritePort(
+        addr=pyrtl.WireVector(10, name="addr_w2"),
+        data=pyrtl.WireVector(32, name="data_w2"),
+        en=1,
+    )
+    mem = AbstractMem(
+        width=32,
+        height=1024,
+        name="test_4r2w",
+        read_ports=[r1, r2, r3, r4],
+        write_ports=[w1, w2],
+    )
+    try:
+        physical_mems = mem_mapping(mem, tech)
+        for physical_mem in physical_mems:
+            if verbose:
+                print(physical_mem)
+            else:
+                print(f"{physical_mem.name}")
     except ValueError as e:
         print(e)
 
@@ -180,8 +333,19 @@ if __name__ == "__main__":
     with open("mem_tech.json", "r") as f:
         tech = json.load(f)
 
-    # test_1r1w(tech["xilinx"])
-    # test_1r1w(tech["pyrtl"])
+    # success expected
+    test_1r1w(tech["xilinx"])
+    test_1r1w(tech["pyrtl"])
 
-    # test_1rw(tech["xilinx"])
+    test_1rw(tech["xilinx"])
     test_1rw(tech["pyrtl"])
+
+    test_2r1w(tech["xilinx"])
+    test_2r1w(tech["pyrtl"])
+
+    test_4r1w(tech["xilinx"])
+    test_4r1w(tech["pyrtl"])
+
+    # failure expected
+    test_4r2w(tech["xilinx"])
+    test_4r2w(tech["pyrtl"])
