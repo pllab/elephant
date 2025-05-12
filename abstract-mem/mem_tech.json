@@ -3,7 +3,7 @@
         {
             "name": "xilinx_bram_2rw",
             "description": "7-Series Dual-Port BRAM",
-            "cost_per_bit": 2,
+            "cost_per_bit": 3,
             "width": 36,
             "height": 1024,
             "read_ports": 0,
@@ -16,7 +16,7 @@
         {
             "name": "xilinx_bram_1rw",
             "description": "7-Series Single-Port BRAM",
-            "cost_per_bit": 3,
+            "cost_per_bit": 2,
             "width": 18,
             "height": 1024,
             "read_ports": 0,
