@@ -1,5 +1,4 @@
 Rewrote 1024 muxes to qmuxes
-Rewrote 0 inverted muxes to qmuxes
 Reduced all qmuxes
 Found 1 memory(ies):
 	Memory 0: width = 32, height = 32

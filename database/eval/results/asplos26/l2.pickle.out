@@ -1,5 +1,4 @@
 Rewrote 358436 muxes to qmuxes
-Rewrote 0 inverted muxes to qmuxes
 Reduced all qmuxes
 Found 4 memory(ies):
 	Memory 0: width = 144, height = 4096
@@ -42,4 +41,4 @@ Found 4 memory(ies):
 			Write enable: 10017421
 			Write address: (10017430, 10017431)
 			Write data: (1214369, 1216858, 1217106, 1217354, 1217602)...
-Time elapsed: 165.48s
+Time elapsed: 108.99s
