@@ -29,7 +29,7 @@ module bsg_mem_2r1w_sync_width_p66_els_p32
   wire [65:0] r0_data_o,r1_data_o;
 
   bsg_mem_2r1w_sync_synth
-   #(.els_p(66), .els_p(1<<5))
+   #(.width_p(66), .els_p(1<<5))
   synth
   (
     .clk_i(clk_i),
