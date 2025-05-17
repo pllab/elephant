@@ -35,6 +35,7 @@ module bsg_mem_3r1w_sync_width_p66_els_p32
   wire [65:0] r0_data_o,r1_data_o,r2_data_o;
 
   bsg_mem_3r1w_sync_synth
+   #(.width_p(66), .els_p(1<<5))
   synth
   (
     .clk_i(clk_i),

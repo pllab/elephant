@@ -42,11 +42,9 @@ module bsg_mem_2rw_sync_mask_write_byte_synth #( parameter `BSG_INV_PARAM(width_
   genvar i;
   for(i=0; i<write_mask_width_lp; i=i+1)
   begin: bk
-    bsg_mem_2rw_sync #( .width_p      (8)
+    bsg_mem_2rw_sync_synth #( .width_p      (8)
                         ,.els_p        (els_p)
                         ,.addr_width_lp(addr_width_lp)
-                        ,.disable_collision_warning_p(disable_collision_warning_p)
-                        ,.harden_p(harden_p)
                       ) mem_2rw_sync
                       ( .clk_i  (clk_i)
                        ,.reset_i(reset_i)
