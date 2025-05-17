@@ -1497,6 +1497,7 @@ module bp_fe_ras_00
 
 
   bsg_mem_1r1w
+  #(.width_p(43), .els_p(1<<4))
   mem
   (
     .w_clk_i(clk_i),

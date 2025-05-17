@@ -157,6 +157,7 @@ module bp_be_cmd_queue
 
 
   bsg_mem_1r1w
+  #(.width_p(114), .els_p(4))
   fifo_mem
   (
     .w_clk_i(clk_i),

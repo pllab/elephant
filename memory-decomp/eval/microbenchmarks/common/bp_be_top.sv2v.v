@@ -395,6 +395,7 @@ module bp_be_cmd_queue_00
 
 
   bsg_mem_1r1w
+  #(.width_p(114), .els_p(4))
   fifo_mem
   (
     .w_clk_i(clk_i),
@@ -7457,6 +7458,7 @@ module bp_be_issue_queue_00
   assign bypass_preissue = wptr_r == rptr_n;
 
   bsg_mem_1r1w
+  #(.width_p(80), .els_p(8))
   preissue_fifo_mem
   (
     .w_clk_i(clk_i),
@@ -7771,6 +7773,7 @@ module bp_be_issue_queue_00
   assign bypass_issue = wptr_r[5:3] == rptr_r[5:3];
 
   bsg_mem_1r1w
+  #(.width_p(174), .els_p(8))
   queue_fifo_mem
   (
     .w_clk_i(clk_i),
