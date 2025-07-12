@@ -112,8 +112,10 @@ def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False,
     if timeit:
         print(f"Created {len(wps)} write port(s) in {time.time() - start:.3f}s")
         start = time.time()
+    mux_cnt, demux_cnt = 0, 0
     print(f"Found {len(mems)} memory(ies):")
     for i, (qss, rps) in enumerate(mems.items()):
+        demux_cnt += len(qss) * (2*len(qss[0]) - 1)
         print(f"\tMemory {i}: width = {len(qss)}, height = {len(qss[0])}")
         if verbose:
             for j, (qs, ra, rd) in enumerate(rps):
@@ -128,6 +130,7 @@ def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False,
             print(f"\t\t\tWrite data: {wd}")
         else:
             for j, (qs, ra, rd) in enumerate(rps):
+                mux_cnt += len(qss) * (2 * len(qss[0]) - 1)
                 print(f"\t\tRead port {j}:")
                 print(f"\t\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
                 print(f"\t\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
@@ -138,6 +141,8 @@ def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False,
             print(f"\t\t\tWrite enable: {wen}")
             print(f"\t\t\tWrite address: {wa[:5]}" + ("..." if len(wa) > 5 else ""))
             print(f"\t\t\tWrite data: {wd[:5]}" + ("..." if len(wd) > 5 else ""))
+    print(f"Total muxes replaced by read ports: {mux_cnt}")
+    print(f"Total demuxes replaced by write ports: {demux_cnt}")
     print(f"Time elapsed: {time.time() - all_start:.3f}s")
 
 
