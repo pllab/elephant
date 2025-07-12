@@ -1,5 +1,5 @@
-from elephant import db, rewriter
-import pyrtl
+from . import db, rewriter
+# import pyrtl
 import json
 import time
 
@@ -23,50 +23,50 @@ NETLIST_FILES = [
 # pyrtl.set_debug_mode(True)
 
 
-def test_to_pyrtl():
-    netlist = db.NetlistDatabase()
-    with open(NETLIST_FILE, "r") as f:
-        netlist.build_from_blif(json.load(f), "toplevel", True)
+# def test_to_pyrtl():
+#     netlist = db.NetlistDatabase()
+#     with open(NETLIST_FILE, "r") as f:
+#         netlist.build_from_blif(json.load(f), "toplevel", True)
 
-    # saturate
-    rewriter.rewrite_dffe_pn_to_pp(netlist)
-    rewriter.group_dffe_pp(netlist)
-    # updated = True
-    # while updated:
-    #     updated = False
-    #     updated = True if rewriter.saturate_comm(netlist, "$_AND_") > 0 else updated
-    #     updated = True if rewriter.saturate_comm(netlist, "$_OR_") > 0 else updated
-    #     updated = True if rewriter.saturate_demorgan(netlist, "$_AND_", "$_OR_") else updated
-    #     updated = True if rewriter.saturate_demorgan(netlist, "$_OR_", "$_AND_") else updated
-    #     updated = True if rewriter.saturate_idemp(netlist, "$_NOT_") else updated
+#     # saturate
+#     rewriter.rewrite_dffe_pn_to_pp(netlist)
+#     rewriter.group_dffe_pp(netlist)
+#     # updated = True
+#     # while updated:
+#     #     updated = False
+#     #     updated = True if rewriter.saturate_comm(netlist, "$_AND_") > 0 else updated
+#     #     updated = True if rewriter.saturate_comm(netlist, "$_OR_") > 0 else updated
+#     #     updated = True if rewriter.saturate_demorgan(netlist, "$_AND_", "$_OR_") else updated
+#     #     updated = True if rewriter.saturate_demorgan(netlist, "$_OR_", "$_AND_") else updated
+#     #     updated = True if rewriter.saturate_idemp(netlist, "$_NOT_") else updated
 
-    # reduce muxes
-    rewriter.rewrite_2_1_mux_to_binary_gate(netlist)
-    while rewriter.reduce_mux_once(netlist):
-        pass
+#     # reduce muxes
+#     rewriter.rewrite_2_1_mux_to_binary_gate(netlist)
+#     while rewriter.reduce_mux_once(netlist):
+#         pass
 
-    # cur = netlist.cursor()
-    # with open("binary_gate.json", "w") as f:
-    #     cur.execute("SELECT * FROM binary_gate;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("concat.json", "w") as f:
-    #     cur.execute("SELECT * FROM concat;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("mux.json", "w") as f:
-    #     cur.execute("SELECT * FROM mux;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("dffe_xx.json", "w") as f:
-    #     cur.execute("SELECT * FROM dffe_xx;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("selector.json", "w") as f:
-    #     cur.execute("SELECT * FROM selector;")
-    #     json.dump(cur.fetchall(), f)
-    # with open("unary_gate.json", "w") as f:
-    #     cur.execute("SELECT * FROM unary_gate;")
-    #     json.dump(cur.fetchall(), f)
-    block: pyrtl.Block = netlist.to_pyrtl()
-    with open("pyrtl.text", "w") as f:
-        f.write(str(block))
+#     cur = netlist.cursor()
+#     with open("binary_gate.json", "w") as f:
+#         cur.execute("SELECT * FROM binary_gate;")
+#         json.dump(cur.fetchall(), f)
+#     with open("concat.json", "w") as f:
+#         cur.execute("SELECT * FROM concat;")
+#         json.dump(cur.fetchall(), f)
+#     with open("mux.json", "w") as f:
+#         cur.execute("SELECT * FROM mux;")
+#         json.dump(cur.fetchall(), f)
+#     with open("dffe_xx.json", "w") as f:
+#         cur.execute("SELECT * FROM dffe_xx;")
+#         json.dump(cur.fetchall(), f)
+#     with open("selector.json", "w") as f:
+#         cur.execute("SELECT * FROM selector;")
+#         json.dump(cur.fetchall(), f)
+#     with open("unary_gate.json", "w") as f:
+#         cur.execute("SELECT * FROM unary_gate;")
+#         json.dump(cur.fetchall(), f)
+#     block: pyrtl.Block = netlist.to_pyrtl()
+#     with open("pyrtl.text", "w") as f:
+#         f.write(str(block))
 
 
 def test_extract_mems(name: str, top: str):
@@ -76,21 +76,42 @@ def test_extract_mems(name: str, top: str):
     netlist.extract_mems()
 
 
-def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False, verbose: bool = False):
-    start = time.time()
+def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False, verbose: bool = False, timeit: bool = False):
+    all_start = time.time()
+    start = time.time() if timeit else 0
     rewriter.rewrite_dffe_xx_to_pp(netlist)
+    rewriter.saturate_comm(netlist, "$_AND_")
+    rewriter.saturate_comm(netlist, "$_OR_")
+    rewriter.saturate_2_1_mux(netlist)
+    if timeit:
+        print(f"Rewrote dffs and logic gates in {time.time() - start:.3f}s")
+        start = time.time()
     cnt = rewriter.rewrite_mux_to_qmux(netlist)
-    print(f"Rewrote {cnt} muxes to qmuxes")
+    print(f"Rewrote {cnt} muxes to qmuxes" + (f" in {time.time() - start:.3f}s" if timeit else ""))
+    if timeit:
+        start = time.time()
     if inverted_mux:
         cnt = rewriter.rewrite_inverted_mux_to_qmux(netlist)
-        print(f"Rewrote {cnt} inverted muxes to qmuxes")
+        print(f"Rewrote {cnt} inverted muxes to qmuxes" + (f" in {time.time() - start:.3f}s" if timeit else ""))
+        if timeit:
+            start = time.time()
     while rewriter.reduce_qmux_once(netlist) > 0:
         pass
-    print("Reduced all qmuxes")
+    if timeit:
+        print(f"Reduced all qmuxes in {time.time() - start:.3f}s")
+        start = time.time()
     rps = rewriter.find_readport(netlist)
+    if timeit:
+        print(f"Found {len(rps)} read port(s) in {time.time() - start:.3f}s")
+        start = time.time()
     mems = rewriter.find_memory(rps)
+    if timeit:
+        print(f"Found {len(mems)} memory(ies) in {time.time() - start:.3f}s")
+        start = time.time()
     wps = rewriter.create_writeport(netlist, mems)
-    time_elapsed = time.time() - start
+    if timeit:
+        print(f"Created {len(wps)} write port(s) in {time.time() - start:.3f}s")
+        start = time.time()
     print(f"Found {len(mems)} memory(ies):")
     for i, (qss, rps) in enumerate(mems.items()):
         print(f"\tMemory {i}: width = {len(qss)}, height = {len(qss[0])}")
@@ -117,10 +138,10 @@ def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False,
             print(f"\t\t\tWrite enable: {wen}")
             print(f"\t\t\tWrite address: {wa[:5]}" + ("..." if len(wa) > 5 else ""))
             print(f"\t\t\tWrite data: {wd[:5]}" + ("..." if len(wd) > 5 else ""))
-    print(f"Time elapsed: {time_elapsed:.2f}s")
+    print(f"Time elapsed: {time.time() - all_start:.3f}s")
 
 
-def test_extract_quasi_memory(netlist: db.NetlistDatabase, verbose: bool = False):
+def test_extract_quasi_memory(netlist: db.NetlistDatabase, verbose: bool = False, timeit: bool = False):
     # def flatten(l: list[int | list | None]) -> list:
     #     result = []
     #     for item in l:
@@ -169,10 +190,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--inverted-mux", dest="inverted_mux", action="store_true", help="rewrite inverted muxes"
     )
+    parser.add_argument(
+        "--timeit", action="store_true", help="time the extraction process"
+    )
     args = parser.parse_args()
 
     if args.name is None and args.top is None:
-        name, top = NETLIST_FILES[-1]
+        name, top = NETLIST_FILES[1]
         name = NETLIST_PATH + name + ".json"
     elif args.name is None:
         print("Provide JSON filename with --input")
@@ -184,11 +208,16 @@ if __name__ == "__main__":
         name = args.name
         top = "top"
 
+    start_time = 0
+    if args.timeit:
+        start_time = time.time()
     netlist = db.NetlistDatabase()
     with open(name, "r") as f:
         netlist.build_from_blif(json.load(f), top, True)
+    if args.timeit:
+        print(f"Built netlist in {time.time() - start_time:.3f}s")
 
     if args.quasi:
-        test_extract_quasi_memory(netlist, args.verbose)
+        test_extract_quasi_memory(netlist, args.verbose, args.timeit)
     else:
-        test_extract_memory(netlist, args.inverted_mux, args.verbose)
+        test_extract_memory(netlist, args.inverted_mux, args.verbose, args.timeit)
