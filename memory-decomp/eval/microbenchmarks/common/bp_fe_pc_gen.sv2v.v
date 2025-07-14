@@ -97,6 +97,7 @@ module bsg_mem_1r1w_sync_width_p50_els_p64_latch_last_read_p1
   wire [49:0] r_data_o;
 
   bsg_mem_1r1w_sync_synth
+   #(.width_p(50), .els_p(1<<6))
   synth
   (
     .clk_i(clk_i),
@@ -520,6 +521,7 @@ module bsg_mem_1r1w_sync_00000008_512_1
   wire [7:0] r_data_o;
 
   bsg_mem_1r1w_sync_synth
+   #(.width_p(8), .els_p(1<<9))
   synth
   (
     .clk_i(clk_i),
@@ -1344,6 +1346,7 @@ module bp_fe_ras_00
 
 
   bsg_mem_1r1w
+  #(.width_p(43), .els_p(1<<4))
   mem
   (
     .w_clk_i(clk_i),
