@@ -115,7 +115,7 @@ def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False,
     mux_cnt, demux_cnt = 0, 0
     print(f"Found {len(mems)} memory(ies):")
     for i, (qss, rps) in enumerate(mems.items()):
-        demux_cnt += len(qss) * (2*len(qss[0]) - 1)
+        demux_cnt += len(qss) * (len(qss[0]) - 1)
         print(f"\tMemory {i}: width = {len(qss)}, height = {len(qss[0])}")
         if verbose:
             for j, (qs, ra, rd) in enumerate(rps):
@@ -130,7 +130,7 @@ def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False,
             print(f"\t\t\tWrite data: {wd}")
         else:
             for j, (qs, ra, rd) in enumerate(rps):
-                mux_cnt += len(qss) * (2 * len(qss[0]) - 1)
+                mux_cnt += len(qss) * (len(qss[0]) - 1)
                 print(f"\t\tRead port {j}:")
                 print(f"\t\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
                 print(f"\t\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
@@ -142,30 +142,37 @@ def test_extract_memory(netlist: db.NetlistDatabase, inverted_mux: bool = False,
             print(f"\t\t\tWrite address: {wa[:5]}" + ("..." if len(wa) > 5 else ""))
             print(f"\t\t\tWrite data: {wd[:5]}" + ("..." if len(wd) > 5 else ""))
     print(f"Total muxes replaced by read ports: {mux_cnt}")
-    print(f"Total demuxes replaced by write ports: {demux_cnt}")
+    print(f"Total estimated demuxes replaced by write ports: {demux_cnt}")
     print(f"Time elapsed: {time.time() - all_start:.3f}s")
 
 
 def test_extract_quasi_memory(netlist: db.NetlistDatabase, verbose: bool = False, timeit: bool = False):
-    # def flatten(l: list[int | list | None]) -> list:
-    #     result = []
-    #     for item in l:
-    #         if isinstance(item, list):
-    #             result.extend(flatten(item))
-    #         elif item is not None:
-    #             result.append(item)
-    #     return result
-    start = time.time()
+    all_start = time.time()
+    start = time.time() if timeit else 0
     rewriter.rewrite_dffe_xx_to_pp(netlist)
+    if timeit:
+        print(f"Rewrote dffs in {time.time() - start:.3f}s")
+        start = time.time()
     cnt = rewriter.rewrite_mux_to_quasi_qmux(netlist)
-    print(f"Rewrote {cnt} muxes to quasi qmuxes")
+    if timeit:
+        print(f"Rewrote {cnt} muxes to quasi qmuxes in {time.time() - start:.3f}s")
+        start = time.time()
+    else:
+        print(f"Rewrote {cnt} muxes to quasi qmuxes")
     while rewriter.reduce_quasi_qmux_once(netlist) > 0:
         pass
-    print("Reduced all quasi qmuxes")
+    if timeit:
+        print(f"Reduced all quasi qmuxes in {time.time() - start:.3f}s")
+        start = time.time()
+    else:
+        print("Reduced all quasi qmuxes")
     mems = rewriter.find_quasi_memory(netlist)
-    time_elapsed = time.time() - start
+    if timeit:
+        print(f"Found {len(mems)} quasi memory(ies) in {time.time() - start:.3f}s")
     print(f"Found {len(mems)} quasi memory(ies):")
+    mux_cnt = 0
     for qss, ra, rd in mems:
+        mux_cnt += len(qss) * (len(qss[0]) - 1)
         print(f"\tMemory: width = {len(qss)}, height = {len(qss[0]) - 1}")  # exclude the last const 0 dff
         ra = [e for e in ra if e is not None]
         if verbose:
@@ -174,7 +181,8 @@ def test_extract_quasi_memory(netlist: db.NetlistDatabase, verbose: bool = False
         else:
             print(f"\t\tRead address: {ra[:5]}" + ("..." if len(ra) > 5 else ""))
             print(f"\t\tRead data: {rd[:5]}" + ("..." if len(rd) > 5 else ""))
-    print(f"Time elapsed: {time_elapsed:.2f}s")
+    print(f"Total muxes replaced by read ports: {mux_cnt}")
+    print(f"Time elapsed: {time.time() - all_start:.3f}s")
 
 
 if __name__ == "__main__":
