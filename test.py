@@ -12,30 +12,46 @@ def test_mem(schema_path: str, db_path: str, design_path: str, top_module: str =
         design = json.load(f)
     phase_time = total_time = time.time()
     db.build_from_json(design["modules"][top_module])
-    print(f"Database built in {time.time() - phase_time:.2f} seconds")
+    print(f"Database built in {time.time() - phase_time:.2f} seconds.")
     phase_time = time.time()
     rewrites.rewrite_comm(db, ["$_AND_", "$_OR_"])  # scheduled once
-    print(f"Netlist saturated in {time.time() - phase_time:.2f} seconds")
+    print(f"Netlist saturated in {time.time() - phase_time:.2f} seconds.")
     phase_time = time.time()
     rewrites.rewrite_mux_to_muxtree(db) # scheduled once
     while rewrites.reduce_muxtree(db) > 0:  # repeat until no modifications
         pass
-    print(f"Muxtrees reduced in {time.time() - phase_time:.2f} seconds")
+    print(f"Muxtrees reduced in {time.time() - phase_time:.2f} seconds.")
     phase_time = time.time()
+    # rewrites.rewrite_not_to_decoder(db)  # scheduled once
     rewrites.rewrite_and_to_decoder(db)  # scheduled once
     rewrites.rewrite_and_not_to_decoder(db)  # scheduled once
     rewrites.rewrite_and_not_not_to_decoder(db)  # scheduled once
     while rewrites.reduce_decoder(db) > 0:  # repeat until no modifications
         pass
-    print(f"Decoders reduced in {time.time() - phase_time:.2f} seconds")
+    print(f"Decoders reduced in {time.time() - phase_time:.2f} seconds.")
+    # with open("out.json", "w") as f:
+    #     json.dump(db.dump_tables(), f, indent=2)
     phase_time = time.time()
-    extracts.extract_single_bit_mem(db)
-    print(f"Memories extracted in {time.time() - phase_time:.2f} seconds")
-    print(f"Total time: {time.time() - total_time:.2f} seconds")
+    mems = extracts.extract_mem(db)
+    print(f"{len(mems)} memor{'y' if len(mems) == 1 else 'ies'} extracted in {time.time() - phase_time:.2f} seconds.")
+    for i, (w, h, nr, nw) in enumerate(mems):
+        print(f"\tMemory {i}: width={w}, height={h}, #read-ports={nr}, #write-ports={nw}")
+    print(f"Total time: {time.time() - total_time:.2f} seconds.")
 
 if __name__ == "__main__":
     SCHEMA_PATH = "emap/schema.sql"
     DB_PATH = ":memory:"
-    test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h16_1r1w.json")
-    test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h16_1r2w.json")
-    test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h16_1r3w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h16_1r1w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h16_1r2w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h16_1r3w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h256_1r1w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h256_1r2w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w1h256_1r3w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w4h16_1r1w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w4h16_1r2w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w4h16_1r3w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w4h256_1r1w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w4h256_1r2w.json")
+    # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w4h256_1r3w.json")
+
+    test_mem(SCHEMA_PATH, DB_PATH, "nerv.json", "nerv")

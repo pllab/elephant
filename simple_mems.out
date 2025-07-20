@@ -1,0 +1,97 @@
+emap is loaded successfully.
+Testing design `simple_mems/mem_w1h16_1r1w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Muxtrees reduced in 0.00 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.00 seconds.
+        Memory 0: width=1, height=16, #read-ports=1, #write-ports=1
+Total time: 0.02 seconds.
+Testing design `simple_mems/mem_w1h16_1r2w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Muxtrees reduced in 0.00 seconds.
+Decoders reduced in 0.03 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=1, height=16, #read-ports=1, #write-ports=2
+Total time: 0.04 seconds.
+Testing design `simple_mems/mem_w1h16_1r3w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Muxtrees reduced in 0.00 seconds.
+Decoders reduced in 0.05 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=1, height=16, #read-ports=1, #write-ports=3
+Total time: 0.06 seconds.
+Testing design `simple_mems/mem_w1h256_1r1w.json` with top module `top`...
+Database built in 0.01 seconds.
+Netlist saturated in 0.00 seconds.
+Muxtrees reduced in 0.07 seconds.
+Decoders reduced in 2.82 seconds.
+1 memory extracted in 0.42 seconds.
+        Memory 0: width=1, height=256, #read-ports=1, #write-ports=1
+Total time: 3.33 seconds.
+Testing design `simple_mems/mem_w1h256_1r2w.json` with top module `top`...
+Database built in 0.02 seconds.
+Netlist saturated in 0.01 seconds.
+Muxtrees reduced in 0.12 seconds.
+Decoders reduced in 7.42 seconds.
+1 memory extracted in 1.38 seconds.
+        Memory 0: width=1, height=256, #read-ports=1, #write-ports=2
+Total time: 8.94 seconds.
+Testing design `simple_mems/mem_w1h256_1r3w.json` with top module `top`...
+Database built in 0.02 seconds.
+Netlist saturated in 0.01 seconds.
+Muxtrees reduced in 0.17 seconds.
+Decoders reduced in 14.72 seconds.
+1 memory extracted in 2.86 seconds.
+        Memory 0: width=1, height=256, #read-ports=1, #write-ports=3
+Total time: 17.78 seconds.
+Testing design `simple_mems/mem_w4h16_1r1w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Muxtrees reduced in 0.00 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=4, height=16, #read-ports=1, #write-ports=1
+Total time: 0.03 seconds.
+Testing design `simple_mems/mem_w4h16_1r2w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Muxtrees reduced in 0.01 seconds.
+Decoders reduced in 0.03 seconds.
+1 memory extracted in 0.03 seconds.
+        Memory 0: width=4, height=16, #read-ports=1, #write-ports=2
+Total time: 0.06 seconds.
+Testing design `simple_mems/mem_w4h16_1r3w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Muxtrees reduced in 0.01 seconds.
+Decoders reduced in 0.05 seconds.
+1 memory extracted in 0.05 seconds.
+        Memory 0: width=4, height=16, #read-ports=1, #write-ports=3
+Total time: 0.11 seconds.
+Testing design `simple_mems/mem_w4h256_1r1w.json` with top module `top`...
+Database built in 0.02 seconds.
+Netlist saturated in 0.00 seconds.
+Muxtrees reduced in 0.85 seconds.
+Decoders reduced in 2.65 seconds.
+1 memory extracted in 2.31 seconds.
+        Memory 0: width=4, height=256, #read-ports=1, #write-ports=1
+Total time: 5.83 seconds.
+Testing design `simple_mems/mem_w4h256_1r2w.json` with top module `top`...
+Database built in 0.03 seconds.
+Netlist saturated in 0.01 seconds.
+Muxtrees reduced in 1.59 seconds.
+Decoders reduced in 7.44 seconds.
+1 memory extracted in 5.90 seconds.
+        Memory 0: width=4, height=256, #read-ports=1, #write-ports=2
+Total time: 14.98 seconds.
+Testing design `simple_mems/mem_w4h256_1r3w.json` with top module `top`...
+Database built in 0.05 seconds.
+Netlist saturated in 0.01 seconds.
+Muxtrees reduced in 2.56 seconds.
+Decoders reduced in 14.78 seconds.
+1 memory extracted in 11.97 seconds.
+        Memory 0: width=4, height=256, #read-ports=1, #write-ports=3
+Total time: 29.37 seconds.

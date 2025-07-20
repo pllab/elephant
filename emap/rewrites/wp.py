@@ -50,3 +50,13 @@ def reduce_decoder(db: NetlistDB) -> int:
     cur.executemany("INSERT OR IGNORE INTO decoders (addr_const, y) VALUES (?, ?)", newrows)
     db.commit()
     return cur.rowcount
+
+def rewrite_not_to_decoder(db: NetlistDB):
+    """
+    Rewrite NOT gates to decoders.
+    """
+    cur = db.execute("SELECT a, y FROM ay_cells WHERE type = '$_NOT_'")
+    newrows = [(json.dumps({a: 0}, sort_keys=True), y) for a, y in cur]
+    cur.executemany("INSERT OR IGNORE INTO decoders (addr_const, y) VALUES (?, ?)", newrows)
+    db.commit()
+    return cur.rowcount

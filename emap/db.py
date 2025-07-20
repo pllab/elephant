@@ -73,8 +73,8 @@ class NetlistDB(sqlite3.Connection):
             elif cell_type in {"$_DFFE_PP_", "$_DFF_P_"}:   # dffes
                 e = int(conns["E"][0]) if "E" in conns else 1
                 self.execute("INSERT INTO dffes (d, e, clk, q) VALUES (?, ?, ?, ?)", (int(conns["D"][0]), e, int(conns["C"][0]), int(conns["Q"][0])))
-            else:
-                raise ValueError(f"Unsupported cell type: {cell_type}")
+            # else:
+            #     raise ValueError(f"Unsupported cell type: {cell_type}")
 
         self.commit()
 
