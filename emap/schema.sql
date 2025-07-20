@@ -35,3 +35,15 @@ CREATE TABLE IF NOT EXISTS dffes (
     q INTEGER NOT NULL,
     PRIMARY KEY (d, e, clk)
 );
+
+CREATE TABLE IF NOT EXISTS muxtrees (
+    raw_data JSON,
+    addr JSON,
+    read_data INTEGER NOT NULL,
+    PRIMARY KEY (raw_data, addr)
+);
+
+CREATE TABLE IF NOT EXISTS decoders (
+    addr_const JSON PRIMARY KEY,
+    y INTEGER NOT NULL
+);
