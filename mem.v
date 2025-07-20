@@ -1,9 +1,8 @@
-module mem_1r1w #(
+module top #(
     parameter ADDR_WIDTH = 8,
-    parameter DATA_WIDTH = 1
+    parameter DATA_WIDTH = 4
 )(
     input  wire                  clk,
-    input  wire                  rst,
 
     // Write port
     input  wire                  we,

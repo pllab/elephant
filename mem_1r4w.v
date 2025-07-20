@@ -1,4 +1,4 @@
-module mem_2w1r #(
+module top #(
     parameter ADDR_WIDTH = 4,
     parameter DATA_WIDTH = 1
 )(
@@ -14,6 +14,16 @@ module mem_2w1r #(
     input  wire [ADDR_WIDTH-1:0] waddr1,
     input  wire [DATA_WIDTH-1:0] wdata1,
 
+    // Write port 2
+    input  wire                  we2,
+    input  wire [ADDR_WIDTH-1:0] waddr2,
+    input  wire [DATA_WIDTH-1:0] wdata2,
+
+    // Write port 3
+    input  wire                  we3,
+    input  wire [ADDR_WIDTH-1:0] waddr3,
+    input  wire [DATA_WIDTH-1:0] wdata3,
+
     // Read port
     input  wire [ADDR_WIDTH-1:0] raddr,
     output reg  [DATA_WIDTH-1:0] rdata
@@ -26,6 +36,10 @@ module mem_2w1r #(
             mem[waddr0] <= wdata0;
         if (we1)
             mem[waddr1] <= wdata1;
+        if (we2)
+            mem[waddr2] <= wdata2;
+        if (we3)
+            mem[waddr3] <= wdata3;
         rdata <= mem[raddr];
     end
 

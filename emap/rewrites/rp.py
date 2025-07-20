@@ -9,7 +9,7 @@ def rewrite_mux_to_muxtree(db: NetlistDB) -> int:
     cur = db.execute("""
         SELECT mux.a, mux.b, mux.s, mux.y
         FROM absy_cells as mux JOIN dffes as dff1 JOIN dffes as dff2
-            ON mux.a = dff1.q AND mux.b = dff2.q
+            ON mux.a = dff1.q AND mux.b = dff2.q AND dff1.clk = dff2.clk
         WHERE mux.type = '$_MUX_'
     """)
     newrows = [(str([a, b]), str([s]), y) for a, b, s, y in cur]

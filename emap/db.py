@@ -1,5 +1,6 @@
 import sqlite3
 from typing import Iterable
+import json
 
 
 class NetlistDB(sqlite3.Connection):
@@ -22,6 +23,13 @@ class NetlistDB(sqlite3.Connection):
     def to_int(x: str | int) -> int:
         return x if isinstance(x, int) else int(x, base=2)
 
+    @staticmethod
+    def len(s: str) -> int:
+        try:
+            return len(json.loads(s))
+        except json.JSONDecodeError:
+            return 0
+
     def tables_startswith(self, prefix: str) -> list[str]:
         cur = self.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?;", (prefix + "%",))
         return [row[0] for row in cur.fetchall()]
@@ -40,6 +48,7 @@ class NetlistDB(sqlite3.Connection):
         super().__init__(db_file)
         with open(schema_file, "r") as f:
             self.executescript(f.read())
+        self.create_function("len", 1, self.len)
         self.cnt = cnt
 
     def build_from_json(self, mod: dict):
