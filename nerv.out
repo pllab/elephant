@@ -1,9 +1,0 @@
-emap is loaded successfully.
-Testing design `nerv.json` with top module `nerv`...
-Database built in 0.12 seconds.
-Netlist saturated in 0.03 seconds.
-Muxtrees reduced in 2.89 seconds.
-Decoders reduced in 6.54 seconds.
-1 memory extracted in 4.69 seconds.
-        Memory 0: width=32, height=32, #read-ports=2, #write-ports=1
-Total time: 14.28 seconds.

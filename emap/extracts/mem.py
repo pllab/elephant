@@ -109,7 +109,7 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
             mems.append({
                 "read_ports": read_ports,
                 "read_addrs": frozenset(tuple(addr) for addr, _ in read_ports), # redundant but easier to be compared
-                "write_ports": frozenset(write_ports + [(we_candidate, frozenset()) for we_candidate in we_candidates if we_candidate not in we_to_was]),
+                "write_ports": frozenset(write_ports),
                 "raw_data": raw_data
             })
 
