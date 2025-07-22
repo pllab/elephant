@@ -17,10 +17,11 @@ def test_mem(schema_path: str, db_path: str, design_path: str, top_module: str =
     rewrites.rewrite_comm(db, ["$_AND_", "$_OR_"])  # scheduled once
     print(f"Netlist saturated in {time.time() - phase_time:.2f} seconds.")
     phase_time = time.time()
-    rewrites.rewrite_mux_to_muxtree(db) # scheduled once
-    while rewrites.reduce_muxtree(db) > 0:  # repeat until no modifications
-        pass
-    print(f"Muxtrees reduced in {time.time() - phase_time:.2f} seconds.")
+    rewrites.rewrite_mux_to_muxtree(db, subsume=True) # scheduled once
+    total_cnt = 0
+    while cnt := rewrites.reduce_muxtree(db, subsume=True):  # repeat until no modifications
+        total_cnt += cnt
+    print(f"{total_cnt} muxtree(s) reduced in {time.time() - phase_time:.2f} seconds.")
     phase_time = time.time()
     rewrites.rewrite_and_to_decoder(db)  # scheduled once
     rewrites.rewrite_and_not_to_decoder(db)  # scheduled once
@@ -54,4 +55,7 @@ if __name__ == "__main__":
     # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w32h32_2r1w.json")
 
     # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/nerv.json", "nerv")
-    test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/bsg_fifo_w64h256.json", "top")
+    # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/bsg_fifo_64_256.json", "top")
+    test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/bsg_fifo_512_512.json", "top")
+    # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/bsg_cache_ways_p_2_data_width_p_32.json", "top")
+    # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/sparc_ffu.pickle.json", "sparc_ffu_nospu_wrap")

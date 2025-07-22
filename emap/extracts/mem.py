@@ -7,6 +7,25 @@ LOG2 = {2**i: i for i in range(32)}  # log2 lookup table for powers of 2
 
 def is_sublist(s, t):
     # TODO: apply rolling hash for better performance
+    # BASE, MOD = 257, 10000007
+    # if len(s) > len(t):
+    #     return False
+    # h_s = 0
+    # for x in s:
+    #     h_s = (h_s * BASE + hash(x)) % MOD
+    # power = pow(BASE, len(s), MOD)
+    # h_window = 0
+    # for i in range(len(t)):
+    #     h_window = (h_window * BASE + hash(t[i])) % MOD
+    #     if i >= len(s):
+    #         h_window = (h_window - hash(t[i - len(s)]) * power) % MOD
+    #         h_window = (h_window + MOD) % MOD  # handle negative
+    #     if i >= len(s) - 1:
+    #         if h_window == h_s and t[i - len(s) + 1 : i + 1] == s:
+    #             return True
+    # return False
+    if len(s) != len(t):
+        return False
     for i in range(len(t) - len(s) + 1):
         if t[i:i + len(s)] == s:
             return True
@@ -68,6 +87,7 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
 
     # for each group, check their write ports
     mems = []
+    orandtrees_cache: dict[int, list[tuple[int, int]] | None] = {}
     for raw_data, read_ports in raw_data_groups.items():
         dffes = [find_dffe_by_q(db, q) for q in raw_data]
         addr_width = LOG2[len(raw_data)]
@@ -77,34 +97,38 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
             orandtrees = []
             for dffe in dffes:
                 assert dffe is not None
-                d, e, _, _ = dffe
-                orandtrees.append(find_orandtree_by_y(db, e))
+                _, e, _, _ = dffe
+                if e not in orandtrees_cache:
+                    orandtrees_cache[e] = find_orandtree_by_y(db, e)
+                orandtrees.append(orandtrees_cache[e])
             if None in orandtrees or any(len(orandtrees[0]) != len(orandtree) for orandtree in orandtrees): # length mismatch
                 continue
-            we_candidates = {w for w, cnt in collections.Counter(w for orandtree in orandtrees for ands in orandtree for w in ands).items() if cnt >= len(raw_data)}
-            we_to_was: dict[int, list] = {}
-            # TODO: check whether decoders cover all cases
-            # for now we only check the total number of them so the order of wa is not guaranteed
-            for orandtree in orandtrees:
-                for a, b in orandtree:
-                    if a in we_candidates:
-                        if b in we_candidates:
-                            raise ValueError(f"Both {a} and {b} are write enable wires, which is not allowed.")
-                        a, b = b, a
-                    # now b is the write enable wire
-                    decoders = find_decoder_by_y(db, a, addr_width)
-                    if b not in we_to_was:
-                        we_to_was[b] = []
-                    we_to_was[b].extend(frozenset(int(k) for k in decoder) for decoder in decoders)
+            # we_candidates = {w for w, cnt in collections.Counter(w for orandtree in orandtrees for ands in orandtree for w in ands).items() if cnt >= len(raw_data)}
+            # we_to_was: dict[int, list] = {}
+            # # TODO: check whether decoders cover all cases
+            # # for now we only check the total number of them so the order of wa is not guaranteed
+            # for orandtree in orandtrees:
+            #     for a, b in orandtree:
+            #         if a in we_candidates:
+            #             if b in we_candidates:
+            #                 raise ValueError(f"Both {a} and {b} are write enable wires, which is not allowed.")
+            #             a, b = b, a
+            #         # now b is the write enable wire
+            #         decoders = find_decoder_by_y(db, a, addr_width)
+            #         if b not in we_to_was:
+            #             we_to_was[b] = []
+            #         we_to_was[b].extend(frozenset(int(k) for k in decoder) for decoder in decoders)
 
-            write_ports = []    # (we, wa)
-            for we, was in we_to_was.items():
-                for wa, cnt in collections.Counter(was).items():
-                    for _ in range(cnt // len(raw_data)):
-                        write_ports.append((we, wa))
-                if not was:
-                    write_ports.append((we, frozenset()))
-            # TODO: construct wd for each write port
+            # write_ports = []    # (we, wa)
+            # for we, was in we_to_was.items():
+            #     for wa, cnt in collections.Counter(was).items():
+            #         for _ in range(cnt // len(raw_data)):
+            #             write_ports.append((we, wa))
+            #     if not was:
+            #         write_ports.append((we, frozenset()))
+            # # TODO: construct wd for each write port
+
+            write_ports = {(w, frozenset()) for w, cnt in collections.Counter(w for orandtree in orandtrees for ands in orandtree for w in ands).items() if cnt >= len(raw_data)}
 
             mems.append({
                 "read_ports": read_ports,

@@ -50,4 +50,3 @@ def reduce_decoder(db: NetlistDB) -> int:
     cur.executemany("INSERT OR IGNORE INTO decoders (addr_const, y) VALUES (?, ?)", newrows)
     db.commit()
     return cur.rowcount
-

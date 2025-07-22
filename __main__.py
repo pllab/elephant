@@ -17,7 +17,8 @@ NETLIST_FILES = [
     ("bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1",
      "bsg_mem_1rw_sync_synth_width_p8_els_p256_latch_last_read_p1"),
     ("bsg_cache_ways_p_2_data_width_p_32", "top"),
-    ("bp_fe_pc_gen", "bp_fe_pc_gen")
+    ("bp_fe_pc_gen", "bp_fe_pc_gen"),
+    ("../../practical_designs/sparc_ffu.pickle", "sparc_ffu_nospu_wrap")
 ]
 
 # pyrtl.set_debug_mode(True)
@@ -209,7 +210,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.name is None and args.top is None:
-        name, top = NETLIST_FILES[1]
+        name, top = NETLIST_FILES[-1]
         name = NETLIST_PATH + name + ".json"
     elif args.name is None:
         print("Provide JSON filename with --input")
