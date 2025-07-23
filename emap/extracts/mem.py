@@ -1,4 +1,5 @@
 from ..db import NetlistDB
+from ..cpp.build import emapcc
 import json
 import collections
 
@@ -101,11 +102,29 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
 
     # for each group, check their write ports
     mems = []
-    orandtrees_cache: dict[int, list[tuple[int, int]] | None] = {}
     cur.execute("SELECT a, b, y FROM aby_cells WHERE type = '$_OR_'")
-    ors_cache: dict[int, tuple[int, int] | None] = {y: (a, b) for a, b, y in cur.fetchall()}
+    ors_cache: dict[int, tuple[int, int] | None] = {y: (a, b) for a, b, y in cur}
     cur.execute("SELECT a, b, y FROM aby_cells WHERE type = '$_AND_'")
-    ands_cache: dict[int, tuple[int, int] | None] = {y: (a, b) for a, b, y in cur.fetchall()}
+    ands_cache: dict[int, tuple[int, int] | None] = {y: (a, b) for a, b, y in cur}
+    cur.execute("SELECT d, e, q FROM dffes")
+    dffes_cache: dict[int, tuple[int, int] | None] = {q: (d, e) for d, e, q in cur}
+
+    raw_data_groups_list = [(raw_data, read_ports) for raw_data, read_ports in raw_data_groups.items()]
+    raw_dffe_groups = [list(raw_data) for raw_data in raw_data_groups]
+    # print(ors_cache, ands_cache, dffes_cache, raw_dffe_groups)
+    write_ports: list[list[tuple[int, list[int], list[int]]]] = emapcc.find_write_ports_by_dffes(ors_cache, ands_cache, dffes_cache, raw_dffe_groups) # dffe.q -> (we, wa, wd)
+    # print(write_ports)
+    for (raw_data, read_ports), write_ports_for_group in zip(raw_data_groups_list, write_ports):
+        if write_ports_for_group:
+            mems.append({
+                "raw_data": raw_data,
+                "read_ports": read_ports,
+                "read_addrs": frozenset(tuple(addr) for addr, _ in read_ports),  # redundant but easier to be compared
+                "write_ports": frozenset((we, frozenset(wa)) for we, wa, _ in write_ports_for_group)  # (we, wa)
+            })
+
+    """
+    orandtrees_cache: dict[int, list[tuple[int, int]] | None] = {}
     for raw_data, read_ports in raw_data_groups.items():
         dffes = [find_dffe_by_q(db, q) for q in raw_data]
         addr_width = LOG2[len(raw_data)]
@@ -156,6 +175,7 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
                 "write_ports": frozenset(write_ports),
                 "raw_data": raw_data
             })
+    """
 
     return mems
 

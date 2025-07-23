@@ -1,6 +1,7 @@
+#include "find_write_ports_by_dffes.h"
 #include <pybind11/pybind11.h>
 
 
 PYBIND11_MODULE(emapcc, mod) {
-    mod.def("group_wires", &emapcc::group_wires, "A C++ implementation of group_wires()");
+    mod.def("find_write_ports_by_dffes", &emapcc::find_write_ports_by_dffes, "A C++ implementation of find_write_ports_by_dffes()");
 }

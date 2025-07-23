@@ -1,0 +1,179 @@
+emap is loaded successfully.
+Testing design `simple_mems/mem_w1h16_1r1w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Found 8 muxes with DFFs as inputs.
+7 muxtree(s) reduced in 0.00 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.00 seconds.
+        Memory 0: width=1, height=16, #read-ports=1, #write-ports=1
+Total time: 0.01 seconds.
+
+Testing design `simple_mems/mem_w1h16_1r2w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Found 8 muxes with DFFs as inputs.
+7 muxtree(s) reduced in 0.00 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.00 seconds.
+        Memory 0: width=1, height=16, #read-ports=1, #write-ports=2
+Total time: 0.02 seconds.
+
+Testing design `simple_mems/mem_w1h16_1r3w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Found 8 muxes with DFFs as inputs.
+7 muxtree(s) reduced in 0.00 seconds.
+Decoders reduced in 0.02 seconds.
+1 memory extracted in 0.00 seconds.
+        Memory 0: width=1, height=16, #read-ports=1, #write-ports=3
+Total time: 0.03 seconds.
+
+Testing design `simple_mems/mem_w1h256_1r1w.json` with top module `top`...
+Database built in 0.01 seconds.
+Netlist saturated in 0.00 seconds.
+Found 128 muxes with DFFs as inputs.
+127 muxtree(s) reduced in 0.01 seconds.
+Decoders reduced in 0.10 seconds.
+1 memory extracted in 0.00 seconds.
+        Memory 0: width=1, height=256, #read-ports=1, #write-ports=1
+Total time: 0.12 seconds.
+
+Testing design `simple_mems/mem_w1h256_1r2w.json` with top module `top`...
+Database built in 0.02 seconds.
+Netlist saturated in 0.02 seconds.
+Found 128 muxes with DFFs as inputs.
+127 muxtree(s) reduced in 0.02 seconds.
+Decoders reduced in 0.54 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=1, height=256, #read-ports=1, #write-ports=2
+Total time: 0.60 seconds.
+
+Testing design `simple_mems/mem_w1h256_1r3w.json` with top module `top`...
+Database built in 0.03 seconds.
+Netlist saturated in 0.01 seconds.
+Found 128 muxes with DFFs as inputs.
+127 muxtree(s) reduced in 0.01 seconds.
+Decoders reduced in 0.62 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=1, height=256, #read-ports=1, #write-ports=3
+Total time: 0.69 seconds.
+
+Testing design `simple_mems/mem_w4h16_1r1w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Found 32 muxes with DFFs as inputs.
+28 muxtree(s) reduced in 0.00 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.00 seconds.
+        Memory 0: width=4, height=16, #read-ports=1, #write-ports=1
+Total time: 0.01 seconds.
+
+Testing design `simple_mems/mem_w4h16_1r2w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Found 32 muxes with DFFs as inputs.
+28 muxtree(s) reduced in 0.00 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.00 seconds.
+        Memory 0: width=4, height=16, #read-ports=1, #write-ports=2
+Total time: 0.02 seconds.
+
+Testing design `simple_mems/mem_w4h16_1r3w.json` with top module `top`...
+Database built in 0.00 seconds.
+Netlist saturated in 0.00 seconds.
+Found 32 muxes with DFFs as inputs.
+28 muxtree(s) reduced in 0.00 seconds.
+Decoders reduced in 0.02 seconds.
+1 memory extracted in 0.00 seconds.
+        Memory 0: width=4, height=16, #read-ports=1, #write-ports=3
+Total time: 0.03 seconds.
+
+Testing design `simple_mems/mem_w4h256_1r1w.json` with top module `top`...
+Database built in 0.02 seconds.
+Netlist saturated in 0.00 seconds.
+Found 512 muxes with DFFs as inputs.
+508 muxtree(s) reduced in 0.03 seconds.
+Decoders reduced in 0.10 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=4, height=256, #read-ports=1, #write-ports=1
+Total time: 0.16 seconds.
+
+Testing design `simple_mems/mem_w4h256_1r2w.json` with top module `top`...
+Database built in 0.04 seconds.
+Netlist saturated in 0.01 seconds.
+Found 512 muxes with DFFs as inputs.
+508 muxtree(s) reduced in 0.04 seconds.
+Decoders reduced in 0.31 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=4, height=256, #read-ports=1, #write-ports=2
+Total time: 0.40 seconds.
+
+Testing design `simple_mems/mem_w4h256_1r3w.json` with top module `top`...
+Database built in 0.06 seconds.
+Netlist saturated in 0.01 seconds.
+Found 512 muxes with DFFs as inputs.
+508 muxtree(s) reduced in 0.04 seconds.
+Decoders reduced in 0.62 seconds.
+1 memory extracted in 0.02 seconds.
+        Memory 0: width=4, height=256, #read-ports=1, #write-ports=3
+Total time: 0.75 seconds.
+
+Testing design `simple_mems/mem_w32h32_2r1w.json` with top module `top`...
+Database built in 0.03 seconds.
+Netlist saturated in 0.00 seconds.
+Found 1024 muxes with DFFs as inputs.
+960 muxtree(s) reduced in 0.05 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=32, height=32, #read-ports=2, #write-ports=1
+Total time: 0.10 seconds.
+
+Testing design `practical_designs/nerv.json` with top module `nerv`...
+Database built in 0.07 seconds.
+Netlist saturated in 0.02 seconds.
+Found 1024 muxes with DFFs as inputs.
+960 muxtree(s) reduced in 0.06 seconds.
+Decoders reduced in 0.85 seconds.
+1 memory extracted in 0.03 seconds.
+        Memory 0: width=32, height=32, #read-ports=2, #write-ports=1
+Total time: 1.02 seconds.
+
+Testing design `practical_designs/bsg_fifo_64_256.json` with top module `top`...
+Database built in 0.31 seconds.
+Netlist saturated in 0.00 seconds.
+Found 8192 muxes with DFFs as inputs.
+8128 muxtree(s) reduced in 0.44 seconds.
+Decoders reduced in 0.14 seconds.
+1 memory extracted in 0.07 seconds.
+        Memory 0: width=64, height=256, #read-ports=1, #write-ports=1
+Total time: 0.97 seconds.
+
+Testing design `practical_designs/bsg_fifo_512_512.json` with top module `top`...
+Database built in 5.21 seconds.
+Netlist saturated in 0.01 seconds.
+Found 131072 muxes with DFFs as inputs.
+130560 muxtree(s) reduced in 7.99 seconds.
+Decoders reduced in 0.76 seconds.
+1 memory extracted in 1.91 seconds.
+        Memory 0: width=512, height=512, #read-ports=1, #write-ports=1
+Total time: 15.88 seconds.
+
+Testing design `practical_designs/bsg_cache_ways_p_2_data_width_p_32.json` with top module `top`...
+Database built in 0.70 seconds.
+Netlist saturated in 0.01 seconds.
+Found 96 muxes with DFFs as inputs.
+0 muxtree(s) reduced in 0.06 seconds.
+Decoders reduced in 0.84 seconds.
+0 memories extracted in 0.08 seconds.
+Total time: 1.70 seconds.
+
+Testing design `practical_designs/sparc_ffu.pickle.json` with top module `sparc_ffu_nospu_wrap`...
+Database built in 0.24 seconds.
+Netlist saturated in 0.02 seconds.
+Found 5148 muxes with DFFs as inputs.
+4914 muxtree(s) reduced in 0.27 seconds.
+Decoders reduced in 2.29 seconds.
+1 memory extracted in 0.11 seconds.
+        Memory 0: width=78, height=128, #read-ports=1, #write-ports=1
+Total time: 2.94 seconds.
