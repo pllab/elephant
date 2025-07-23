@@ -38,21 +38,35 @@ def find_dffe_by_q(db: NetlistDB, q: int) -> tuple[int, int, int, int] | None:
     cur = db.execute("SELECT * FROM dffes WHERE q = ?", (q,))
     return cur.fetchone()
 
-def find_orandtree_by_y(db: NetlistDB, y: int) -> list[tuple[int, int]] | None:
-    cur = db.execute("SELECT a, b FROM aby_cells WHERE y = ? AND type = '$_OR_' LIMIT 1", (y,))
-    row = cur.fetchone()
+def find_orandtree_by_y(db: NetlistDB, y: int, ors_cache: dict[int, tuple[int, int] | None], ands_cache: dict[int, tuple[int, int] | None]) -> list[tuple[int, int]] | None:
+    row = ors_cache[y] if y in ors_cache else None
     if row is None:
-        # check whether it is an and gate
-        cur = db.execute("SELECT a, b FROM aby_cells WHERE y = ? AND type = '$_AND_' LIMIT 1", (y,))
-        row = cur.fetchone()
+        # check whether it is an AND gate
+        row = ands_cache[y] if y in ands_cache else None
         return None if row is None else [row]
-    # if it is an or gate, we need to find all its children
+    # if it is an OR gate, we need to find all its children
     a, b = row
-    child_a = find_orandtree_by_y(db, a)
+    child_a = find_orandtree_by_y(db, a, ors_cache, ands_cache)
     if child_a is None:
         return None
-    child_b = find_orandtree_by_y(db, b)
+    child_b = find_orandtree_by_y(db, b, ors_cache, ands_cache)
     return None if child_b is None else child_a + child_b
+
+# def find_orandtree_by_y(db: NetlistDB, y: int, ors_cache: dict[int, tuple[int, int] | None], ands_cache: dict[int, tuple[int, int] | None]) -> list[tuple[int, int]] | None:
+#     cur = db.execute("SELECT a, b FROM aby_cells WHERE y = ? AND type = '$_OR_' LIMIT 1", (y,))
+#     row = cur.fetchone()
+#     if row is None:
+#         # check whether it is an AND gate
+#         cur = db.execute("SELECT a, b FROM aby_cells WHERE y = ? AND type = '$_AND_' LIMIT 1", (y,))
+#         row = cur.fetchone()
+#         return None if row is None else [row]
+#     # if it is an OR gate, we need to find all its children
+#     a, b = row
+#     child_a = find_orandtree_by_y(db, a, ors_cache, ands_cache)
+#     if child_a is None:
+#         return None
+#     child_b = find_orandtree_by_y(db, b, ors_cache, ands_cache)
+#     return None if child_b is None else child_a + child_b
 
 def find_decoder_by_y(db: NetlistDB, y: int, length: int) -> list[dict[str, int]]:
     cur = db.execute("SELECT addr_const FROM decoders WHERE y = ? AND len(addr_const) = ?", (y, length))
@@ -88,6 +102,10 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
     # for each group, check their write ports
     mems = []
     orandtrees_cache: dict[int, list[tuple[int, int]] | None] = {}
+    cur.execute("SELECT a, b, y FROM aby_cells WHERE type = '$_OR_'")
+    ors_cache: dict[int, tuple[int, int] | None] = {y: (a, b) for a, b, y in cur.fetchall()}
+    cur.execute("SELECT a, b, y FROM aby_cells WHERE type = '$_AND_'")
+    ands_cache: dict[int, tuple[int, int] | None] = {y: (a, b) for a, b, y in cur.fetchall()}
     for raw_data, read_ports in raw_data_groups.items():
         dffes = [find_dffe_by_q(db, q) for q in raw_data]
         addr_width = LOG2[len(raw_data)]
@@ -99,8 +117,10 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
                 assert dffe is not None
                 _, e, _, _ = dffe
                 if e not in orandtrees_cache:
-                    orandtrees_cache[e] = find_orandtree_by_y(db, e)
+                    orandtrees_cache[e] = find_orandtree_by_y(db, e, ors_cache, ands_cache)
                 orandtrees.append(orandtrees_cache[e])
+            print(f"{raw_data} has orandtrees:\n")
+            print(f"\t{orandtrees}")
             if None in orandtrees or any(len(orandtrees[0]) != len(orandtree) for orandtree in orandtrees): # length mismatch
                 continue
             # we_candidates = {w for w, cnt in collections.Counter(w for orandtree in orandtrees for ands in orandtree for w in ands).items() if cnt >= len(raw_data)}

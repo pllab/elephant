@@ -54,8 +54,8 @@ if __name__ == "__main__":
     # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w4h256_1r3w.json")
     # test_mem(SCHEMA_PATH, DB_PATH, "simple_mems/mem_w32h32_2r1w.json")
 
-    # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/nerv.json", "nerv")
+    test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/nerv.json", "nerv")
     # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/bsg_fifo_64_256.json", "top")
-    test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/bsg_fifo_512_512.json", "top")
+    # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/bsg_fifo_512_512.json", "top")
     # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/bsg_cache_ways_p_2_data_width_p_32.json", "top")
     # test_mem(SCHEMA_PATH, DB_PATH, "practical_designs/sparc_ffu.pickle.json", "sparc_ffu_nospu_wrap")
