@@ -41,10 +41,10 @@ Total time: 0.12 seconds.
 
 Testing design `simple_mems/mem_w1h256_1r2w.json` with top module `top`...
 Database built in 0.02 seconds.
-Netlist saturated in 0.02 seconds.
+Netlist saturated in 0.01 seconds.
 Found 128 muxes with DFFs as inputs.
-127 muxtree(s) reduced in 0.02 seconds.
-Decoders reduced in 0.54 seconds.
+127 muxtree(s) reduced in 0.01 seconds.
+Decoders reduced in 0.56 seconds.
 1 memory extracted in 0.01 seconds.
         Memory 0: width=1, height=256, #read-ports=1, #write-ports=2
 Total time: 0.60 seconds.
@@ -57,7 +57,7 @@ Found 128 muxes with DFFs as inputs.
 Decoders reduced in 0.62 seconds.
 1 memory extracted in 0.01 seconds.
         Memory 0: width=1, height=256, #read-ports=1, #write-ports=3
-Total time: 0.69 seconds.
+Total time: 0.68 seconds.
 
 Testing design `simple_mems/mem_w4h16_1r1w.json` with top module `top`...
 Database built in 0.00 seconds.
@@ -104,7 +104,7 @@ Database built in 0.04 seconds.
 Netlist saturated in 0.01 seconds.
 Found 512 muxes with DFFs as inputs.
 508 muxtree(s) reduced in 0.04 seconds.
-Decoders reduced in 0.31 seconds.
+Decoders reduced in 0.30 seconds.
 1 memory extracted in 0.01 seconds.
         Memory 0: width=4, height=256, #read-ports=1, #write-ports=2
 Total time: 0.40 seconds.
@@ -129,17 +129,17 @@ Decoders reduced in 0.01 seconds.
         Memory 0: width=32, height=32, #read-ports=2, #write-ports=1
 Total time: 0.10 seconds.
 
-Testing design `practical_designs/nerv.json` with top module `nerv`...
+Testing design `practical_designs/noabc/nerv.json` with top module `nerv`...
 Database built in 0.07 seconds.
 Netlist saturated in 0.02 seconds.
 Found 1024 muxes with DFFs as inputs.
 960 muxtree(s) reduced in 0.06 seconds.
-Decoders reduced in 0.85 seconds.
-1 memory extracted in 0.03 seconds.
+Decoders reduced in 0.84 seconds.
+1 memory extracted in 0.02 seconds.
         Memory 0: width=32, height=32, #read-ports=2, #write-ports=1
-Total time: 1.02 seconds.
+Total time: 1.00 seconds.
 
-Testing design `practical_designs/bsg_fifo_64_256.json` with top module `top`...
+Testing design `practical_designs/noabc/bsg_fifo_64_256.json` with top module `top`...
 Database built in 0.31 seconds.
 Netlist saturated in 0.00 seconds.
 Found 8192 muxes with DFFs as inputs.
@@ -149,31 +149,168 @@ Decoders reduced in 0.14 seconds.
         Memory 0: width=64, height=256, #read-ports=1, #write-ports=1
 Total time: 0.97 seconds.
 
-Testing design `practical_designs/bsg_fifo_512_512.json` with top module `top`...
-Database built in 5.21 seconds.
+Testing design `practical_designs/noabc/bsg_fifo_512_512.json` with top module `top`...
+Database built in 5.17 seconds.
 Netlist saturated in 0.01 seconds.
 Found 131072 muxes with DFFs as inputs.
-130560 muxtree(s) reduced in 7.99 seconds.
-Decoders reduced in 0.76 seconds.
-1 memory extracted in 1.91 seconds.
+130560 muxtree(s) reduced in 8.09 seconds.
+Decoders reduced in 0.75 seconds.
+1 memory extracted in 2.19 seconds.
         Memory 0: width=512, height=512, #read-ports=1, #write-ports=1
-Total time: 15.88 seconds.
+Total time: 16.22 seconds.
 
-Testing design `practical_designs/bsg_cache_ways_p_2_data_width_p_32.json` with top module `top`...
-Database built in 0.70 seconds.
+Testing design `practical_designs/noabc/bsg_cache_ways_p_2_data_width_p_32.json` with top module `top`...
+Database built in 0.42 seconds.
 Netlist saturated in 0.01 seconds.
 Found 96 muxes with DFFs as inputs.
 0 muxtree(s) reduced in 0.06 seconds.
-Decoders reduced in 0.84 seconds.
-0 memories extracted in 0.08 seconds.
-Total time: 1.70 seconds.
+Decoders reduced in 0.82 seconds.
+6 memories extracted in 0.08 seconds.
+        Memory 0: width=32, height=2, #read-ports=1, #write-ports=0
+        Memory 1: width=8, height=2, #read-ports=1, #write-ports=0
+        Memory 2: width=8, height=2, #read-ports=1, #write-ports=0
+        Memory 3: width=8, height=2, #read-ports=1, #write-ports=0
+        Memory 4: width=8, height=2, #read-ports=1, #write-ports=0
+        Memory 5: width=32, height=2, #read-ports=1, #write-ports=0
+Total time: 1.39 seconds.
 
-Testing design `practical_designs/sparc_ffu.pickle.json` with top module `sparc_ffu_nospu_wrap`...
+Testing design `practical_designs/noabc/sparc_ffu.json` with top module `sparc_ffu_nospu_wrap`...
 Database built in 0.24 seconds.
 Netlist saturated in 0.02 seconds.
 Found 5148 muxes with DFFs as inputs.
-4914 muxtree(s) reduced in 0.27 seconds.
-Decoders reduced in 2.29 seconds.
-1 memory extracted in 0.11 seconds.
-        Memory 0: width=78, height=128, #read-ports=1, #write-ports=1
-Total time: 2.94 seconds.
+4914 muxtree(s) reduced in 0.28 seconds.
+Decoders reduced in 2.26 seconds.
+6 memories extracted in 0.11 seconds.
+        Memory 0: width=2, height=2, #read-ports=1, #write-ports=0
+        Memory 1: width=6, height=2, #read-ports=1, #write-ports=0
+        Memory 2: width=6, height=2, #read-ports=1, #write-ports=0
+        Memory 3: width=64, height=2, #read-ports=1, #write-ports=0
+        Memory 4: width=78, height=2, #read-ports=1, #write-ports=0
+        Memory 5: width=78, height=128, #read-ports=1, #write-ports=1
+Total time: 2.91 seconds.
+
+Testing design `practical_designs/noabc/bp_be_fp_regfile.json` with top module `bp_be_fp_regfile`...
+Database built in 0.08 seconds.
+Netlist saturated in 0.00 seconds.
+Found 3168 muxes with DFFs as inputs.
+2970 muxtree(s) reduced in 0.15 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.05 seconds.
+        Memory 0: width=66, height=32, #read-ports=3, #write-ports=1
+Total time: 0.31 seconds.
+
+Testing design `practical_designs/noabc/l2.json` with top module `l2`...
+Database built in 14.97 seconds.
+Netlist saturated in 0.17 seconds.
+Found 358872 muxes with DFFs as inputs.
+357910 muxtree(s) reduced in 23.79 seconds.
+Decoders reduced in 106.49 seconds.
+14 memories extracted in 4.11 seconds.
+        Memory 0: width=144, height=2, #read-ports=1, #write-ports=0
+        Memory 1: width=64, height=2, #read-ports=1, #write-ports=0
+        Memory 2: width=66, height=2, #read-ports=1, #write-ports=0
+        Memory 3: width=66, height=2, #read-ports=1, #write-ports=0
+        Memory 4: width=104, height=2, #read-ports=1, #write-ports=0
+        Memory 5: width=4, height=4, #read-ports=1, #write-ports=0
+        Memory 6: width=4, height=4, #read-ports=1, #write-ports=0
+        Memory 7: width=1, height=8, #read-ports=1, #write-ports=0
+        Memory 8: width=64, height=16, #read-ports=1, #write-ports=0
+        Memory 9: width=1, height=16, #read-ports=1, #write-ports=0
+        Memory 10: width=66, height=256, #read-ports=2, #write-ports=1
+        Memory 11: width=104, height=256, #read-ports=1, #write-ports=1
+        Memory 12: width=64, height=1024, #read-ports=1, #write-ports=1
+        Memory 13: width=144, height=4096, #read-ports=1, #write-ports=1
+Total time: 149.53 seconds.
+
+Testing design `practical_designs/abc/nerv.json` with top module `nerv`...
+Database built in 0.05 seconds.
+Netlist saturated in 0.01 seconds.
+Found 1024 muxes with DFFs as inputs.
+960 muxtree(s) reduced in 0.05 seconds.
+Decoders reduced in 0.04 seconds.
+1 memory extracted in 0.01 seconds.
+        Memory 0: width=32, height=32, #read-ports=2, #write-ports=0
+Total time: 0.17 seconds.
+
+Testing design `practical_designs/abc/bsg_fifo_64_256.json` with top module `top`...
+Database built in 0.31 seconds.
+Netlist saturated in 0.00 seconds.
+Found 8192 muxes with DFFs as inputs.
+8128 muxtree(s) reduced in 0.45 seconds.
+Decoders reduced in 0.00 seconds.
+1 memory extracted in 0.07 seconds.
+        Memory 0: width=64, height=256, #read-ports=1, #write-ports=0
+Total time: 0.83 seconds.
+
+Testing design `practical_designs/abc/bsg_fifo_512_512.json` with top module `top`...
+Database built in 5.26 seconds.
+Netlist saturated in 0.01 seconds.
+Found 131072 muxes with DFFs as inputs.
+130560 muxtree(s) reduced in 9.41 seconds.
+Decoders reduced in 0.00 seconds.
+1 memory extracted in 1.93 seconds.
+        Memory 0: width=512, height=512, #read-ports=1, #write-ports=0
+Total time: 16.61 seconds.
+
+Testing design `practical_designs/abc/bsg_cache_ways_p_2_data_width_p_32.json` with top module `top`...
+Database built in 0.45 seconds.
+Netlist saturated in 0.04 seconds.
+Found 96 muxes with DFFs as inputs.
+0 muxtree(s) reduced in 0.07 seconds.
+Decoders reduced in 0.05 seconds.
+6 memories extracted in 0.10 seconds.
+        Memory 0: width=32, height=2, #read-ports=1, #write-ports=0
+        Memory 1: width=32, height=2, #read-ports=1, #write-ports=0
+        Memory 2: width=8, height=2, #read-ports=1, #write-ports=0
+        Memory 3: width=8, height=2, #read-ports=1, #write-ports=0
+        Memory 4: width=8, height=2, #read-ports=1, #write-ports=0
+        Memory 5: width=8, height=2, #read-ports=1, #write-ports=0
+Total time: 0.71 seconds.
+
+Testing design `practical_designs/abc/sparc_ffu.json` with top module `sparc_ffu_nospu_wrap`...
+Database built in 0.23 seconds.
+Netlist saturated in 0.01 seconds.
+Found 5157 muxes with DFFs as inputs.
+4914 muxtree(s) reduced in 0.28 seconds.
+Decoders reduced in 0.01 seconds.
+9 memories extracted in 0.10 seconds.
+        Memory 0: width=3, height=2, #read-ports=1, #write-ports=0
+        Memory 1: width=6, height=2, #read-ports=1, #write-ports=0
+        Memory 2: width=4, height=2, #read-ports=1, #write-ports=0
+        Memory 3: width=4, height=2, #read-ports=1, #write-ports=0
+        Memory 4: width=4, height=2, #read-ports=1, #write-ports=0
+        Memory 5: width=2, height=2, #read-ports=1, #write-ports=0
+        Memory 6: width=64, height=2, #read-ports=1, #write-ports=0
+        Memory 7: width=78, height=2, #read-ports=1, #write-ports=0
+        Memory 8: width=78, height=128, #read-ports=1, #write-ports=0
+Total time: 0.63 seconds.
+
+Testing design `practical_designs/abc/bp_be_fp_regfile.json` with top module `bp_be_fp_regfile`...
+Database built in 0.09 seconds.
+Netlist saturated in 0.00 seconds.
+Found 3168 muxes with DFFs as inputs.
+2970 muxtree(s) reduced in 0.15 seconds.
+Decoders reduced in 0.00 seconds.
+1 memory extracted in 0.05 seconds.
+        Memory 0: width=66, height=32, #read-ports=3, #write-ports=0
+Total time: 0.29 seconds.
+
+Testing design `practical_designs/abc/l2.json` with top module `l2`...
+Database built in 14.72 seconds.
+Netlist saturated in 0.08 seconds.
+Found 358848 muxes with DFFs as inputs.
+357895 muxtree(s) reduced in 26.03 seconds.
+Decoders reduced in 2.17 seconds.
+11 memories extracted in 4.22 seconds.
+        Memory 0: width=144, height=2, #read-ports=1, #write-ports=0
+        Memory 1: width=64, height=2, #read-ports=1, #write-ports=0
+        Memory 2: width=66, height=2, #read-ports=1, #write-ports=0
+        Memory 3: width=66, height=2, #read-ports=1, #write-ports=0
+        Memory 4: width=104, height=2, #read-ports=1, #write-ports=0
+        Memory 5: width=1, height=8, #read-ports=1, #write-ports=0
+        Memory 6: width=64, height=16, #read-ports=1, #write-ports=0
+        Memory 7: width=66, height=256, #read-ports=2, #write-ports=0
+        Memory 8: width=104, height=256, #read-ports=1, #write-ports=0
+        Memory 9: width=64, height=1024, #read-ports=1, #write-ports=0
+        Memory 10: width=144, height=4096, #read-ports=1, #write-ports=0
+Total time: 47.23 seconds.
