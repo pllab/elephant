@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS ay_cells (
     type VARCHAR(16),
     a INTEGER,
     y INTEGER NOT NULL,
-    PRIMARY KEY (type, a)
+    PRIMARY KEY (type, a, y)
 );
 
 CREATE TABLE IF NOT EXISTS aby_cells (
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS aby_cells (
     a INTEGER,
     b INTEGER,
     y INTEGER NOT NULL,
-    PRIMARY KEY (type, a, b)
+    PRIMARY KEY (type, a, b, y)
 );
 
 CREATE TABLE IF NOT EXISTS absy_cells (
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS absy_cells (
     b INTEGER,
     s INTEGER,
     y INTEGER NOT NULL,
-    PRIMARY KEY (type, a, b, s)
+    PRIMARY KEY (type, a, b, s, y)
 );
 
 CREATE TABLE IF NOT EXISTS dffes (
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS dffes (
     e INTEGER,
     clk INTEGER,
     q INTEGER NOT NULL,
-    PRIMARY KEY (d, e, clk)
+    PRIMARY KEY (d, e, clk, q)
 );
 
 CREATE TABLE IF NOT EXISTS muxtrees (

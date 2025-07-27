@@ -115,13 +115,19 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
     write_ports: list[list[tuple[int, list[int], list[int]]]] = emapcc.find_write_ports_by_dffes(ors_cache, ands_cache, dffes_cache, raw_dffe_groups) # dffe.q -> (we, wa, wd)
     # print(write_ports)
     for (raw_data, read_ports), write_ports_for_group in zip(raw_data_groups_list, write_ports):
-        if write_ports_for_group:
-            mems.append({
-                "raw_data": raw_data,
-                "read_ports": read_ports,
-                "read_addrs": frozenset(tuple(addr) for addr, _ in read_ports),  # redundant but easier to be compared
-                "write_ports": frozenset((we, frozenset(wa)) for we, wa, _ in write_ports_for_group)  # (we, wa)
-            })
+        # if write_ports_for_group:
+        #     mems.append({
+        #         "raw_data": raw_data,
+        #         "read_ports": read_ports,
+        #         "read_addrs": frozenset(tuple(addr) for addr, _ in read_ports),  # redundant but easier to be compared
+        #         "write_ports": frozenset((we, frozenset(wa)) for we, wa, _ in write_ports_for_group)  # (we, wa)
+        #     })
+        mems.append({
+            "raw_data": raw_data,
+            "read_ports": read_ports,
+            "read_addrs": frozenset(tuple(addr) for addr, _ in read_ports),  # redundant but easier to be compared
+            "write_ports": frozenset((we, frozenset(wa)) for we, wa, _ in write_ports_for_group)  # (we, wa)
+        })
 
     """
     orandtrees_cache: dict[int, list[tuple[int, int]] | None] = {}
