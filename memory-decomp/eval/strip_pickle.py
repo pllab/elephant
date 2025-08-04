@@ -6,8 +6,6 @@ def repl(match):
     definition = match.group(0)
     module = match.group(1)
 
-    print(f"MATCH FOUND: {module}")
-
     return module
 
 def process_file(subdesign, input_file, output_file):
