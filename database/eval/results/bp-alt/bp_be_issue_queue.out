@@ -1,0 +1,23 @@
+Rewrote 1016 muxes to qmuxes
+Rewrote 0 inverted muxes to qmuxes
+Reduced all qmuxes
+Found 2 memory(ies):
+	Memory 0: width = 174, height = 8
+		Read port 0:
+			Read address: (9432, 9433, 9434, 419, 420)...
+			Read data: (1193, 1191, 1189)
+			Registers: [(839, 4437, 4089, 3741, 3393), (841, 4439, 4091, 3743, 3395), (843, 4441, 4093, 3745, 3397), (845, 4443, 4095, 3747, 3399), (847, 4445, 4097, 3749, 3401)]...
+		Write port:
+			Write enable: 100000000
+			Write address: (100000007, 100000007, 100000007)
+			Write data: (838, 840, 842, 844, 846)...
+	Memory 1: width = 80, height = 8
+		Read port 0:
+			Read address: (8102, 8103, 8104, 8105, 8106)...
+			Read data: (7615, 7859, 7318)
+			Registers: [(5528, 1869, 1709, 1549, 1389), (5530, 1871, 1711, 1551, 1391), (5532, 1873, 1713, 1553, 1393), (5534, 1875, 1715, 1555, 1395), (5536, 1877, 1717, 1557, 1397)]...
+		Write port:
+			Write enable: 100000008
+			Write address: (100000007, 100000007, 100000007)
+			Write data: (5527, 5529, 5531, 5533, 5535)...
+Time elapsed: 0.06s
