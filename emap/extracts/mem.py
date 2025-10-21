@@ -95,6 +95,8 @@ def extract_single_bit_mem(db: NetlistDB) -> list:
     # group muxtrees by their raw_data
     raw_data_groups: dict[tuple, list] = {}
     for raw_data, addr, read_data in large_muxtrees:
+        if LOG2[len(raw_data)] < 2:  # skip small memories
+            continue
         if raw_data not in raw_data_groups:
             raw_data_groups[raw_data] = []
         raw_data_groups[raw_data].append((addr, read_data))

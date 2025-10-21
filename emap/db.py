@@ -69,7 +69,9 @@ class NetlistDB(sqlite3.Connection):
         # build cells
         for cell in cells.values():
             cell_type, conns = cell["type"], cell["connections"]
-            if cell_type in {"$_AND_", "$_OR_"}:            # aby_cells
+            #if cell_type in {"$_AND_", "$_OR_", "$_ANDNOT_", "$_NAND_", "$_NOR_", "$_ORNOT_", "$_XNOR_", "$_XOR_"}:            # aby_cells
+            #if cell_type in {"$_AND_", "$_OR_",}:            # aby_cells
+            if cell_type in {"$_AND_", "$_OR_", "$_ANDNOT_"}:            # aby_cells
                 self.execute("INSERT INTO aby_cells (type, a, b, y) VALUES (?, ?, ?, ?)", (cell_type, wire_to_int(conns["A"][0]), wire_to_int(conns["B"][0]), wire_to_int(conns["Y"][0])))
             elif cell_type == "$_NOT_":                     # ay_cells
                 self.execute("INSERT INTO ay_cells (type, a, y) VALUES (?, ?, ?)", (cell_type, wire_to_int(conns["A"][0]), wire_to_int(conns["Y"][0])))
