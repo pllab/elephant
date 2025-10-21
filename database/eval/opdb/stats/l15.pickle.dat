@@ -3,68 +3,130 @@
 
 === l15_wrap ===
 
-   Number of wires:             136676
-   Number of wire bits:         262805
-   Number of public wires:        2880
-   Number of public wire bits:  128617
+   Number of wires:             142720
+   Number of wire bits:         269567
+   Number of public wires:        2887
+   Number of public wire bits:  129004
+   Number of ports:                 72
+   Number of port bits:            939
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:             242489
-     $_ANDNOT_                   12024
-     $_AND_                       1158
-     $_DFFE_PP_                  99887
-     $_DFF_P_                     1221
-     $_MUX_                     110472
-     $_NAND_                       613
-     $_NOR_                        709
-     $_NOT_                       1679
-     $_ORNOT_                     1088
-     $_OR_                        7533
-     $_SDFFCE_PN0P_               3238
-     $_SDFFCE_PP0P_                 27
-     $_SDFFCE_PP1P_                  2
-     $_SDFFE_PN0N_                 601
-     $_SDFFE_PN0P_                1352
-     $_SDFFE_PN1P_                   2
-     $_SDFFE_PP1P_                   1
-     $_SDFF_PN0_                   189
-     $_SDFF_PP0_                    31
-     $_XNOR_                        30
-     $_XOR_                        632
+   Number of cells:             248946
+     $_ANDNOT_                    9665
+     $_AND_                       1300
+     $_DFFE_PP_                 106551
+     $_MUX_                     120024
+     $_NAND_                       475
+     $_NOR_                        424
+     $_NOT_                       1516
+     $_ORNOT_                      824
+     $_OR_                        7424
+     $_XNOR_                        36
+     $_XOR_                        638
+     $scopeinfo                     69
 
 
-5. Printing statistics.
+4. Printing statistics.
 
 === l15_wrap ===
 
-   Number of wires:             136676
-   Number of wire bits:         262805
-   Number of public wires:        2880
-   Number of public wire bits:  128617
+   Number of wires:             133156
+   Number of wire bits:         260003
+   Number of public wires:        2887
+   Number of public wire bits:  129004
+   Number of ports:                 72
+   Number of port bits:            939
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:             242489
-     $_ANDNOT_                   12024
-     $_AND_                       1158
-     $_DFFE_PP_                  99887
-     $_DFF_P_                     1221
-     $_MUX_                     110472
-     $_NAND_                       613
-     $_NOR_                        709
-     $_NOT_                       1679
-     $_ORNOT_                     1088
-     $_OR_                        7533
-     $_SDFFCE_PN0P_               3238
+   Number of cells:             239382
+     $_ANDNOT_                    9667
+     $_AND_                       1299
+     $_DFFE_PP_                  97752
+     $_DFF_P_                     1201
+     $_MUX_                     110468
+     $_NAND_                       477
+     $_NOR_                        424
+     $_NOT_                       1524
+     $_ORNOT_                      811
+     $_OR_                        7418
+     $_SDFFCE_PN0P_               5369
      $_SDFFCE_PP0P_                 27
      $_SDFFCE_PP1P_                  2
-     $_SDFFE_PN0N_                 601
-     $_SDFFE_PN0P_                1352
+     $_SDFFE_PN0N_                 594
+     $_SDFFE_PN0P_                1359
      $_SDFFE_PN1P_                   2
      $_SDFFE_PP1P_                   1
-     $_SDFF_PN0_                   189
+     $_SDFF_PN0_                   213
      $_SDFF_PP0_                    31
-     $_XNOR_                        30
-     $_XOR_                        632
+     $_XNOR_                        36
+     $_XOR_                        638
+     $scopeinfo                     69
+
+
+4. Printing statistics.
+
+=== l15_wrap ===
+
+   Number of wires:              15585
+   Number of wire bits:         286913
+   Number of public wires:        3520
+   Number of public wire bits:  133239
+   Number of ports:                 72
+   Number of port bits:            939
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             240081
+     $_AND_                      11059
+     $_DFFE_PP_                  97752
+     $_DFF_P_                     1201
+     $_MUX_                     112990
+     $_NOT_                       1079
+     $_OR_                        7655
+     $_SDFFCE_PN0P_               5392
+     $_SDFFCE_PN1P_                  2
+     $_SDFFCE_PP0P_                  4
+     $_SDFFE_PN0N_                 594
+     $_SDFFE_PN0P_                1359
+     $_SDFFE_PN1P_                   2
+     $_SDFFE_PP1P_                   1
+     $_SDFF_PN0_                   214
+     $_SDFF_PP0_                    30
+     $_XOR_                        678
+     $scopeinfo                     69
+
+
+4. Printing statistics.
+
+=== l15_wrap ===
+
+   Number of wires:              15609
+   Number of wire bits:         286982
+   Number of public wires:        3524
+   Number of public wire bits:  133303
+   Number of ports:                 72
+   Number of port bits:            939
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             240102
+     $_AND_                      11056
+     $_DFFE_PP_                  97752
+     $_DFF_P_                     1201
+     $_MUX_                     112993
+     $_NOT_                       1087
+     $_OR_                        7668
+     $_SDFFCE_PN0P_               5392
+     $_SDFFCE_PN1P_                  2
+     $_SDFFCE_PP0P_                  4
+     $_SDFFE_PN0N_                 594
+     $_SDFFE_PN0P_                1359
+     $_SDFFE_PN1P_                   2
+     $_SDFFE_PP1P_                   1
+     $_SDFF_PN0_                   214
+     $_SDFF_PP0_                    30
+     $_XOR_                        678
+     $scopeinfo                     69
 

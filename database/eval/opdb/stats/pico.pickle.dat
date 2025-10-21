@@ -3,36 +3,141 @@
 
 === picorv32 ===
 
-   Number of wires:               8098
-   Number of wire bits:          11700
-   Number of public wires:         240
-   Number of public wire bits:    3393
+   Number of wires:               8857
+   Number of wire bits:          12462
+   Number of public wires:         239
+   Number of public wire bits:    3384
+   Number of ports:                 30
+   Number of port bits:            418
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:              10452
-     $_ANDNOT_                    1488
-     $_AND_                        497
-     $_DFFE_PN_                      4
-     $_DFFE_PP_                   1499
-     $_DFF_P_                      129
-     $_MUX_                       3150
-     $_NAND_                       318
-     $_NOR_                        307
-     $_NOT_                        219
-     $_ORNOT_                      214
-     $_OR_                        1363
-     $_SDFFCE_PN0P_                 34
-     $_SDFFCE_PP0P_                184
+   Number of cells:              11215
+     $_ANDNOT_                    1559
+     $_AND_                        507
+     $_DFFE_PP_                   2107
+     $_MUX_                       3797
+     $_NAND_                       317
+     $_NOR_                        367
+     $_NOT_                        188
+     $_ORNOT_                      236
+     $_OR_                        1341
+     $_XNOR_                       159
+     $_XOR_                        634
+     $print                          1
+     $scopeinfo                      2
+
+
+4. Printing statistics.
+
+=== picorv32 ===
+
+   Number of wires:               8216
+   Number of wire bits:          11821
+   Number of public wires:         239
+   Number of public wire bits:    3384
+   Number of ports:                 30
+   Number of port bits:            418
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10574
+     $_ANDNOT_                    1559
+     $_AND_                        507
+     $_DFFE_PP_                   1503
+     $_DFF_P_                      132
+     $_MUX_                       3156
+     $_NAND_                       317
+     $_NOR_                        367
+     $_NOT_                        188
+     $_ORNOT_                      236
+     $_OR_                        1341
+     $_SDFFCE_PN0P_                 36
+     $_SDFFCE_PP0P_                182
      $_SDFFCE_PP1P_                  5
-     $_SDFFE_PN0P_                 158
+     $_SDFFE_PN0N_                   2
+     $_SDFFE_PN0P_                 156
      $_SDFFE_PN1N_                   4
      $_SDFFE_PN1P_                   2
      $_SDFFE_PP0P_                   2
      $_SDFFE_PP1P_                   3
      $_SDFF_PN0_                    75
      $_SDFF_PN1_                     1
-     $_SDFF_PP0_                     3
-     $_XNOR_                       150
-     $_XOR_                        643
+     $_SDFF_PP0_                     4
+     $_XNOR_                       159
+     $_XOR_                        634
+     $print                          1
+     $scopeinfo                      2
+
+
+4. Printing statistics.
+
+=== picorv32 ===
+
+   Number of wires:               2770
+   Number of wire bits:          13533
+   Number of public wires:         260
+   Number of public wire bits:    3654
+   Number of ports:                 30
+   Number of port bits:            418
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10990
+     $_AND_                       2464
+     $_DFFE_PN_                      4
+     $_DFFE_PP_                   1499
+     $_DFF_P_                      132
+     $_MUX_                       3370
+     $_NOT_                        459
+     $_OR_                        1729
+     $_SDFFCE_PN0P_                 34
+     $_SDFFCE_PP0P_                184
+     $_SDFFCE_PP1P_                  5
+     $_SDFFE_PN0P_                 158
+     $_SDFFE_PN1P_                   6
+     $_SDFFE_PP0P_                   2
+     $_SDFFE_PP1P_                   3
+     $_SDFF_PN0_                    75
+     $_SDFF_PN1_                     1
+     $_SDFF_PP0_                     4
+     $_XOR_                        858
+     $print                          1
+     $scopeinfo                      2
+
+
+4. Printing statistics.
+
+=== picorv32 ===
+
+   Number of wires:               2770
+   Number of wire bits:          13533
+   Number of public wires:         260
+   Number of public wire bits:    3654
+   Number of ports:                 30
+   Number of port bits:            418
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10990
+     $_AND_                       2464
+     $_DFFE_PN_                      4
+     $_DFFE_PP_                   1499
+     $_DFF_P_                      132
+     $_MUX_                       3370
+     $_NOT_                        459
+     $_OR_                        1729
+     $_SDFFCE_PN0P_                 34
+     $_SDFFCE_PP0P_                184
+     $_SDFFCE_PP1P_                  5
+     $_SDFFE_PN0P_                 158
+     $_SDFFE_PN1P_                   6
+     $_SDFFE_PP0P_                   2
+     $_SDFFE_PP1P_                   3
+     $_SDFF_PN0_                    75
+     $_SDFF_PN1_                     1
+     $_SDFF_PP0_                     4
+     $_XOR_                        858
+     $print                          1
+     $scopeinfo                      2
 
