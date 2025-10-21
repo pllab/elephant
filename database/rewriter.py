@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from .db import NetlistDatabase
 
 
-MAGIC_NUMBER = 10000000
+MAGIC_NUMBER = 100000000
 def id_generator():
     i = MAGIC_NUMBER
     while True:
