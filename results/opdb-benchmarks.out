@@ -1,0 +1,44 @@
+emap is loaded successfully.
+Testing design `database/eval/opdb/json/l15.pickle.json` with top module `l15_wrap`...
+Database built in 0.49 seconds.
+Netlist saturated in 0.04 seconds.
+Found 50180 muxes with DFFs as inputs.
+49125 muxtree(s) reduced in 0.90 seconds.
+Decoders reduced in 12.26 seconds.
+4 memories extracted in 0.36 seconds.
+	Memory 0: width=8, height=128, #read-ports=2, #write-ports=1
+	Memory 1: width=116, height=128, #read-ports=1, #write-ports=1
+	Memory 2: width=30, height=512, #read-ports=1, #write-ports=1
+	Memory 3: width=128, height=512, #read-ports=1, #write-ports=1
+Total time: 14.04 seconds.
+
+Testing design `database/eval/opdb/json/sparc_core.pickle.json` with top module `sparc_core`...
+Database built in 1.58 seconds.
+Netlist saturated in 0.19 seconds.
+Found 131250 muxes with DFFs as inputs.
+127426 muxtree(s) reduced in 2.73 seconds.
+Decoders reduced in 277.16 seconds.
+8 memories extracted in 2.94 seconds.
+	Memory 0: width=3, height=4, #read-ports=1, #write-ports=1
+	Memory 1: width=151, height=32, #read-ports=1, #write-ports=1
+	Memory 2: width=576, height=128, #read-ports=1, #write-ports=1
+	Memory 3: width=120, height=128, #read-ports=1, #write-ports=1
+	Memory 4: width=78, height=128, #read-ports=1, #write-ports=1
+	Memory 5: width=116, height=128, #read-ports=1, #write-ports=1
+	Memory 6: width=272, height=256, #read-ports=1, #write-ports=1
+	Memory 7: width=272, height=256, #read-ports=1, #write-ports=1
+Total time: 284.60 seconds.
+
+Testing design `database/eval/opdb/json/l2.pickle.json` with top module `l2`...
+Database built in 3.40 seconds.
+Netlist saturated in 0.06 seconds.
+Found 358872 muxes with DFFs as inputs.
+357910 muxtree(s) reduced in 7.34 seconds.
+Decoders reduced in 31.09 seconds.
+4 memories extracted in 1.31 seconds.
+	Memory 0: width=66, height=256, #read-ports=2, #write-ports=1
+	Memory 1: width=104, height=256, #read-ports=1, #write-ports=1
+	Memory 2: width=64, height=1024, #read-ports=1, #write-ports=1
+	Memory 3: width=144, height=4096, #read-ports=1, #write-ports=1
+Total time: 43.20 seconds.
+

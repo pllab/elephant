@@ -1,0 +1,77 @@
+emap is loaded successfully.
+Testing design `database/eval/microbenchmarks/json-abc-share/bsg_cache_ways_p_2_data_width_p_32.json` with top module `top`...
+Database built in 0.09 seconds.
+Rewrite 3154 ANDNOTs
+Netlist saturated in 0.02 seconds.
+Found 102 muxes with DFFs as inputs.
+0 muxtree(s) reduced in 0.03 seconds.
+Decoders reduced in 0.78 seconds.
+0 memories extracted in 0.03 seconds.
+Total time: 0.94 seconds.
+
+Testing design `database/eval/microbenchmarks/json-abc-share/bsg_fifo_64_256.json` with top module `top`...
+Database built in 0.07 seconds.
+Rewrite 266 ANDNOTs
+Netlist saturated in 0.00 seconds.
+Found 8192 muxes with DFFs as inputs.
+8128 muxtree(s) reduced in 0.17 seconds.
+Decoders reduced in 0.02 seconds.
+1 memory extracted in 0.02 seconds.
+	Memory 0: width=64, height=256, #read-ports=1, #write-ports=1
+Total time: 0.28 seconds.
+
+Testing design `database/eval/microbenchmarks/json-abc-share/bsg_fifo_512_512.json` with top module `top`...
+Database built in 1.21 seconds.
+Rewrite 910 ANDNOTs
+Netlist saturated in 0.01 seconds.
+Found 131072 muxes with DFFs as inputs.
+130560 muxtree(s) reduced in 2.88 seconds.
+Decoders reduced in 0.09 seconds.
+1 memory extracted in 0.64 seconds.
+	Memory 0: width=512, height=512, #read-ports=1, #write-ports=1
+Total time: 4.81 seconds.
+
+Testing design `database/eval/microbenchmarks/json-abc-share/nerv.json` with top module `nerv`...
+Database built in 0.02 seconds.
+Rewrite 1894 ANDNOTs
+Netlist saturated in 0.01 seconds.
+Found 1024 muxes with DFFs as inputs.
+960 muxtree(s) reduced in 0.02 seconds.
+Decoders reduced in 0.77 seconds.
+1 memory extracted in 0.01 seconds.
+	Memory 0: width=32, height=32, #read-ports=2, #write-ports=1
+Total time: 0.82 seconds.
+
+Testing design `database/eval/microbenchmarks/json-abc-share/bp_be_fp_regfile.pickle.json` with top module `bp_be_fp_regfile`...
+Database built in 0.02 seconds.
+Rewrite 38 ANDNOTs
+Netlist saturated in 0.00 seconds.
+Found 3168 muxes with DFFs as inputs.
+2970 muxtree(s) reduced in 0.05 seconds.
+Decoders reduced in 0.00 seconds.
+1 memory extracted in 0.02 seconds.
+	Memory 0: width=66, height=32, #read-ports=3, #write-ports=1
+Total time: 0.09 seconds.
+
+Testing design `database/eval/opdb/json-abc-share/pico.pickle.json` with top module `picorv32`...
+Database built in 0.02 seconds.
+Rewrite 1559 ANDNOTs
+Netlist saturated in 0.01 seconds.
+Found 1215 muxes with DFFs as inputs.
+960 muxtree(s) reduced in 0.02 seconds.
+Decoders reduced in 0.57 seconds.
+1 memory extracted in 0.02 seconds.
+	Memory 0: width=32, height=32, #read-ports=2, #write-ports=1
+Total time: 0.65 seconds.
+
+Testing design `database/eval/opdb/json-abc-share/sparc_ffu.pickle.json` with top module `sparc_ffu_nospu_wrap`...
+Database built in 0.05 seconds.
+Rewrite 1956 ANDNOTs
+Netlist saturated in 0.01 seconds.
+Found 5145 muxes with DFFs as inputs.
+4914 muxtree(s) reduced in 0.09 seconds.
+Decoders reduced in 0.68 seconds.
+1 memory extracted in 0.03 seconds.
+	Memory 0: width=78, height=128, #read-ports=1, #write-ports=1
+Total time: 0.87 seconds.
+
