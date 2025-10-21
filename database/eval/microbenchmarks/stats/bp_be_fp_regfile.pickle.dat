@@ -1,0 +1,124 @@
+
+5. Printing statistics.
+
+=== bp_be_fp_regfile ===
+
+   Number of wires:               6909
+   Number of wire bits:          10750
+   Number of public wires:         429
+   Number of public wire bits:    4258
+   Number of ports:                  8
+   Number of port bits:            290
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               9304
+     $_ANDNOT_                      38
+     $_AND_                          3
+     $_DFFE_PP_                   2412
+     $_MUX_                       6732
+     $_NAND_                         2
+     $_NOT_                          1
+     $_ORNOT_                        4
+     $_OR_                          69
+     $_XOR_                         30
+     $scopeinfo                     13
+
+
+5. Printing statistics.
+
+=== bp_be_fp_regfile ===
+
+   Number of wires:               6909
+   Number of wire bits:          10750
+   Number of public wires:         429
+   Number of public wire bits:    4258
+   Number of ports:                  8
+   Number of port bits:            290
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               9304
+     $_ANDNOT_                      38
+     $_AND_                          3
+     $_DFFE_PP_                   2412
+     $_MUX_                       6732
+     $_NAND_                         2
+     $_NOT_                          1
+     $_ORNOT_                        4
+     $_OR_                          69
+     $_XOR_                         30
+     $scopeinfo                     13
+
+
+5. Printing statistics.
+
+=== bp_be_fp_regfile ===
+
+   Number of wires:               6909
+   Number of wire bits:          10750
+   Number of public wires:         429
+   Number of public wire bits:    4258
+   Number of ports:                  8
+   Number of port bits:            290
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               9304
+     $_ANDNOT_                      38
+     $_AND_                          3
+     $_DFFE_PP_                   2412
+     $_MUX_                       6732
+     $_NAND_                         2
+     $_NOT_                          1
+     $_ORNOT_                        4
+     $_OR_                          69
+     $_XOR_                         30
+     $scopeinfo                     13
+
+
+5. Printing statistics.
+
+=== bp_be_fp_regfile ===
+
+   Number of wires:                656
+   Number of wire bits:          11159
+   Number of public wires:         454
+   Number of public wire bits:    5065
+   Number of ports:                  8
+   Number of port bits:            290
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               9314
+     $_AND_                         89
+     $_DFFE_PP_                   2412
+     $_MUX_                       6732
+     $_NOT_                         11
+     $_OR_                          27
+     $_XOR_                         30
+     $scopeinfo                     13
+
+
+5. Printing statistics.
+
+=== bp_be_fp_regfile ===
+
+   Number of wires:                656
+   Number of wire bits:          11159
+   Number of public wires:         454
+   Number of public wire bits:    5065
+   Number of ports:                  8
+   Number of port bits:            290
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               9314
+     $_AND_                         89
+     $_DFFE_PP_                   2412
+     $_MUX_                       6732
+     $_NOT_                         11
+     $_OR_                          27
+     $_XOR_                         30
+     $scopeinfo                     13
+
