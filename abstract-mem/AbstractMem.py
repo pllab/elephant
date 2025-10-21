@@ -1,56 +1,90 @@
+from __future__ import annotations
+
 import pyrtl
-from collections import namedtuple
 from math import log2
 from dataclasses import dataclass
 from typing import Any
 from functools import reduce
 
 class AbstractMem:
-
     @dataclass
     class Mask:
-        mask: pyrtl.WireVector = None
+        mask: pyrtl.WireVector | None = None
         granularity: int = 1
         offset: bool = False
         sign: Any = None
 
     @dataclass
     class ReadPort:
-        addr: pyrtl.WireVector = None
-        data: pyrtl.WireVector = None
+        addr: pyrtl.WireVector | None = None
+        data: pyrtl.WireVector | None = None
         en: Any = None
-        mask: 'Mask' = None
+        # mask: AbstractMem.Mask | None = None
 
     @dataclass
     class WritePort:
-        addr: pyrtl.WireVector = None
-        data: pyrtl.WireVector = None
+        addr: pyrtl.WireVector | None = None
+        data: pyrtl.WireVector | None = None
         en: Any = None
-        mask: 'Mask' = None
+        mask: AbstractMem.Mask | None = None
 
-    def __init__(self, 
-                 width,
-                 height,
-                 name='',
-                 read_ports=[],
-                 write_ports=[],
-                 rw_fwd=False,
-                 latch_last_read=False,
-                 asynchronous=False,
-                 ):
+    @dataclass
+    class ReadWritePort:
+        addr: pyrtl.WireVector | None = None
+        data_in: pyrtl.WireVector | None = None
+        data_out: pyrtl.WireVector | None = None
+        en: Any = None  # write enable
+        mask: AbstractMem.Mask | None = None
+
+    width: int
+    height: int
+    name: str
+    read_ports: list[AbstractMem.ReadPort]
+    write_ports: list[AbstractMem.WritePort]
+    read_write_ports: list[AbstractMem.ReadWritePort]
+    forward: bool
+    latch_last_read: bool
+    asynchronous: bool
+
+    def __repr__(self):
+        return f"AbstractMem(width={self.width}, height={self.height}, name={self.name}, " \
+               f"read_ports={self.read_ports}, write_ports={self.write_ports}, " \
+               f"read_write_ports={self.read_write_ports}, forward={self.forward}, " \
+               f"latch_last_read={self.latch_last_read}, asynchronous={self.asynchronous})"
+
+    def __init__(
+        self, 
+        width: int,
+        height: int,
+        name: str = "",
+        read_ports: list | None = None,
+        write_ports: list | None = None,
+        read_write_ports: list | None = None,
+        forward: bool = False,
+        latch_last_read: bool = False,
+        asynchronous: bool = False,
+    ):
         self.width = width
         self.height = height
         self.name = name
-        self.read_ports = read_ports
-        self.write_ports = write_ports
-        self.rw_fwd = rw_fwd
+        self.read_ports = read_ports or []
+        self.write_ports = write_ports or []
+        self.read_write_ports = read_write_ports or []
+        self.forward = forward
         self.latch_last_read = latch_last_read
-        self.asynchronous=asynchronous
+        self.asynchronous = asynchronous
 
         if self.latch_last_read and len(self.read_ports) > 1:
             raise Exception("Error, cannot set latch_last_read with more than 1 read port")
 
-    def create_mem(width, height_log2, name='', config='1rw', **kwargs):
+    @staticmethod
+    def create_mem(
+        width: int,
+        height_log2: int,
+        name: str = "",
+        config: str = "1rw",
+        **kwargs
+    ) -> AbstractMem:
         """
         Factory function to create AbstractMem instances with standard configurations.
         
@@ -71,7 +105,7 @@ class AbstractMem:
         Returns:
             AbstractMem: Configured memory instance
         """
-        
+
         # Calculate address width
         addr_width = height_log2
         
