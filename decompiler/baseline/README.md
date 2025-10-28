@@ -3,3 +3,7 @@
 * The baseline memory decompiler uses the "complete" decompilation technique which sacrifices performance for completeness.
 * Part of the decompiler is accelerated by a C++ module.
     * Before running, you must compile the C++ module by running `build_emapcc.sh`
+
+
+* `run-tests.py` runs all of the test netlists in `test/`
+* `run-benchmarks.py` runs all of the benchmark netlists from the paper evaluation (after reorganizing, the file paths are broken, so this won't work at the moment) 
