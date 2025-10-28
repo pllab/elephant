@@ -1,0 +1,53 @@
+emap is loaded successfully.
+Testing design `practical_designs/bp/bp_be_top.noabc.nodfflegalize.json` with top module `bp_be_top`...
+Database built in 1.03 seconds.
+Netlist saturated in 0.16 seconds.
+Found 6894 muxes with DFFs as inputs.
+6482 muxtree(s) reduced in 0.93 seconds.
+Decoders reduced in 300.33 seconds.
+17 memories extracted in 0.31 seconds.
+	Memory 0: width=113, height=4, #read-ports=1, #write-ports=1
+	Memory 1: width=3, height=4, #read-ports=1, #write-ports=0
+	Memory 2: width=3, height=4, #read-ports=1, #write-ports=0
+	Memory 3: width=94, height=8, #read-ports=1, #write-ports=1
+	Memory 4: width=80, height=8, #read-ports=1, #write-ports=1
+	Memory 5: width=1, height=8, #read-ports=2, #write-ports=0
+	Memory 6: width=1, height=8, #read-ports=1, #write-ports=0
+	Memory 7: width=66, height=32, #read-ports=3, #write-ports=1
+	Memory 8: width=66, height=32, #read-ports=2, #write-ports=1
+	Memory 9: width=30, height=32, #read-ports=1, #write-ports=0
+	Memory 10: width=31, height=32, #read-ports=1, #write-ports=0
+	Memory 11: width=20, height=32, #read-ports=1, #write-ports=0
+	Memory 12: width=20, height=32, #read-ports=1, #write-ports=0
+	Memory 13: width=20, height=32, #read-ports=1, #write-ports=0
+	Memory 14: width=1, height=64, #read-ports=2, #write-ports=0
+	Memory 15: width=1, height=64, #read-ports=1, #write-ports=0
+	Memory 16: width=1, height=64, #read-ports=1, #write-ports=0
+Total time: 302.75 seconds.
+
+Testing design `practical_designs/bp/bp_be_top.noabc.dfflegalize.json` with top module `bp_be_top`...
+Database built in 2.21 seconds.
+Netlist saturated in 0.18 seconds.
+Found 6900 muxes with DFFs as inputs.
+6482 muxtree(s) reduced in 1.17 seconds.
+Decoders reduced in 27010.67 seconds.
+17 memories extracted in 0.61 seconds.
+	Memory 0: width=113, height=4, #read-ports=1, #write-ports=1
+	Memory 1: width=3, height=4, #read-ports=1, #write-ports=0
+	Memory 2: width=3, height=4, #read-ports=1, #write-ports=0
+	Memory 3: width=94, height=8, #read-ports=1, #write-ports=1
+	Memory 4: width=80, height=8, #read-ports=1, #write-ports=1
+	Memory 5: width=1, height=8, #read-ports=2, #write-ports=0
+	Memory 6: width=1, height=8, #read-ports=1, #write-ports=0
+	Memory 7: width=66, height=32, #read-ports=3, #write-ports=1
+	Memory 8: width=66, height=32, #read-ports=2, #write-ports=1
+	Memory 9: width=30, height=32, #read-ports=1, #write-ports=0
+	Memory 10: width=31, height=32, #read-ports=1, #write-ports=0
+	Memory 11: width=20, height=32, #read-ports=1, #write-ports=0
+	Memory 12: width=20, height=32, #read-ports=1, #write-ports=0
+	Memory 13: width=20, height=32, #read-ports=1, #write-ports=0
+	Memory 14: width=1, height=64, #read-ports=2, #write-ports=0
+	Memory 15: width=1, height=64, #read-ports=1, #write-ports=0
+	Memory 16: width=1, height=64, #read-ports=1, #write-ports=0
+Total time: 27014.84 seconds.
+
