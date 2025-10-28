@@ -1,5 +1,8 @@
-from AbstractMem import AbstractMem
 import pyrtl
+
+import sys
+sys.path.append('.')
+from AbstractMem import AbstractMem
 
 def test_vivado_bram(height_log2, width, portedness):
     pyrtl.reset_working_block()
