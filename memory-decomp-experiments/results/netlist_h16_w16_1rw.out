@@ -1,0 +1,30 @@
+reg_tmp6067[16]: tmp771 tmp765 tmp777 tmp780 tmp783 tmp789 tmp792 tmp795 tmp786 tmp758 tmp762 tmp774 tmp798 tmp801 tmp768 tmp804 
+reg_tmp6050[16]: tmp32 tmp822 tmp813 tmp19 tmp828 tmp36 tmp819 tmp810 tmp28 tmp40 tmp825 tmp24 tmp816 tmp807 tmp48 tmp44 
+reg_tmp6061[16]: tmp688 tmp660 tmp664 tmp700 tmp691 tmp694 tmp697 tmp703 tmp667 tmp670 tmp706 tmp673 tmp676 tmp679 tmp682 tmp685 
+reg_tmp6033[16]: tmp73 tmp100 tmp57 tmp61 tmp103 tmp88 tmp85 tmp97 tmp69 tmp91 tmp106 tmp52 tmp77 tmp65 tmp94 tmp81 
+reg_tmp6042[16]: tmp419 tmp443 tmp422 tmp437 tmp428 tmp461 tmp458 tmp446 tmp449 tmp452 tmp455 tmp425 tmp415 tmp434 tmp440 tmp431 
+reg_tmp6036[16]: tmp366 tmp385 tmp391 tmp382 tmp412 tmp370 tmp394 tmp373 tmp388 tmp379 tmp376 tmp397 tmp400 tmp403 tmp406 tmp409 
+reg_tmp6047[16]: tmp510 tmp504 tmp483 tmp464 tmp507 tmp486 tmp477 tmp501 tmp495 tmp498 tmp468 tmp492 tmp474 tmp471 tmp489 tmp480 
+reg_tmp6018[16]: tmp284 tmp290 tmp272 tmp268 tmp299 tmp302 tmp305 tmp308 tmp296 tmp311 tmp287 tmp314 tmp275 tmp293 tmp278 tmp281 
+reg_tmp6039[16]: tmp189 tmp177 tmp195 tmp192 tmp183 tmp174 tmp170 tmp201 tmp204 tmp207 tmp210 tmp198 tmp213 tmp180 tmp216 tmp186 
+reg_tmp6056[16]: tmp618 tmp621 tmp624 tmp627 tmp645 tmp648 tmp651 tmp630 tmp633 tmp636 tmp639 tmp642 tmp654 tmp657 tmp615 tmp611 
+reg_tmp6028[16]: tmp155 tmp109 tmp131 tmp122 tmp137 tmp125 tmp113 tmp128 tmp119 tmp134 tmp152 tmp143 tmp140 tmp116 tmp146 tmp149 
+reg_tmp6013[16]: tmp513 tmp544 tmp550 tmp553 tmp541 tmp532 tmp523 tmp556 tmp547 tmp559 tmp538 tmp529 tmp520 tmp535 tmp526 tmp517 
+reg_tmp6023[16]: tmp226 tmp250 tmp229 tmp253 tmp256 tmp259 tmp247 tmp262 tmp232 tmp265 tmp223 tmp235 tmp219 tmp238 tmp241 tmp244 
+reg_openram_h16_w16_1rw_ren[4]: tmp164 tmp161 tmp167 tmp158 
+reg_tmp6064[16]: tmp716 tmp719 tmp722 tmp725 tmp728 tmp731 tmp734 tmp743 tmp746 tmp752 tmp737 tmp749 tmp740 tmp755 tmp709 tmp713 
+reg_tmp6070[16]: tmp330 tmp333 tmp324 tmp327 tmp317 tmp336 tmp339 tmp342 tmp321 tmp345 tmp348 tmp351 tmp354 tmp357 tmp360 tmp363 
+reg_tmp6053[16]: tmp593 tmp562 tmp566 tmp569 tmp572 tmp575 tmp578 tmp581 tmp584 tmp587 tmp590 tmp599 tmp602 tmp605 tmp596 tmp608 
+++++++++++
+mem_openram_h16_w16_1rw_wen
+addr_width: 4
+val_width: 16
+write enable: openram_h16_w16_1rw_wen/1I
+write_address: (4), ['openram_h16_w16_1rw_waddr[0]/1I', 'openram_h16_w16_1rw_waddr[1]/1I', 'openram_h16_w16_1rw_waddr[2]/1I', 'openram_h16_w16_1rw_waddr[3]/1I']
+write_port: (16), ['openram_h16_w16_1rw_wdata[10]/1I', 'openram_h16_w16_1rw_wdata[12]/1I', 'openram_h16_w16_1rw_wdata[11]/1I', 'openram_h16_w16_1rw_wdata[13]/1I', 'openram_h16_w16_1rw_wdata[8]/1I', 'openram_h16_w16_1rw_wdata[0]/1I', 'openram_h16_w16_1rw_wdata[14]/1I', 'openram_h16_w16_1rw_wdata[2]/1I', 'openram_h16_w16_1rw_wdata[15]/1I', 'openram_h16_w16_1rw_wdata[5]/1I', 'openram_h16_w16_1rw_wdata[6]/1I', 'openram_h16_w16_1rw_wdata[4]/1I', 'openram_h16_w16_1rw_wdata[1]/1I', 'openram_h16_w16_1rw_wdata[9]/1I', 'openram_h16_w16_1rw_wdata[7]/1I', 'openram_h16_w16_1rw_wdata[3]/1I']
+read_ports:
+ addr: ('read_addr_0/4I', ['tmp161_o', 'tmp158_o', 'tmp164_o', 'tmp167_o'])
+ enable: openram_h16_w16_1rw_ren
+ data: ('read_data_0/16O', ('tmp1319', 'tmp1235', 'tmp1298', 'tmp1256', 'tmp1424', 'tmp1340', 'tmp1529', 'tmp1277', 'tmp1550', 'tmp1487', 'tmp1403', 'tmp1382', 'tmp1445', 'tmp1361', 'tmp1508', 'tmp1466'))
+----------
+decomp time: 0.5293471813201904 s

@@ -1,0 +1,917 @@
+
+reg_enable tmp86381/1W
+n 5
+ net tmp86381/1W <-- & -- tmp86382/1W, tmp11130/1W
+n 4
+ net tmp86382/1W <-- & -- tmp86474/1W, tmp86389/1W
+n 3
+ net tmp86389/1W <-- & -- tmp86274/1W, tmp86390/1W
+ net tmp86474/1W <-- & -- tmp86278/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86390/1W <-- & -- tmp34056/1W, tmp34076/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86437/1W
+n 5
+ net tmp86437/1W <-- & -- tmp86439/1W, tmp11130/1W
+n 4
+ net tmp86439/1W <-- & -- tmp86470/1W, tmp86449/1W
+n 3
+ net tmp86449/1W <-- & -- tmp86274/1W, tmp86450/1W
+ net tmp86470/1W <-- & -- tmp33996/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86450/1W <-- & -- tmp34056/1W, tmp86270/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86452/1W
+n 5
+ net tmp86452/1W <-- & -- tmp86454/1W, tmp11130/1W
+n 4
+ net tmp86454/1W <-- & -- tmp86470/1W, tmp86465/1W
+n 3
+ net tmp86465/1W <-- & -- tmp34036/1W, tmp86483/1W
+ net tmp86470/1W <-- & -- tmp33996/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86483/1W <-- & -- tmp86272/1W, tmp86270/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+reg_enable tmp86459/1W
+n 5
+ net tmp86459/1W <-- & -- tmp86460/1W, tmp11130/1W
+n 4
+ net tmp86460/1W <-- & -- tmp86478/1W, tmp86465/1W
+n 3
+ net tmp86465/1W <-- & -- tmp34036/1W, tmp86483/1W
+ net tmp86478/1W <-- & -- tmp33996/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86483/1W <-- & -- tmp86272/1W, tmp86270/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+reg_enable tmp86476/1W
+n 5
+ net tmp86476/1W <-- & -- tmp86477/1W, tmp11130/1W
+n 4
+ net tmp86477/1W <-- & -- tmp86478/1W, tmp86482/1W
+n 3
+ net tmp86482/1W <-- & -- tmp86274/1W, tmp86483/1W
+ net tmp86478/1W <-- & -- tmp33996/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86483/1W <-- & -- tmp86272/1W, tmp86270/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86417/1W
+n 5
+ net tmp86417/1W <-- & -- tmp86418/1W, tmp11130/1W
+n 4
+ net tmp86418/1W <-- & -- tmp86484/1W, tmp86419/1W
+n 3
+ net tmp86419/1W <-- & -- tmp86274/1W, tmp86420/1W
+ net tmp86484/1W <-- & -- tmp86278/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86420/1W <-- & -- tmp86272/1W, tmp34076/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86462/1W
+n 5
+ net tmp86462/1W <-- & -- tmp86463/1W, tmp11130/1W
+n 4
+ net tmp86463/1W <-- & -- tmp86484/1W, tmp86465/1W
+n 3
+ net tmp86465/1W <-- & -- tmp34036/1W, tmp86483/1W
+ net tmp86484/1W <-- & -- tmp86278/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86483/1W <-- & -- tmp86272/1W, tmp86270/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+reg_enable tmp86384/1W
+n 5
+ net tmp86384/1W <-- & -- tmp86385/1W, tmp11130/1W
+n 4
+ net tmp86385/1W <-- & -- tmp86478/1W, tmp86389/1W
+n 3
+ net tmp86389/1W <-- & -- tmp86274/1W, tmp86390/1W
+ net tmp86478/1W <-- & -- tmp33996/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86390/1W <-- & -- tmp34056/1W, tmp34076/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86447/1W
+n 5
+ net tmp86447/1W <-- & -- tmp86448/1W, tmp11130/1W
+n 4
+ net tmp86448/1W <-- & -- tmp86484/1W, tmp86449/1W
+n 3
+ net tmp86449/1W <-- & -- tmp86274/1W, tmp86450/1W
+ net tmp86484/1W <-- & -- tmp86278/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86450/1W <-- & -- tmp34056/1W, tmp86270/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86441/1W
+n 5
+ net tmp86441/1W <-- & -- tmp86442/1W, tmp11130/1W
+n 4
+ net tmp86442/1W <-- & -- tmp86474/1W, tmp86449/1W
+n 3
+ net tmp86449/1W <-- & -- tmp86274/1W, tmp86450/1W
+ net tmp86474/1W <-- & -- tmp86278/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86450/1W <-- & -- tmp34056/1W, tmp86270/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86456/1W
+n 5
+ net tmp86456/1W <-- & -- tmp86457/1W, tmp11130/1W
+n 4
+ net tmp86457/1W <-- & -- tmp86474/1W, tmp86465/1W
+n 3
+ net tmp86465/1W <-- & -- tmp34036/1W, tmp86483/1W
+ net tmp86474/1W <-- & -- tmp86278/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86483/1W <-- & -- tmp86272/1W, tmp86270/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+reg_enable tmp86358/1W
+n 5
+ net tmp86358/1W <-- & -- tmp86361/1W, tmp11130/1W
+n 4
+ net tmp86361/1W <-- & -- tmp86470/1W, tmp86375/1W
+n 3
+ net tmp86375/1W <-- & -- tmp34036/1W, tmp86390/1W
+ net tmp86470/1W <-- & -- tmp33996/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86390/1W <-- & -- tmp34056/1W, tmp34076/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+reg_enable tmp86426/1W
+n 5
+ net tmp86426/1W <-- & -- tmp86427/1W, tmp11130/1W
+n 4
+ net tmp86427/1W <-- & -- tmp86474/1W, tmp86435/1W
+n 3
+ net tmp86435/1W <-- & -- tmp34036/1W, tmp86450/1W
+ net tmp86474/1W <-- & -- tmp86278/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86450/1W <-- & -- tmp34056/1W, tmp86270/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+reg_enable tmp86472/1W
+n 5
+ net tmp86472/1W <-- & -- tmp86473/1W, tmp11130/1W
+n 4
+ net tmp86473/1W <-- & -- tmp86474/1W, tmp86482/1W
+n 3
+ net tmp86482/1W <-- & -- tmp86274/1W, tmp86483/1W
+ net tmp86474/1W <-- & -- tmp86278/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86483/1W <-- & -- tmp86272/1W, tmp86270/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86377/1W
+n 5
+ net tmp86377/1W <-- & -- tmp86379/1W, tmp11130/1W
+n 4
+ net tmp86379/1W <-- & -- tmp86470/1W, tmp86389/1W
+n 3
+ net tmp86389/1W <-- & -- tmp86274/1W, tmp86390/1W
+ net tmp86470/1W <-- & -- tmp33996/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86390/1W <-- & -- tmp34056/1W, tmp34076/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86480/1W
+n 5
+ net tmp86480/1W <-- & -- tmp86481/1W, tmp11130/1W
+n 4
+ net tmp86481/1W <-- & -- tmp86484/1W, tmp86482/1W
+n 3
+ net tmp86482/1W <-- & -- tmp86274/1W, tmp86483/1W
+ net tmp86484/1W <-- & -- tmp86278/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86483/1W <-- & -- tmp86272/1W, tmp86270/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86399/1W
+n 5
+ net tmp86399/1W <-- & -- tmp86400/1W, tmp11130/1W
+n 4
+ net tmp86400/1W <-- & -- tmp86478/1W, tmp86405/1W
+n 3
+ net tmp86405/1W <-- & -- tmp34036/1W, tmp86420/1W
+ net tmp86478/1W <-- & -- tmp33996/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86420/1W <-- & -- tmp86272/1W, tmp34076/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+reg_enable tmp86363/1W
+n 5
+ net tmp86363/1W <-- & -- tmp86365/1W, tmp11130/1W
+n 4
+ net tmp86365/1W <-- & -- tmp86474/1W, tmp86375/1W
+n 3
+ net tmp86375/1W <-- & -- tmp34036/1W, tmp86390/1W
+ net tmp86474/1W <-- & -- tmp86278/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86390/1W <-- & -- tmp34056/1W, tmp34076/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+reg_enable tmp86444/1W
+n 5
+ net tmp86444/1W <-- & -- tmp86445/1W, tmp11130/1W
+n 4
+ net tmp86445/1W <-- & -- tmp86478/1W, tmp86449/1W
+n 3
+ net tmp86449/1W <-- & -- tmp86274/1W, tmp86450/1W
+ net tmp86478/1W <-- & -- tmp33996/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86450/1W <-- & -- tmp34056/1W, tmp86270/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86411/1W
+n 5
+ net tmp86411/1W <-- & -- tmp86412/1W, tmp11130/1W
+n 4
+ net tmp86412/1W <-- & -- tmp86474/1W, tmp86419/1W
+n 3
+ net tmp86419/1W <-- & -- tmp86274/1W, tmp86420/1W
+ net tmp86474/1W <-- & -- tmp86278/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86420/1W <-- & -- tmp86272/1W, tmp34076/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86467/1W
+n 5
+ net tmp86467/1W <-- & -- tmp86469/1W, tmp11130/1W
+n 4
+ net tmp86469/1W <-- & -- tmp86470/1W, tmp86482/1W
+n 3
+ net tmp86482/1W <-- & -- tmp86274/1W, tmp86483/1W
+ net tmp86470/1W <-- & -- tmp33996/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86483/1W <-- & -- tmp86272/1W, tmp86270/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86422/1W
+n 5
+ net tmp86422/1W <-- & -- tmp86424/1W, tmp11130/1W
+n 4
+ net tmp86424/1W <-- & -- tmp86470/1W, tmp86435/1W
+n 3
+ net tmp86435/1W <-- & -- tmp34036/1W, tmp86450/1W
+ net tmp86470/1W <-- & -- tmp33996/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86450/1W <-- & -- tmp34056/1W, tmp86270/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+reg_enable tmp86387/1W
+n 5
+ net tmp86387/1W <-- & -- tmp86388/1W, tmp11130/1W
+n 4
+ net tmp86388/1W <-- & -- tmp86484/1W, tmp86389/1W
+n 3
+ net tmp86389/1W <-- & -- tmp86274/1W, tmp86390/1W
+ net tmp86484/1W <-- & -- tmp86278/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86390/1W <-- & -- tmp34056/1W, tmp34076/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86392/1W
+n 5
+ net tmp86392/1W <-- & -- tmp86394/1W, tmp11130/1W
+n 4
+ net tmp86394/1W <-- & -- tmp86470/1W, tmp86405/1W
+n 3
+ net tmp86405/1W <-- & -- tmp34036/1W, tmp86420/1W
+ net tmp86470/1W <-- & -- tmp33996/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86420/1W <-- & -- tmp86272/1W, tmp34076/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+reg_enable tmp86396/1W
+n 5
+ net tmp86396/1W <-- & -- tmp86397/1W, tmp11130/1W
+n 4
+ net tmp86397/1W <-- & -- tmp86474/1W, tmp86405/1W
+n 3
+ net tmp86405/1W <-- & -- tmp34036/1W, tmp86420/1W
+ net tmp86474/1W <-- & -- tmp86278/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86420/1W <-- & -- tmp86272/1W, tmp34076/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+reg_enable tmp86371/1W
+n 5
+ net tmp86371/1W <-- & -- tmp86373/1W, tmp11130/1W
+n 4
+ net tmp86373/1W <-- & -- tmp86484/1W, tmp86375/1W
+n 3
+ net tmp86375/1W <-- & -- tmp34036/1W, tmp86390/1W
+ net tmp86484/1W <-- & -- tmp86278/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86390/1W <-- & -- tmp34056/1W, tmp34076/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+reg_enable tmp86432/1W
+n 5
+ net tmp86432/1W <-- & -- tmp86433/1W, tmp11130/1W
+n 4
+ net tmp86433/1W <-- & -- tmp86484/1W, tmp86435/1W
+n 3
+ net tmp86435/1W <-- & -- tmp34036/1W, tmp86450/1W
+ net tmp86484/1W <-- & -- tmp86278/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86450/1W <-- & -- tmp34056/1W, tmp86270/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+reg_enable tmp86402/1W
+n 5
+ net tmp86402/1W <-- & -- tmp86403/1W, tmp11130/1W
+n 4
+ net tmp86403/1W <-- & -- tmp86484/1W, tmp86405/1W
+n 3
+ net tmp86405/1W <-- & -- tmp34036/1W, tmp86420/1W
+ net tmp86484/1W <-- & -- tmp86278/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp86278/1W <-- ~ -- tmp33996/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86420/1W <-- & -- tmp86272/1W, tmp34076/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+reg_enable tmp86414/1W
+n 5
+ net tmp86414/1W <-- & -- tmp86415/1W, tmp11130/1W
+n 4
+ net tmp86415/1W <-- & -- tmp86478/1W, tmp86419/1W
+n 3
+ net tmp86419/1W <-- & -- tmp86274/1W, tmp86420/1W
+ net tmp86478/1W <-- & -- tmp33996/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86420/1W <-- & -- tmp86272/1W, tmp34076/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86429/1W
+n 5
+ net tmp86429/1W <-- & -- tmp86430/1W, tmp11130/1W
+n 4
+ net tmp86430/1W <-- & -- tmp86478/1W, tmp86435/1W
+n 3
+ net tmp86435/1W <-- & -- tmp34036/1W, tmp86450/1W
+ net tmp86478/1W <-- & -- tmp33996/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86450/1W <-- & -- tmp34056/1W, tmp86270/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp86270/1W <-- ~ -- tmp34076/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+reg_enable tmp86407/1W
+n 5
+ net tmp86407/1W <-- & -- tmp86409/1W, tmp11130/1W
+n 4
+ net tmp86409/1W <-- & -- tmp86470/1W, tmp86419/1W
+n 3
+ net tmp86419/1W <-- & -- tmp86274/1W, tmp86420/1W
+ net tmp86470/1W <-- & -- tmp33996/1W, tmp34016/1W
+n 2
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86420/1W <-- & -- tmp86272/1W, tmp34076/1W
+ net tmp86274/1W <-- ~ -- tmp34036/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp86272/1W <-- ~ -- tmp34056/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+n 0
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+reg_enable tmp86367/1W
+n 5
+ net tmp86367/1W <-- & -- tmp86369/1W, tmp11130/1W
+n 4
+ net tmp86369/1W <-- & -- tmp86478/1W, tmp86375/1W
+n 3
+ net tmp86375/1W <-- & -- tmp34036/1W, tmp86390/1W
+ net tmp86478/1W <-- & -- tmp33996/1W, tmp86276/1W
+n 2
+ net tmp86276/1W <-- ~ -- tmp34016/1W
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+ net tmp33996/1W <-- & -- tmp4872_o/1W, tmp11130/1W
+ net tmp86390/1W <-- & -- tmp34056/1W, tmp34076/1W
+ net tmp34036/1W <-- & -- tmp4881_o/1W, tmp11130/1W
+n 1
+ net tmp4881_o/1W <-- s -- reg_tmp7082/5R ((2,))
+ net tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+ net tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ net tmp4872_o/1W <-- s -- reg_tmp7082/5R ((4,))
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp34016/1W <-- & -- tmp4877_o/1W, tmp11130/1W
+n 0
+ net tmp4877_o/1W <-- s -- reg_tmp7082/5R ((3,))
+ net tmp4885_o/1W <-- s -- reg_tmp7082/5R ((1,))
+ net tmp4889_o/1W <-- s -- reg_tmp7082/5R ((0,))
+ ~~> possible address inputs!!
+ ~~> tmp34056/1W <-- & -- tmp4885_o/1W, tmp11130/1W
+ ~~> tmp34076/1W <-- & -- tmp4889_o/1W, tmp11130/1W
+mem.address 5 ['tmp4872_o', 'tmp4877_o', 'tmp4881_o', 'tmp4885_o', 'tmp4889_o']

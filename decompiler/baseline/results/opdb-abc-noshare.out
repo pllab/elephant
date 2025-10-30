@@ -1,0 +1,73 @@
+emap is loaded successfully.
+Testing design `database/eval/opdb/json-abc-noshare/pico.pickle.json` with top module `picorv32`...
+Database built in 0.02 seconds.
+Rewrite 1559 ANDNOTs
+Netlist saturated in 0.01 seconds.
+Found 1151 muxes with DFFs as inputs.
+960 muxtree(s) reduced in 0.02 seconds.
+Decoders reduced in 0.58 seconds.
+1 memory extracted in 0.01 seconds.
+	Memory 0: width=32, height=32, #read-ports=2, #write-ports=1
+Total time: 0.64 seconds.
+
+Testing design `database/eval/opdb/json-abc-noshare/sparc_ffu.pickle.json` with top module `sparc_ffu_nospu_wrap`...
+Database built in 0.06 seconds.
+Rewrite 1956 ANDNOTs
+Netlist saturated in 0.01 seconds.
+Found 5145 muxes with DFFs as inputs.
+4914 muxtree(s) reduced in 0.09 seconds.
+Decoders reduced in 0.64 seconds.
+1 memory extracted in 0.03 seconds.
+	Memory 0: width=78, height=128, #read-ports=1, #write-ports=1
+Total time: 0.83 seconds.
+
+Testing design `database/eval/opdb/json-abc-noshare/l15.pickle.json` with top module `l15_wrap`...
+Database built in 0.54 seconds.
+Rewrite 9667 ANDNOTs
+Netlist saturated in 0.06 seconds.
+Found 50116 muxes with DFFs as inputs.
+49110 muxtree(s) reduced in 1.01 seconds.
+Decoders reduced in 16.48 seconds.
+7 memories extracted in 0.35 seconds.
+	Memory 0: width=4, height=128, #read-ports=1, #write-ports=0
+	Memory 1: width=8, height=128, #read-ports=1, #write-ports=1
+	Memory 2: width=4, height=128, #read-ports=1, #write-ports=0
+	Memory 3: width=116, height=128, #read-ports=1, #write-ports=1
+	Memory 4: width=8, height=128, #read-ports=1, #write-ports=1
+	Memory 5: width=30, height=512, #read-ports=1, #write-ports=1
+	Memory 6: width=128, height=512, #read-ports=1, #write-ports=1
+Total time: 18.45 seconds.
+
+Testing design `database/eval/opdb/json-abc-noshare/sparc_core.pickle.json` with top module `sparc_core`...
+Database built in 1.71 seconds.
+Rewrite 36213 ANDNOTs
+Netlist saturated in 0.25 seconds.
+Found 130930 muxes with DFFs as inputs.
+127411 muxtree(s) reduced in 2.85 seconds.
+Decoders reduced in 250.34 seconds.
+8 memories extracted in 2.58 seconds.
+	Memory 0: width=3, height=4, #read-ports=1, #write-ports=1
+	Memory 1: width=150, height=32, #read-ports=1, #write-ports=1
+	Memory 2: width=78, height=128, #read-ports=1, #write-ports=1
+	Memory 3: width=120, height=128, #read-ports=1, #write-ports=1
+	Memory 4: width=576, height=128, #read-ports=1, #write-ports=1
+	Memory 5: width=116, height=128, #read-ports=1, #write-ports=1
+	Memory 6: width=272, height=256, #read-ports=1, #write-ports=1
+	Memory 7: width=272, height=256, #read-ports=1, #write-ports=1
+Total time: 257.74 seconds.
+
+Testing design `database/eval/opdb/json-abc-noshare/l2.pickle.json` with top module `l2`...
+Database built in 3.71 seconds.
+Rewrite 14448 ANDNOTs
+Netlist saturated in 0.10 seconds.
+Found 358844 muxes with DFFs as inputs.
+357892 muxtree(s) reduced in 8.18 seconds.
+Decoders reduced in 58.94 seconds.
+5 memories extracted in 1.48 seconds.
+	Memory 0: width=64, height=16, #read-ports=1, #write-ports=0
+	Memory 1: width=66, height=256, #read-ports=2, #write-ports=1
+	Memory 2: width=104, height=256, #read-ports=1, #write-ports=1
+	Memory 3: width=64, height=1024, #read-ports=1, #write-ports=1
+	Memory 4: width=144, height=4096, #read-ports=1, #write-ports=1
+Total time: 72.41 seconds.
+

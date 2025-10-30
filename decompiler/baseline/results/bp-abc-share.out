@@ -1,0 +1,312 @@
+emap is loaded successfully.
+Testing design `database/eval/blackparrot-abc/json/bp_be_cmd_queue.json` with top module `bp_be_cmd_queue`...
+Database built in 0.00 seconds.
+Rewrite 9 ANDNOTs
+Netlist saturated in 0.00 seconds.
+Found 228 muxes with DFFs as inputs.
+114 muxtree(s) reduced in 0.00 seconds.
+Decoders reduced in 0.00 seconds.
+1 memory extracted in 0.01 seconds.
+	Memory 0: width=114, height=4, #read-ports=1, #write-ports=1
+Total time: 0.01 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_be_issue_queue.json` with top module `bp_be_issue_queue`...
+Database built in 0.03 seconds.
+Rewrite 1839 ANDNOTs
+Netlist saturated in 0.02 seconds.
+Found 692 muxes with DFFs as inputs.
+515 muxtree(s) reduced in 0.01 seconds.
+Decoders reduced in 0.70 seconds.
+3 memories extracted in 0.03 seconds.
+	Memory 0: width=2, height=4, #read-ports=1, #write-ports=1
+	Memory 1: width=93, height=8, #read-ports=1, #write-ports=1
+	Memory 2: width=78, height=8, #read-ports=1, #write-ports=1
+Total time: 0.79 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_be_int_regfile.json` with top module `bp_be_int_regfile`...
+Database built in 0.01 seconds.
+Rewrite 172 ANDNOTs
+Netlist saturated in 0.00 seconds.
+Found 2112 muxes with DFFs as inputs.
+1980 muxtree(s) reduced in 0.03 seconds.
+Decoders reduced in 0.01 seconds.
+1 memory extracted in 0.01 seconds.
+	Memory 0: width=66, height=32, #read-ports=2, #write-ports=1
+Total time: 0.07 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_be_fp_regfile.json` with top module `bp_be_fp_regfile`...
+Database built in 0.02 seconds.
+Rewrite 38 ANDNOTs
+Netlist saturated in 0.00 seconds.
+Found 3168 muxes with DFFs as inputs.
+2970 muxtree(s) reduced in 0.05 seconds.
+Decoders reduced in 0.00 seconds.
+1 memory extracted in 0.02 seconds.
+	Memory 0: width=66, height=32, #read-ports=3, #write-ports=1
+Total time: 0.08 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_fe_pc_gen.json` with top module `bp_fe_pc_gen`...
+Database built in 0.05 seconds.
+Rewrite 999 ANDNOTs
+Netlist saturated in 0.01 seconds.
+Found 959 muxes with DFFs as inputs.
+866 muxtree(s) reduced in 0.04 seconds.
+Decoders reduced in 10.05 seconds.
+3 memories extracted in 0.02 seconds.
+	Memory 0: width=43, height=16, #read-ports=1, #write-ports=1
+	Memory 1: width=10, height=64, #read-ports=1, #write-ports=1
+	Memory 2: width=1, height=512, #read-ports=1, #write-ports=1
+Total time: 10.17 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_be_dcache.json` with top module `bp_be_dcache`...
+Database built in 0.67 seconds.
+Rewrite 17536 ANDNOTs
+Netlist saturated in 0.08 seconds.
+Found 72049 muxes with DFFs as inputs.
+71194 muxtree(s) reduced in 1.35 seconds.
+Decoders reduced in 16.61 seconds.
+94 memories extracted in 0.43 seconds.
+	Memory 0: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 1: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 2: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 3: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 4: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 5: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 6: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 7: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 8: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 9: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 10: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 11: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 12: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 13: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 14: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 15: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 16: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 17: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 18: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 19: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 20: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 21: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 22: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 23: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 24: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 25: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 26: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 27: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 28: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 29: width=1, height=128, #read-ports=1, #write-ports=1
+	Memory 30: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 31: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 32: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 33: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 34: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 35: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 36: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 37: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 38: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 39: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 40: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 41: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 42: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 43: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 44: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 45: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 46: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 47: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 48: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 49: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 50: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 51: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 52: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 53: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 54: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 55: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 56: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 57: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 58: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 59: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 60: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 61: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 62: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 63: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 64: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 65: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 66: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 67: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 68: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 69: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 70: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 71: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 72: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 73: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 74: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 75: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 76: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 77: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 78: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 79: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 80: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 81: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 82: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 83: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 84: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 85: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 86: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 87: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 88: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 89: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 90: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 91: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 92: width=8, height=256, #read-ports=1, #write-ports=1
+	Memory 93: width=8, height=256, #read-ports=1, #write-ports=1
+Total time: 19.14 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_fe_icache.json` with top module `bp_fe_icache`...
+Database built in 1.24 seconds.
+Rewrite 6366 ANDNOTs
+Netlist saturated in 0.04 seconds.
+Found 137187 muxes with DFFs as inputs.
+136482 muxtree(s) reduced in 2.64 seconds.
+Decoders reduced in 5.44 seconds.
+30 memories extracted in 0.67 seconds.
+	Memory 0: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 1: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 2: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 3: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 4: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 5: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 6: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 7: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 8: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 9: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 10: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 11: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 12: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 13: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 14: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 15: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 16: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 17: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 18: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 19: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 20: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 21: width=1, height=128, #read-ports=1, #write-ports=1
+	Memory 22: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 23: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 24: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 25: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 26: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 27: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 28: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 29: width=64, height=512, #read-ports=1, #write-ports=1
+Total time: 10.04 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_fe_top.json` with top module `bp_fe_top`...
+Database built in 1.35 seconds.
+Rewrite 8768 ANDNOTs
+Netlist saturated in 0.06 seconds.
+Found 138186 muxes with DFFs as inputs.
+137351 muxtree(s) reduced in 2.80 seconds.
+Decoders reduced in 42.64 seconds.
+33 memories extracted in 0.72 seconds.
+	Memory 0: width=39, height=16, #read-ports=1, #write-ports=1
+	Memory 1: width=11, height=64, #read-ports=1, #write-ports=1
+	Memory 2: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 3: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 4: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 5: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 6: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 7: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 8: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 9: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 10: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 11: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 12: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 13: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 14: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 15: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 16: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 17: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 18: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 19: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 20: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 21: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 22: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 23: width=1, height=128, #read-ports=1, #write-ports=1
+	Memory 24: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 25: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 26: width=1, height=512, #read-ports=1, #write-ports=1
+	Memory 27: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 28: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 29: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 30: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 31: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 32: width=64, height=512, #read-ports=1, #write-ports=1
+Total time: 47.57 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_be_top.json` with top module `bp_be_top`...
+Database built in 2.23 seconds.
+Rewrite 52742 ANDNOTs
+Netlist saturated in 0.31 seconds.
+Found 2980 muxes with DFFs as inputs.
+2483 muxtree(s) reduced in 0.93 seconds.
+Decoders reduced in 23492.68 seconds.
+5 memories extracted in 0.45 seconds.
+	Memory 0: width=113, height=4, #read-ports=1, #write-ports=1
+	Memory 1: width=45, height=8, #read-ports=1, #write-ports=1
+	Memory 2: width=80, height=8, #read-ports=1, #write-ports=1
+	Memory 3: width=1, height=32, #read-ports=1, #write-ports=1
+	Memory 4: width=66, height=32, #read-ports=2, #write-ports=1
+Total time: 23496.60 seconds.
+
+Testing design `database/eval/blackparrot-abc/json/bp_core_minimal.json` with top module `bp_core_minimal`...
+Database built in 3.59 seconds.
+Rewrite 62427 ANDNOTs
+Netlist saturated in 0.37 seconds.
+Found 141146 muxes with DFFs as inputs.
+139875 muxtree(s) reduced in 4.26 seconds.
+Decoders reduced in 24956.38 seconds.
+40 memories extracted in 1.24 seconds.
+	Memory 0: width=74, height=4, #read-ports=1, #write-ports=1
+	Memory 1: width=45, height=8, #read-ports=1, #write-ports=1
+	Memory 2: width=16, height=8, #read-ports=1, #write-ports=1
+	Memory 3: width=9, height=8, #read-ports=1, #write-ports=1
+	Memory 4: width=80, height=8, #read-ports=1, #write-ports=1
+	Memory 5: width=39, height=16, #read-ports=1, #write-ports=1
+	Memory 6: width=66, height=32, #read-ports=2, #write-ports=1
+	Memory 7: width=11, height=64, #read-ports=1, #write-ports=1
+	Memory 8: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 9: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 10: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 11: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 12: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 13: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 14: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 15: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 16: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 17: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 18: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 19: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 20: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 21: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 22: width=20, height=64, #read-ports=1, #write-ports=1
+	Memory 23: width=3, height=64, #read-ports=1, #write-ports=1
+	Memory 24: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 25: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 26: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 27: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 28: width=1, height=64, #read-ports=1, #write-ports=1
+	Memory 29: width=1, height=64, #read-ports=1, #write-ports=0
+	Memory 30: width=1, height=128, #read-ports=1, #write-ports=1
+	Memory 31: width=1, height=512, #read-ports=1, #write-ports=1
+	Memory 32: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 33: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 34: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 35: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 36: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 37: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 38: width=64, height=512, #read-ports=1, #write-ports=1
+	Memory 39: width=64, height=512, #read-ports=1, #write-ports=1
+Total time: 24965.84 seconds.
+

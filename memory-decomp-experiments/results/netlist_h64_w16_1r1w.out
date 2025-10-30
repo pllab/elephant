@@ -1,0 +1,78 @@
+reg_tmp23879[16]: tmp1141 tmp1120 tmp1098 tmp1132 tmp1111 tmp1144 tmp1102 tmp1123 tmp1135 tmp1108 tmp1114 tmp1126 tmp1138 tmp1117 tmp1105 tmp1129 
+reg_tmp23862[16]: tmp180 tmp192 tmp195 tmp213 tmp198 tmp210 tmp174 tmp186 tmp201 tmp167 tmp207 tmp177 tmp189 tmp204 tmp183 tmp171 
+reg_tmp23925[16]: tmp1827 tmp1784 tmp1794 tmp1806 tmp1818 tmp1788 tmp1830 tmp1797 tmp1809 tmp1821 tmp1800 tmp1812 tmp1824 tmp1791 tmp1803 tmp1815 
+reg_tmp23820[16]: tmp302 tmp275 tmp287 tmp269 tmp293 tmp305 tmp278 tmp308 tmp296 tmp281 tmp299 tmp272 tmp311 tmp284 tmp290 tmp265 
+reg_tmp23913[16]: tmp1588 tmp1598 tmp1610 tmp1622 tmp1634 tmp1592 tmp1601 tmp1613 tmp1604 tmp1616 tmp1628 tmp1595 tmp1607 tmp1619 tmp1631 tmp1625 
+reg_tmp23888[16]: tmp1264 tmp1288 tmp1249 tmp1255 tmp1267 tmp1279 tmp1291 tmp1276 tmp1258 tmp1270 tmp1282 tmp1252 tmp1273 tmp1245 tmp1261 tmp1285 
+reg_tmp24005[16]: tmp2994 tmp2976 tmp2985 tmp2997 tmp2967 tmp2979 tmp3000 tmp2982 tmp2960 tmp2988 tmp2970 tmp3006 tmp2991 tmp3003 tmp2964 tmp2973 
+reg_tmp23808[16]: tmp2826 tmp2838 tmp2817 tmp2850 tmp2829 tmp2841 tmp2853 tmp2820 tmp2832 tmp2844 tmp2856 tmp2823 tmp2835 tmp2847 tmp2813 tmp2859 
+reg_tmp23942[16]: tmp2045 tmp2057 tmp2069 tmp2036 tmp2060 tmp2048 tmp2072 tmp2051 tmp2063 tmp2039 tmp2075 tmp2029 tmp2042 tmp2066 tmp2054 tmp2033 
+reg_tmp23803[16]: tmp2357 tmp2369 tmp2336 tmp2348 tmp2360 tmp2327 tmp2339 tmp2351 tmp2363 tmp2342 tmp2330 tmp2354 tmp2366 tmp2323 tmp2333 tmp2345 
+reg_tmp23843[16]: tmp627 tmp651 tmp618 tmp630 tmp642 tmp654 tmp608 tmp645 tmp621 tmp633 tmp612 tmp624 tmp636 tmp648 tmp639 tmp615 
+reg_tmp23999[16]: tmp2887 tmp2869 tmp2881 tmp2899 tmp2862 tmp2872 tmp2884 tmp2902 tmp2890 tmp2866 tmp2893 tmp2875 tmp2905 tmp2878 tmp2908 tmp2896 
+reg_tmp23834[16]: tmp461 tmp492 tmp504 tmp471 tmp495 tmp465 tmp474 tmp507 tmp486 tmp498 tmp477 tmp483 tmp489 tmp501 tmp468 tmp480 
+reg_tmp23970[16]: tmp2443 tmp2455 tmp2467 tmp2425 tmp2434 tmp2446 tmp2458 tmp2437 tmp2449 tmp2461 tmp2428 tmp2440 tmp2452 tmp2464 tmp2421 tmp2431 
+reg_tmp23897[16]: tmp1399 tmp1411 tmp1435 tmp1392 tmp1423 tmp1402 tmp1414 tmp1426 tmp1438 tmp1396 tmp1405 tmp1417 tmp1429 tmp1408 tmp1420 tmp1432 
+reg_tmp23987[16]: tmp2685 tmp2706 tmp2694 tmp2666 tmp2676 tmp2688 tmp2709 tmp2670 tmp2697 tmp2679 tmp2691 tmp2700 tmp2712 tmp2682 tmp2703 tmp2673 
+reg_tmp23868[16]: tmp991 tmp988 tmp976 tmp964 tmp967 tmp979 tmp958 tmp994 tmp970 tmp982 tmp951 tmp961 tmp985 tmp997 tmp973 tmp955 
+reg_tmp23815[16]: tmp45 tmp19 tmp53 tmp36 tmp3186 tmp28 tmp65 tmp24 tmp3177 tmp57 tmp61 tmp3180 tmp49 tmp32 tmp3183 tmp3174 
+reg_tmp23961[16]: tmp2278 tmp2287 tmp2299 tmp2311 tmp2290 tmp2302 tmp2314 tmp2281 tmp2293 tmp2305 tmp2317 tmp2274 tmp2284 tmp2296 tmp2308 tmp2320 
+reg_tmp23837[16]: tmp547 tmp526 tmp538 tmp550 tmp517 tmp544 tmp529 tmp541 tmp553 tmp510 tmp520 tmp532 tmp556 tmp514 tmp523 tmp535 
+reg_tmp23796[16]: tmp1846 tmp1858 tmp1870 tmp1849 tmp1861 tmp1873 tmp1840 tmp1852 tmp1864 tmp1876 tmp1833 tmp1843 tmp1855 tmp1867 tmp1879 tmp1837 
+reg_tmp23964[16]: tmp3132 tmp3144 tmp3135 tmp3147 tmp3107 tmp3126 tmp3138 tmp3111 tmp3123 tmp3117 tmp3129 tmp3141 tmp3153 tmp3150 tmp3114 tmp3120 
+reg_tmp23928[16]: tmp91 tmp97 tmp109 tmp81 tmp85 tmp94 tmp112 tmp77 tmp73 tmp115 tmp103 tmp40 tmp106 tmp69 tmp88 tmp100 
+reg_tmp23779[16]: tmp363 tmp379 tmp400 tmp370 tmp409 tmp382 tmp388 tmp373 tmp385 tmp406 tmp394 tmp367 tmp391 tmp403 tmp376 tmp397 
+reg_tmp23828[16]: tmp3049 tmp3009 tmp3052 tmp3022 tmp3034 tmp3019 tmp3031 tmp3013 tmp3043 tmp3055 tmp3025 tmp3037 tmp3046 tmp3016 tmp3028 tmp3040 
+reg_tmp23945[16]: tmp2088 tmp2100 tmp2112 tmp2118 tmp2091 tmp2103 tmp2109 tmp2115 tmp2121 tmp2094 tmp2106 tmp2124 tmp2085 tmp2097 tmp2078 tmp2082 
+reg_tmp23891[16]: tmp1319 tmp1331 tmp1313 tmp1301 tmp1310 tmp1322 tmp1334 tmp1294 tmp1325 tmp1307 tmp1337 tmp1304 tmp1298 tmp1316 tmp1328 tmp1340 
+reg_tmp23916[16]: tmp1680 tmp1637 tmp1647 tmp1659 tmp1671 tmp1683 tmp1641 tmp1650 tmp1662 tmp1674 tmp1653 tmp1665 tmp1677 tmp1668 tmp1644 tmp1656 
+reg_tmp23885[16]: tmp1236 tmp1218 tmp1203 tmp1215 tmp1227 tmp1239 tmp1196 tmp1206 tmp1230 tmp1242 tmp1200 tmp1209 tmp1221 tmp1233 tmp1224 tmp1212 
+reg_openram_h64_w16_1r1w_ren[6]: tmp3156 tmp3171 tmp3165 tmp3159 tmp3168 tmp3162 
+reg_tmp23825[16]: tmp314 tmp324 tmp336 tmp348 tmp360 tmp318 tmp327 tmp330 tmp342 tmp354 tmp339 tmp351 tmp321 tmp333 tmp345 tmp357 
+reg_tmp23976[16]: tmp2526 tmp2538 tmp2547 tmp2559 tmp2529 tmp2541 tmp2562 tmp2519 tmp2544 tmp2553 tmp2565 tmp2550 tmp2523 tmp2532 tmp2535 tmp2556 
+reg_tmp23990[16]: tmp2719 tmp2737 tmp2749 tmp2761 tmp2722 tmp2752 tmp2725 tmp2731 tmp2743 tmp2755 tmp2715 tmp2728 tmp2740 tmp2734 tmp2746 tmp2758 
+reg_tmp24008[16]: tmp220 tmp232 tmp244 tmp256 tmp223 tmp235 tmp247 tmp259 tmp216 tmp226 tmp238 tmp250 tmp262 tmp229 tmp241 tmp253 
+reg_tmp23874[16]: tmp1059 tmp1056 tmp1074 tmp1086 tmp1062 tmp1049 tmp1065 tmp1077 tmp1089 tmp1053 tmp1068 tmp1080 tmp1092 tmp1083 tmp1095 tmp1071 
+reg_tmp23922[16]: tmp1757 tmp1745 tmp1751 tmp1760 tmp1772 tmp1775 tmp1739 tmp1766 tmp1763 tmp1778 tmp1735 tmp1754 tmp1742 tmp1769 tmp1781 tmp1748 
+reg_tmp23993[16]: tmp2780 tmp2804 tmp2789 tmp2795 tmp2783 tmp2771 tmp2764 tmp2807 tmp2774 tmp2810 tmp2786 tmp2798 tmp2768 tmp2777 tmp2801 tmp2792 
+reg_tmp23882[16]: tmp1169 tmp1157 tmp1181 tmp1193 tmp1160 tmp1154 tmp1172 tmp1184 tmp1147 tmp1175 tmp1187 tmp1163 tmp1151 tmp1166 tmp1190 tmp1178 
+reg_tmp23840[16]: tmp559 tmp569 tmp605 tmp563 tmp587 tmp572 tmp596 tmp584 tmp590 tmp575 tmp599 tmp581 tmp593 tmp566 tmp578 tmp602 
+reg_tmp23951[16]: tmp2183 tmp2222 tmp2195 tmp2207 tmp2176 tmp2186 tmp2198 tmp2210 tmp2180 tmp2216 tmp2189 tmp2213 tmp2219 tmp2192 tmp2204 tmp2201 
+reg_tmp23996[16]: tmp3062 tmp3101 tmp3071 tmp3104 tmp3080 tmp3092 tmp3074 tmp3095 tmp3083 tmp3077 tmp3098 tmp3058 tmp3086 tmp3065 tmp3068 tmp3089 
+reg_tmp23939[16]: tmp2017 tmp2011 tmp2026 tmp1996 tmp2008 tmp1987 tmp1999 tmp1980 tmp2005 tmp1990 tmp2002 tmp2014 tmp1984 tmp1993 tmp2020 tmp2023 
+reg_tmp23859[16]: tmp817 tmp829 tmp841 tmp820 tmp832 tmp844 tmp814 tmp838 tmp811 tmp823 tmp835 tmp847 tmp804 tmp826 tmp850 tmp808 
+reg_tmp23853[16]: tmp734 tmp713 tmp725 tmp737 tmp749 tmp716 tmp740 tmp728 tmp706 tmp752 tmp719 tmp731 tmp743 tmp710 tmp722 tmp746 
+reg_tmp23933[16]: tmp1889 tmp1882 tmp1925 tmp1892 tmp1904 tmp1916 tmp1886 tmp1895 tmp1907 tmp1919 tmp1910 tmp1898 tmp1922 tmp1901 tmp1928 tmp1913 
+reg_tmp23919[16]: tmp1732 tmp1702 tmp1714 tmp1726 tmp1693 tmp1705 tmp1717 tmp1729 tmp1686 tmp1696 tmp1720 tmp1690 tmp1699 tmp1711 tmp1708 tmp1723 
+reg_tmp23973[16]: tmp2501 tmp2477 tmp2489 tmp2516 tmp2504 tmp2470 tmp2480 tmp2492 tmp2507 tmp2474 tmp2483 tmp2495 tmp2510 tmp2513 tmp2486 tmp2498 
+reg_tmp23846[16]: tmp676 tmp688 tmp700 tmp673 tmp679 tmp691 tmp703 tmp682 tmp694 tmp657 tmp697 tmp667 tmp664 tmp685 tmp661 tmp670 
+reg_tmp23856[16]: tmp771 tmp768 tmp786 tmp798 tmp774 tmp777 tmp789 tmp801 tmp755 tmp792 tmp762 tmp780 tmp759 tmp765 tmp795 tmp783 
+reg_tmp23900[16]: tmp1457 tmp1445 tmp1448 tmp1460 tmp1472 tmp1484 tmp1451 tmp1463 tmp1475 tmp1487 tmp1441 tmp1454 tmp1466 tmp1478 tmp1469 tmp1481 
+reg_tmp23865[16]: tmp909 tmp921 tmp933 tmp945 tmp902 tmp906 tmp924 tmp936 tmp948 tmp915 tmp927 tmp939 tmp912 tmp918 tmp930 tmp942 
+reg_tmp23791[16]: tmp1343 tmp1356 tmp1368 tmp1380 tmp1347 tmp1359 tmp1371 tmp1383 tmp1350 tmp1362 tmp1374 tmp1386 tmp1353 tmp1365 tmp1377 tmp1389 
+reg_tmp23948[16]: tmp2131 tmp2143 tmp2155 tmp2164 tmp2146 tmp2167 tmp2134 tmp2137 tmp2149 tmp2158 tmp2170 tmp2127 tmp2140 tmp2152 tmp2161 tmp2173 
+reg_tmp23936[16]: tmp1938 tmp1950 tmp1962 tmp1974 tmp1941 tmp1953 tmp1965 tmp1977 tmp1931 tmp1956 tmp1944 tmp1968 tmp1935 tmp1947 tmp1959 tmp1971 
+reg_tmp24002[16]: tmp2911 tmp2933 tmp2945 tmp2915 tmp2924 tmp2936 tmp2948 tmp2918 tmp2927 tmp2939 tmp2951 tmp2957 tmp2921 tmp2930 tmp2942 tmp2954 
+reg_tmp23894[16]: tmp149 tmp161 tmp125 tmp137 tmp152 tmp164 tmp128 tmp140 tmp143 tmp155 tmp118 tmp131 tmp146 tmp158 tmp122 tmp134 
+reg_tmp23967[16]: tmp2412 tmp2379 tmp2391 tmp2403 tmp2372 tmp2415 tmp2382 tmp2394 tmp2376 tmp2406 tmp2418 tmp2385 tmp2397 tmp2409 tmp2388 tmp2400 
+reg_tmp23982[16]: tmp2654 tmp2624 tmp2636 tmp2645 tmp2657 tmp2627 tmp2639 tmp2648 tmp2617 tmp2660 tmp2630 tmp2642 tmp2651 tmp2663 tmp2633 tmp2621 
+reg_tmp23979[16]: tmp2572 tmp2611 tmp2599 tmp2581 tmp2593 tmp2602 tmp2614 tmp2584 tmp2596 tmp2605 tmp2575 tmp2587 tmp2568 tmp2608 tmp2578 tmp2590 
+reg_tmp23871[16]: tmp1013 tmp1025 tmp1037 tmp1004 tmp1016 tmp1028 tmp1040 tmp1007 tmp1019 tmp1031 tmp1043 tmp1000 tmp1010 tmp1022 tmp1034 tmp1046 
+reg_tmp23954[16]: tmp2232 tmp2244 tmp2256 tmp2268 tmp2235 tmp2247 tmp2259 tmp2271 tmp2229 tmp2225 tmp2238 tmp2250 tmp2262 tmp2241 tmp2253 tmp2265 
+reg_tmp23784[16]: tmp853 tmp878 tmp890 tmp863 tmp857 tmp869 tmp881 tmp893 tmp866 tmp872 tmp884 tmp899 tmp896 tmp875 tmp887 tmp860 
+reg_tmp23910[16]: tmp1539 tmp1555 tmp1567 tmp1579 tmp1558 tmp1570 tmp1546 tmp1582 tmp1561 tmp1573 tmp1549 tmp1585 tmp1543 tmp1576 tmp1564 tmp1552 
+reg_tmp23831[16]: tmp425 tmp428 tmp440 tmp452 tmp431 tmp443 tmp455 tmp412 tmp419 tmp434 tmp446 tmp416 tmp458 tmp422 tmp437 tmp449 
+reg_tmp23907[16]: tmp1506 tmp1518 tmp1497 tmp1509 tmp1530 tmp1521 tmp1494 tmp1500 tmp1524 tmp1533 tmp1490 tmp1512 tmp1503 tmp1515 tmp1527 tmp1536 
+++++++++++
+mem_openram_h64_w16_1r1w_wen
+addr_width: 6
+val_width: 16
+write enable: openram_h64_w16_1r1w_wen/1I
+write_address: (6), ['openram_h64_w16_1r1w_waddr[0]/1I', 'openram_h64_w16_1r1w_waddr[1]/1I', 'openram_h64_w16_1r1w_waddr[2]/1I', 'openram_h64_w16_1r1w_waddr[3]/1I', 'openram_h64_w16_1r1w_waddr[4]/1I', 'openram_h64_w16_1r1w_waddr[5]/1I']
+write_port: (16), ['openram_h64_w16_1r1w_wdata[9]/1I', 'openram_h64_w16_1r1w_wdata[5]/1I', 'openram_h64_w16_1r1w_wdata[7]/1I', 'openram_h64_w16_1r1w_wdata[12]/1I', 'openram_h64_w16_1r1w_wdata[0]/1I', 'openram_h64_w16_1r1w_wdata[10]/1I', 'openram_h64_w16_1r1w_wdata[2]/1I', 'openram_h64_w16_1r1w_wdata[8]/1I', 'openram_h64_w16_1r1w_wdata[4]/1I', 'openram_h64_w16_1r1w_wdata[6]/1I', 'openram_h64_w16_1r1w_wdata[3]/1I', 'openram_h64_w16_1r1w_wdata[1]/1I', 'openram_h64_w16_1r1w_wdata[11]/1I', 'openram_h64_w16_1r1w_wdata[13]/1I', 'openram_h64_w16_1r1w_wdata[14]/1I', 'openram_h64_w16_1r1w_wdata[15]/1I']
+read_ports:
+ addr: ('read_addr_0/6I', ['tmp3168_o', 'tmp3162_o', 'tmp3171_o', 'tmp3159_o', 'tmp3156_o', 'tmp3165_o'])
+ enable: openram_h64_w16_1r1w_ren
+ data: ('read_data_0/16O', ('tmp3675', 'tmp3801', 'tmp3633', 'tmp3927', 'tmp3885', 'tmp3780', 'tmp3864', 'tmp3843', 'tmp3906', 'tmp3759', 'tmp3696', 'tmp3738', 'tmp3717', 'tmp3654', 'tmp3948', 'tmp3822'))
+----------
+decomp time: 7.922899961471558 s

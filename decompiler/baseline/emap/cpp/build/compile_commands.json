@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/zsisco/write-port-extraction/emap/cpp/build",
+  "command": "/usr/bin/c++ -Demapcc_EXPORTS -I/home/zsisco/write-port-extraction/emap/cpp/include -isystem /usr/include/python3.11 -fPIC -fvisibility=hidden -flto -fno-fat-lto-objects -std=gnu++17 -o CMakeFiles/emapcc.dir/src/emapcc.cpp.o -c /home/zsisco/write-port-extraction/emap/cpp/src/emapcc.cpp",
+  "file": "/home/zsisco/write-port-extraction/emap/cpp/src/emapcc.cpp"
+},
+{
+  "directory": "/home/zsisco/write-port-extraction/emap/cpp/build",
+  "command": "/usr/bin/c++ -Demapcc_EXPORTS -I/home/zsisco/write-port-extraction/emap/cpp/include -isystem /usr/include/python3.11 -fPIC -fvisibility=hidden -flto -fno-fat-lto-objects -std=gnu++17 -o CMakeFiles/emapcc.dir/src/find_write_ports_by_dffes.cpp.o -c /home/zsisco/write-port-extraction/emap/cpp/src/find_write_ports_by_dffes.cpp",
+  "file": "/home/zsisco/write-port-extraction/emap/cpp/src/find_write_ports_by_dffes.cpp"
+}
+]

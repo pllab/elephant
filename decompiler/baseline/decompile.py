@@ -1,0 +1,55 @@
+from emap import NetlistDB
+import emap.rewrites as rewrites
+import emap.extracts as extracts
+import json
+import time
+
+
+def test_mem(schema_path: str, db_path: str, design_path: str, top_module: str = "top"):
+    print(f"Testing design `{design_path}` with top module `{top_module}`...")
+    db = NetlistDB(schema_file=schema_path, db_file=db_path, cnt=1000000)
+    with open(design_path, "r") as f:
+        design = json.load(f)
+    phase_time = total_time = time.time()
+    db.build_from_json(design["modules"][top_module])
+    print(f"Database built in {time.time() - phase_time:.2f} seconds.")
+    phase_time = time.time()
+    # Saturation
+    rewrites.rewrite_comm(db, ["$_AND_", "$_OR_"])  # scheduled once
+    # XXX: Can try adding other gates, or scheduling this later.
+
+    nncount = rewrites.rewrite_xnot_to_x_not(db, "$_AND_")
+    print(f"Rewrite {nncount} ANDNOTs")
+
+    #nncount = rewrites.rewrite_xnot_to_x_not(db, "$_OR_")
+    #print(f"Rewrite {nncount} ORNOTs")
+
+    #nncount = rewrites.rewrite_nand_nor(db, "$_AND_")
+    #print(f"Rewrite {nncount} NANDs")
+    #nncount = rewrites.rewrite_nand_nor(db, "$_OR_")
+    #print(f"Rewrite {nncount} NORs")
+
+    #newmux = rewrites.rewrite_2_1_mux(db)
+    #print(f"Inserted {newmux} MUXs")
+    print(f"Netlist saturated in {time.time() - phase_time:.2f} seconds.")
+    phase_time = time.time()
+    rewrites.rewrite_mux_to_muxtree(db, subsume=True) # scheduled once
+    total_cnt = 0
+    while cnt := rewrites.reduce_muxtree(db, subsume=True):  # repeat until no modifications
+        total_cnt += cnt
+    print(f"{total_cnt} muxtree(s) reduced in {time.time() - phase_time:.2f} seconds.")
+    phase_time = time.time()
+    rewrites.rewrite_and_to_decoder(db)  # scheduled once
+    rewrites.rewrite_and_not_to_decoder(db)  # scheduled once
+    rewrites.rewrite_and_not_not_to_decoder(db)  # scheduled once
+    rewrites.reduce_decoder(db)
+    print(f"Decoders reduced in {time.time() - phase_time:.2f} seconds.")
+    # with open("out.json", "w") as f:
+    #     json.dump(db.dump_tables(), f, indent=2)
+    phase_time = time.time()
+    mems = extracts.extract_mem(db)
+    print(f"{len(mems)} memor{'y' if len(mems) == 1 else 'ies'} extracted in {time.time() - phase_time:.2f} seconds.")
+    for i, (w, h, nr, nw) in enumerate(mems):
+        print(f"\tMemory {i}: width={w}, height={h}, #read-ports={nr}, #write-ports={nw}")
+    print(f"Total time: {time.time() - total_time:.2f} seconds.\n")
+

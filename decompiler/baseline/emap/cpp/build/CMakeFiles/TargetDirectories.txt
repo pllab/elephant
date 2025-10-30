@@ -1,0 +1,3 @@
+/home/zsisco/write-port-extraction/emap/cpp/build/CMakeFiles/emapcc.dir
+/home/zsisco/write-port-extraction/emap/cpp/build/CMakeFiles/edit_cache.dir
+/home/zsisco/write-port-extraction/emap/cpp/build/CMakeFiles/rebuild_cache.dir
