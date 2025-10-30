@@ -8,4 +8,4 @@ To try:
 
 * `run-tests.py` runs all of the test netlists in `test/`
 * `run-benchmarks.py` runs all of the benchmark netlists from the paper evaluation
-    * **NOTE:** after reorganizing, the file paths are broken, so this won't work at the moment
+    * **NOTE:** after reorganizing, the file paths are broken, so this won't work at the moment (check back later!)
