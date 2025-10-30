@@ -1,0 +1,1830 @@
+{
+  "creator": "Yosys 0.48+70 (git sha1 6225abec7, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)",
+  "modules": {
+    "toplevel": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "elephant/tests/verilog/cache.v:5.1-227.10"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "ref": {
+          "direction": "input",
+          "bits": [ 3, 4, 5, 6, 7 ]
+        },
+        "data": {
+          "direction": "output",
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x" ]
+        },
+        "valid_out": {
+          "direction": "output",
+          "bits": [ 8 ]
+        }
+      },
+      "cells": {
+        "$abc$337$auto$blifparse.cc:396:parse_blif$338": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 5 ],
+            "Y": [ 9 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$340": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 10 ],
+            "B": [ 11 ],
+            "S": [ 3 ],
+            "Y": [ 12 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$341": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 13 ],
+            "B": [ 14 ],
+            "S": [ 3 ],
+            "Y": [ 15 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$342": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 12 ],
+            "B": [ 15 ],
+            "S": [ 4 ],
+            "Y": [ 16 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$343": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 17 ],
+            "B": [ 18 ],
+            "S": [ 3 ],
+            "Y": [ 19 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$344": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 20 ],
+            "B": [ 21 ],
+            "S": [ 3 ],
+            "Y": [ 22 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$345": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 19 ],
+            "B": [ 22 ],
+            "S": [ 4 ],
+            "Y": [ 23 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$346": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 16 ],
+            "B": [ 23 ],
+            "S": [ 5 ],
+            "Y": [ 24 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$347": {
+          "hide_name": 1,
+          "type": "$_XNOR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 24 ],
+            "B": [ 6 ],
+            "Y": [ 25 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$348": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 26 ],
+            "B": [ 27 ],
+            "S": [ 3 ],
+            "Y": [ 28 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$349": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 29 ],
+            "B": [ 30 ],
+            "S": [ 3 ],
+            "Y": [ 31 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$350": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 28 ],
+            "B": [ 31 ],
+            "S": [ 4 ],
+            "Y": [ 32 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$351": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 33 ],
+            "B": [ 34 ],
+            "S": [ 3 ],
+            "Y": [ 35 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$352": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 36 ],
+            "B": [ 37 ],
+            "S": [ 3 ],
+            "Y": [ 38 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$353": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 35 ],
+            "B": [ 38 ],
+            "S": [ 4 ],
+            "Y": [ 39 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$354": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 32 ],
+            "B": [ 39 ],
+            "S": [ 5 ],
+            "Y": [ 40 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$355": {
+          "hide_name": 1,
+          "type": "$_XOR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 40 ],
+            "B": [ 7 ],
+            "Y": [ 41 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$356": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 25 ],
+            "B": [ 41 ],
+            "Y": [ 8 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$357": {
+          "hide_name": 1,
+          "type": "$_ORNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 41 ],
+            "B": [ 25 ],
+            "Y": [ 42 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$358": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 4 ],
+            "Y": [ 43 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$359": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 43 ],
+            "B": [ 5 ],
+            "Y": [ 44 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$360": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 44 ],
+            "Y": [ 45 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$361": {
+          "hide_name": 1,
+          "type": "$_ORNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 4 ],
+            "B": [ 3 ],
+            "Y": [ 46 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$362": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 46 ],
+            "B": [ 5 ],
+            "Y": [ 47 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$363": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 47 ],
+            "Y": [ 48 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$364": {
+          "hide_name": 1,
+          "type": "$_ORNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 4 ],
+            "Y": [ 49 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$365": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 49 ],
+            "B": [ 5 ],
+            "Y": [ 50 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$366": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 50 ],
+            "Y": [ 51 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$367": {
+          "hide_name": 1,
+          "type": "$_NAND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 4 ],
+            "Y": [ 52 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$368": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 52 ],
+            "B": [ 5 ],
+            "Y": [ 53 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$369": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 53 ],
+            "Y": [ 54 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$370": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 43 ],
+            "B": [ 9 ],
+            "Y": [ 55 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$371": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 55 ],
+            "Y": [ 56 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$372": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 46 ],
+            "B": [ 9 ],
+            "Y": [ 57 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$373": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 57 ],
+            "Y": [ 58 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$374": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 49 ],
+            "B": [ 9 ],
+            "Y": [ 59 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$375": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 59 ],
+            "Y": [ 60 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$376": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 52 ],
+            "B": [ 9 ],
+            "Y": [ 61 ]
+          }
+        },
+        "$abc$337$auto$blifparse.cc:396:parse_blif$377": {
+          "hide_name": 1,
+          "type": "$_ANDNOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 61 ],
+            "Y": [ 62 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$168": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "E": [ 45 ],
+            "Q": [ 10 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$169": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "E": [ 45 ],
+            "Q": [ 26 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$299": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "E": [ 48 ],
+            "Q": [ 11 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$300": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "E": [ 48 ],
+            "Q": [ 27 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$301": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "E": [ 51 ],
+            "Q": [ 13 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$302": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "E": [ 51 ],
+            "Q": [ 29 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$303": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "E": [ 54 ],
+            "Q": [ 14 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$304": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "E": [ 54 ],
+            "Q": [ 30 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$305": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "E": [ 56 ],
+            "Q": [ 17 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$306": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "E": [ 56 ],
+            "Q": [ 33 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$307": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "E": [ 58 ],
+            "Q": [ 18 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$308": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "E": [ 58 ],
+            "Q": [ 34 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$309": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "E": [ 60 ],
+            "Q": [ 20 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$310": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "E": [ 60 ],
+            "Q": [ 36 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$311": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "E": [ 62 ],
+            "Q": [ 21 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$312": {
+          "hide_name": 1,
+          "type": "$_DFFE_PP_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:210.5-222.8"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "E": [ 62 ],
+            "Q": [ 37 ]
+          }
+        }
+      },
+      "netnames": {
+        "$abc$337$new_n31": {
+          "hide_name": 1,
+          "bits": [ 9 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n33": {
+          "hide_name": 1,
+          "bits": [ 12 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n34": {
+          "hide_name": 1,
+          "bits": [ 15 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n35": {
+          "hide_name": 1,
+          "bits": [ 16 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n36": {
+          "hide_name": 1,
+          "bits": [ 19 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n37": {
+          "hide_name": 1,
+          "bits": [ 22 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n38": {
+          "hide_name": 1,
+          "bits": [ 23 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n39": {
+          "hide_name": 1,
+          "bits": [ 24 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n40": {
+          "hide_name": 1,
+          "bits": [ 25 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n41": {
+          "hide_name": 1,
+          "bits": [ 28 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n42": {
+          "hide_name": 1,
+          "bits": [ 31 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n43": {
+          "hide_name": 1,
+          "bits": [ 32 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n44": {
+          "hide_name": 1,
+          "bits": [ 35 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n45": {
+          "hide_name": 1,
+          "bits": [ 38 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n46": {
+          "hide_name": 1,
+          "bits": [ 39 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n47": {
+          "hide_name": 1,
+          "bits": [ 40 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n48": {
+          "hide_name": 1,
+          "bits": [ 41 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n50": {
+          "hide_name": 1,
+          "bits": [ 42 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n51": {
+          "hide_name": 1,
+          "bits": [ 43 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n52": {
+          "hide_name": 1,
+          "bits": [ 44 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n54": {
+          "hide_name": 1,
+          "bits": [ 46 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n55": {
+          "hide_name": 1,
+          "bits": [ 47 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n57": {
+          "hide_name": 1,
+          "bits": [ 49 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n58": {
+          "hide_name": 1,
+          "bits": [ 50 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n60": {
+          "hide_name": 1,
+          "bits": [ 52 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n61": {
+          "hide_name": 1,
+          "bits": [ 53 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n63": {
+          "hide_name": 1,
+          "bits": [ 55 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n65": {
+          "hide_name": 1,
+          "bits": [ 57 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n67": {
+          "hide_name": 1,
+          "bits": [ 59 ],
+          "attributes": {
+          }
+        },
+        "$abc$337$new_n69": {
+          "hide_name": 1,
+          "bits": [ 61 ],
+          "attributes": {
+          }
+        },
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:6.11-6.14"
+          }
+        },
+        "const_0_0": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:21.10-21.19"
+          }
+        },
+        "const_10_0": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:31.10-31.20"
+          }
+        },
+        "const_11_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:32.10-32.20"
+          }
+        },
+        "const_12_4": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:33.15-33.25"
+          }
+        },
+        "const_13_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:34.10-34.20"
+          }
+        },
+        "const_14_5": {
+          "hide_name": 0,
+          "bits": [ "1", "0", "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:35.15-35.25"
+          }
+        },
+        "const_15_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:36.10-36.20"
+          }
+        },
+        "const_16_6": {
+          "hide_name": 0,
+          "bits": [ "0", "1", "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:37.15-37.25"
+          }
+        },
+        "const_17_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:38.10-38.20"
+          }
+        },
+        "const_18_7": {
+          "hide_name": 0,
+          "bits": [ "1", "1", "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:39.15-39.25"
+          }
+        },
+        "const_19_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:40.10-40.20"
+          }
+        },
+        "const_1_0": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:22.10-22.19"
+          }
+        },
+        "const_2_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:23.10-23.19"
+          }
+        },
+        "const_3_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:24.10-24.19"
+          }
+        },
+        "const_4_0": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:25.10-25.19"
+          }
+        },
+        "const_5_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:26.10-26.19"
+          }
+        },
+        "const_6_2": {
+          "hide_name": 0,
+          "bits": [ "0", "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:27.15-27.24"
+          }
+        },
+        "const_7_0": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:28.10-28.19"
+          }
+        },
+        "const_8_1": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:29.10-29.19"
+          }
+        },
+        "const_9_3": {
+          "hide_name": 0,
+          "bits": [ "1", "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:30.15-30.24"
+          }
+        },
+        "data": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:8.18-8.22"
+          }
+        },
+        "ref": {
+          "hide_name": 0,
+          "bits": [ 3, 4, 5, 6, 7 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:7.16-7.19"
+          }
+        },
+        "tmp0": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 10, 26 ],
+          "attributes": {
+          }
+        },
+        "tmp1": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 11, 27 ],
+          "attributes": {
+          }
+        },
+        "tmp10": {
+          "hide_name": 0,
+          "bits": [ 3, 4 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:43.15-43.20"
+          }
+        },
+        "tmp11": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:44.10-44.15"
+          }
+        },
+        "tmp12": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:45.10-45.15"
+          }
+        },
+        "tmp13": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 63, 64 ],
+          "attributes": {
+            "unused_bits": "16 17"
+          }
+        },
+        "tmp14": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:47.10-47.15"
+          }
+        },
+        "tmp15": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 65, 66 ],
+          "attributes": {
+            "unused_bits": "16 17"
+          }
+        },
+        "tmp16": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 67, 68 ],
+          "attributes": {
+            "unused_bits": "16 17"
+          }
+        },
+        "tmp17": {
+          "hide_name": 0,
+          "bits": [ 3, 4 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:50.15-50.20"
+          }
+        },
+        "tmp18": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:51.10-51.15"
+          }
+        },
+        "tmp19": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:52.10-52.15"
+          }
+        },
+        "tmp2": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 13, 29, "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:14.15-14.19"
+          }
+        },
+        "tmp20": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 69, 70, "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:53.16-53.21",
+            "unused_bits": "16 17"
+          }
+        },
+        "tmp21": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:54.10-54.15"
+          }
+        },
+        "tmp22": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 71, 72, "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:55.16-55.21",
+            "unused_bits": "16 17"
+          }
+        },
+        "tmp23": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 73, 74, "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:56.16-56.21",
+            "unused_bits": "16 17"
+          }
+        },
+        "tmp24": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 75, 76, "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:57.16-57.21",
+            "unused_bits": "16 17"
+          }
+        },
+        "tmp25": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:58.10-58.15"
+          }
+        },
+        "tmp26": {
+          "hide_name": 0,
+          "bits": [ 75, 76 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:59.15-59.20",
+            "unused_bits": "0 1"
+          }
+        },
+        "tmp27": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:60.16-60.21"
+          }
+        },
+        "tmp28": {
+          "hide_name": 0,
+          "bits": [ 6, 7 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:61.15-61.20"
+          }
+        },
+        "tmp29": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:62.10-62.15"
+          }
+        },
+        "tmp3": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 14, 30 ],
+          "attributes": {
+          }
+        },
+        "tmp30": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:63.10-63.15"
+          }
+        },
+        "tmp32": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:65.15-65.20"
+          }
+        },
+        "tmp33": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:66.15-66.20"
+          }
+        },
+        "tmp35": {
+          "hide_name": 0,
+          "bits": [ 45 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:68.10-68.15"
+          }
+        },
+        "tmp36": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:69.16-69.21"
+          }
+        },
+        "tmp37": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 6, 7 ],
+          "attributes": {
+          }
+        },
+        "tmp4": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 17, 33, "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:16.15-16.19"
+          }
+        },
+        "tmp40": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:73.15-73.20"
+          }
+        },
+        "tmp41": {
+          "hide_name": 0,
+          "bits": [ "1", "0", "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:74.15-74.20"
+          }
+        },
+        "tmp43": {
+          "hide_name": 0,
+          "bits": [ 48 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:76.10-76.15"
+          }
+        },
+        "tmp44": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 6, 7 ],
+          "attributes": {
+          }
+        },
+        "tmp47": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:80.10-80.15"
+          }
+        },
+        "tmp48": {
+          "hide_name": 0,
+          "bits": [ "0", "1", "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:81.15-81.20"
+          }
+        },
+        "tmp5": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 18, 34, "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:17.15-17.19"
+          }
+        },
+        "tmp50": {
+          "hide_name": 0,
+          "bits": [ 51 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:83.10-83.15"
+          }
+        },
+        "tmp51": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 6, 7 ],
+          "attributes": {
+          }
+        },
+        "tmp54": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:87.10-87.15"
+          }
+        },
+        "tmp55": {
+          "hide_name": 0,
+          "bits": [ "1", "1", "0" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:88.15-88.20"
+          }
+        },
+        "tmp57": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:90.10-90.15"
+          }
+        },
+        "tmp58": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 6, 7 ],
+          "attributes": {
+          }
+        },
+        "tmp6": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 20, 36 ],
+          "attributes": {
+          }
+        },
+        "tmp62": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:95.10-95.15"
+          }
+        },
+        "tmp63": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 6, 7 ],
+          "attributes": {
+          }
+        },
+        "tmp67": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:100.10-100.15"
+          }
+        },
+        "tmp68": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 6, 7 ],
+          "attributes": {
+          }
+        },
+        "tmp7": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 21, 37, "1" ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:19.15-19.19"
+          }
+        },
+        "tmp72": {
+          "hide_name": 0,
+          "bits": [ 60 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:105.10-105.15"
+          }
+        },
+        "tmp73": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 6, 7 ],
+          "attributes": {
+          }
+        },
+        "tmp77": {
+          "hide_name": 0,
+          "bits": [ 62 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:110.10-110.15"
+          }
+        },
+        "tmp78": {
+          "hide_name": 0,
+          "bits": [ "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", 6, 7 ],
+          "attributes": {
+          }
+        },
+        "tmp8": {
+          "hide_name": 0,
+          "bits": [ 3, 4, 5 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:41.15-41.19"
+          }
+        },
+        "tmp9": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:42.10-42.14"
+          }
+        },
+        "valid_out": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "elephant/tests/verilog/cache.v:9.12-9.21"
+          }
+        }
+      }
+    }
+  }
+}
