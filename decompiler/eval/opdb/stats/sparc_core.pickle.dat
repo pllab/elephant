@@ -1,0 +1,50 @@
+
+5. Printing statistics.
+
+=== sparc_core ===
+
+   Number of wires:             461494
+   Number of wire bits:         979234
+   Number of public wires:       34813
+   Number of public wire bits:  550394
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             768647
+     $_ANDNOT_                   36971
+     $_AND_                       7071
+     $_DFFE_NP_                  29507
+     $_DFFE_PN_                     66
+     $_DFFE_PP_                 262001
+     $_DFF_N_                      342
+     $_DFF_PN0_                      1
+     $_DFF_P_                    13463
+     $_DLATCH_N_                    92
+     $_MUX_                     338298
+     $_NAND_                      2069
+     $_NOR_                       4494
+     $_NOT_                      13184
+     $_ORNOT_                     3517
+     $_OR_                       28948
+     $_SDFFCE_NN0P_                216
+     $_SDFFCE_PN0P_              10168
+     $_SDFFCE_PN1P_                  4
+     $_SDFFCE_PP0P_                 16
+     $_SDFFE_NP0P_                  32
+     $_SDFFE_PN0N_                  56
+     $_SDFFE_PN0P_                4937
+     $_SDFFE_PN1N_                   1
+     $_SDFFE_PN1P_                  23
+     $_SDFFE_PP0N_                  30
+     $_SDFFE_PP0P_                 285
+     $_SDFFE_PP1N_                   5
+     $_SDFFE_PP1P_                   6
+     $_SDFF_NP0_                     1
+     $_SDFF_NP1_                     1
+     $_SDFF_PN0_                   522
+     $_SDFF_PN1_                   107
+     $_SDFF_PP0_                   246
+     $_SDFF_PP1_                    25
+     $_XNOR_                      2442
+     $_XOR_                       9500
+
