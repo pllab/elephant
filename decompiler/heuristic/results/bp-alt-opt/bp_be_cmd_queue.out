@@ -1,0 +1,14 @@
+Rewrote 228 muxes to qmuxes
+Rewrote 0 inverted muxes to qmuxes
+Reduced all qmuxes
+Found 1 memory(ies):
+	Memory 0: width = 114, height = 4
+		Read port 0:
+			Read address: (232, 231, 230, 229, 228)...
+			Read data: (244, 246)
+			Registers: [(603, 717, 266, 488), (604, 718, 268, 489), (605, 719, 270, 490), (606, 720, 272, 491), (607, 721, 274, 492)]...
+		Write port:
+			Write enable: 100000000
+			Write address: (100000009, 100000010)
+			Write data: (264, 267, 269, 271, 273)...
+Time elapsed: 0.01s

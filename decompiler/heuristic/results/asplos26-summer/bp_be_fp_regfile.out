@@ -1,0 +1,29 @@
+Built netlist in 0.102s
+Rewrote dffs and logic gates in 0.004s
+Rewrote 3168 muxes to qmuxes in 0.018s
+Rewrote 0 inverted muxes to qmuxes in 0.004s
+Reduced all qmuxes in 0.111s
+Found 3 read port(s) in 0.004s
+Found 1 memory(ies) in 0.000s
+Created 1 write port(s) in 0.002s
+Found 1 memory(ies):
+	Memory 0: width = 66, height = 32
+		Read port 0:
+			Read address: (7803, 7804, 7805, 7806, 7807)...
+			Read data: (293, 295, 297, 299, 301)
+			Registers: [(313, 4415, 4283, 4151, 4019), (315, 4417, 4285, 4153, 4021), (317, 4419, 4287, 4155, 4023), (319, 4421, 4289, 4157, 4025), (321, 4423, 4291, 4159, 4027)]...
+		Read port 1:
+			Read address: (9341, 9344, 9347, 9350, 9353)...
+			Read data: (303, 305, 307, 309, 311)
+			Registers: [(313, 4415, 4283, 4151, 4019), (315, 4417, 4285, 4153, 4021), (317, 4419, 4287, 4155, 4023), (319, 4421, 4289, 4157, 4025), (321, 4423, 4291, 4159, 4027)]...
+		Read port 2:
+			Read address: (11253, 11254, 11255, 11256, 11257)...
+			Read data: (445, 447, 449, 451, 453)
+			Registers: [(313, 4415, 4283, 4151, 4019), (315, 4417, 4285, 4153, 4021), (317, 4419, 4287, 4155, 4023), (319, 4421, 4289, 4157, 4025), (321, 4423, 4291, 4159, 4027)]...
+		Write port:
+			Write enable: 100000000
+			Write address: (100000011, 100000011, 100000011, 100000011, 100000011)
+			Write data: (312, 314, 316, 318, 320)...
+Total muxes replaced by read ports: 6138
+Total estimated demuxes replaced by write ports: 2046
+Time elapsed: 0.143s
