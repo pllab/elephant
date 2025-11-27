@@ -1,0 +1,10 @@
+name = "funmem"
+version = "0.1.0"
+defaultTargets = ["funmem"]
+
+[[lean_lib]]
+name = "Funmem"
+
+[[lean_exe]]
+name = "funmem"
+root = "Main"
