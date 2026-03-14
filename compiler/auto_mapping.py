@@ -335,17 +335,27 @@ if __name__ == "__main__":
 
     # success expected
     test_1r1w(tech["xilinx"])
+    print('===================\n')
     test_1r1w(tech["pyrtl"])
+    print('===================\n')
 
     test_1rw(tech["xilinx"])
+    print('===================\n')
     test_1rw(tech["pyrtl"])
+    print('===================\n')
 
     test_2r1w(tech["xilinx"])
+    print('===================\n')
     test_2r1w(tech["pyrtl"])
+    print('===================\n')
 
     test_4r1w(tech["xilinx"])
+    print('===================\n')
     test_4r1w(tech["pyrtl"])
+    print('===================\n')
 
     # failure expected
     test_4r2w(tech["xilinx"])
+    print('===================\n')
     test_4r2w(tech["pyrtl"])
+    print('===================\n')
