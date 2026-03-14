@@ -100,7 +100,7 @@ class AbstractMem:
                 - '1r2w': One read port, two write ports
                 - '2r2w': Two read ports, two write ports
             **kwargs: Additional arguments passed to AbstractMem constructor
-                e.g., rw_fwd=True, latch_last_read=True, asynchronous=False
+                e.g., forward=True, latch_last_read=True, asynchronous=False
         
         Returns:
             AbstractMem: Configured memory instance
@@ -230,7 +230,7 @@ class AbstractMem:
             parameters_list.append(f".latch_last_read_p({p})")
 
         if not shared_rw:
-            rw_fwd_p = "1" if self.rw_fwd else "0"
+            rw_fwd_p = "1" if self.forward else "0"
             parameters_list.append(f".read_write_same_addr_p({rw_fwd_p})")
 
         parameters = "#(" + ", ".join(parameters_list) + ")\n"
@@ -342,7 +342,8 @@ class AbstractMem:
             if not isinstance(read_port, AbstractMem.ReadPort):
                 raise Exception(f"Error, invalid read port: {read_port}")
 
-            addr, data, en, mask = read_port.addr, read_port.data, read_port.en, read_port.mask
+            addr, data, en = read_port.addr, read_port.data, read_port.en
+            #addr, data, en, mask = read_port.addr, read_port.data, read_port.en, read_port.mask
 
             if en is None:
                 en = pyrtl.Const(1, bitwidth=1)
@@ -361,38 +362,39 @@ class AbstractMem:
                     with en:
                         addr_r.next |= addr
 
-            if self.rw_fwd:
+            if self.forward:
                 rdata = pyrtl.select(addr_r == w_addr,
                                      w_data,
                                      mem[addr_r])
             else:
                 rdata = mem[addr_r]
 
-            if mask is not None:
-                r_mask = mask.mask
-                r_sign = mask.sign
-                num_1s = count_ones(r_mask)
-                num_0s = clz(r_mask)
-                readdata_sext = pyrtl.WireVector(self.width)
-                with pyrtl.conditional_assignment:
-                    with num_1s == 8:
-                        readdata_n = pyrtl.shift_right_logical(rdata, num_0s)[0:8]
-                        readdata_sext |= pyrtl.select(
-                            r_sign,
-                            readdata_n.sign_extended(self.width),
-                            readdata_n.zero_extended(self.width),
-                        )
-                    with num_1s == 16:
-                        readdata_n = pyrtl.shift_right_logical(rdata, num_0s)[0:16]
-                        readdata_sext |= pyrtl.select(
-                            r_sign,
-                            readdata_n.sign_extended(self.width),
-                            readdata_n.zero_extended(self.width),
-                        )
-                    with pyrtl.otherwise:  # whole word, and sign-extending is meaningless
-                        readdata_sext |= rdata
+            #if mask is not None:
+            #    r_mask = mask.mask
+            #    r_sign = mask.sign
+            #    num_1s = count_ones(r_mask)
+            #    num_0s = clz(r_mask)
+            #    readdata_sext = pyrtl.WireVector(self.width)
+            #    with pyrtl.conditional_assignment:
+            #        with num_1s == 8:
+            #            readdata_n = pyrtl.shift_right_logical(rdata, num_0s)[0:8]
+            #            readdata_sext |= pyrtl.select(
+            #                r_sign,
+            #                readdata_n.sign_extended(self.width),
+            #                readdata_n.zero_extended(self.width),
+            #            )
+            #        with num_1s == 16:
+            #            readdata_n = pyrtl.shift_right_logical(rdata, num_0s)[0:16]
+            #            readdata_sext |= pyrtl.select(
+            #                r_sign,
+            #                readdata_n.sign_extended(self.width),
+            #                readdata_n.zero_extended(self.width),
+            #            )
+            #        with pyrtl.otherwise:  # whole word, and sign-extending is meaningless
+            #            readdata_sext |= rdata
 
-            final_rdata = rdata if mask is None else readdata_sext
+            #final_rdata = rdata if mask is None else readdata_sext
+            final_rdata = rdata
 
             if self.latch_last_read:
                 llr_en = pyrtl.Register(1)
@@ -729,7 +731,7 @@ def test_1r1w_rw():
             name='mem',
             read_ports=[AbstractMem.ReadPort(raddr, rdata, pyrtl.Const(1,bitwidth=1))],
             write_ports=[AbstractMem.WritePort(waddr, inc, w_en)],
-            rw_fwd=True,
+            forward=True,
             )
     mem.to_pyrtl(pyrtl.working_block())
     
@@ -798,7 +800,7 @@ def test_2r1w_rw():
             read_ports=[AbstractMem.ReadPort(raddr1, rdata1, pyrtl.Const(1,bitwidth=1)),
                         AbstractMem.ReadPort(raddr2, rdata2, pyrtl.Const(1,bitwidth=1))],
             write_ports=[AbstractMem.WritePort(waddr, sum, w_en)],
-            rw_fwd=True,
+            forward=True,
             )
     mem.to_pyrtl(pyrtl.working_block())
 
