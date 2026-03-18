@@ -1163,7 +1163,7 @@ def find_quasi_memory(netlist: NetlistDatabase) -> list:
 
 if __name__ == "__main__":
 
-    NETLIST_FILE = "elephant/tests/json/pico.json"
+    NETLIST_FILE = "heuristic/tests/json/pico.json"
 
     import time
     import json
