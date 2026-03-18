@@ -6,6 +6,8 @@ The artifact is split between the fungible memory compiler and decompiler.
 * Directory `decompiler/` has the memory decompiler with two implementations,
   the theoretically complete baseline, and the less complete but faster
   decompiler which incorporates some heuristics.
+* Directory `decompiler/eval` contains all netlist benchmarks as JSON files
+  along with the original Verilog source code they were synthesized from.
 
 ## Getting Started Guide
 
@@ -97,9 +99,4 @@ Total time: 0.02 seconds.
 
 The first line details the expected memory block to be found in the netlist.
 The extracted memories are listed at the end.
-
-## Step-by-Step Instructions
-
-These instructions will explain how to fully evaluate the artifact and support
-the claims in the paper.
 
