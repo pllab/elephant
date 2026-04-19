@@ -1,4 +1,6 @@
-# Artifact for _Fungible Memories for Automated Technology Mapping and Re-targeting_
+# 「ARCHIVED」The repo has been moved to [Codeberg](https://codeberg.org/FRACAS/memo).
+
+# Artifact for _Fungible Memories for Automated Technology Mapping and Retargeting_
 
 The artifact is split between the fungible memory compiler and decompiler.
 
